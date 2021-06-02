@@ -1,0 +1,179 @@
+@import 'variables';
+
+:root{
+	--height-menu: 48px;
+}
+
+body{
+	padding: 0;
+	margin: 0;
+}
+.header{
+	position: fixed;
+	/*margin-top: -16px;*/
+	width: 100%;
+	height: var(--height-menu);
+	background: #f1f1f1;
+	z-index: 1;
+}
+
+
+.logo img{
+	width: 40px;
+	height: 100%;
+	margin-left: 5px;
+}
+.menu{
+	display: flex;
+	width: 100%;
+}
+.menu ul{
+	display: flex;
+	list-style-type: none;
+}
+
+.menu ul li{
+	margin-right: 10px;
+
+}
+
+
+.item{
+	display: flex;
+	justify-content: space-between;
+	box-sizing: border-box;
+	width: 85%;
+	height: 100%;
+	margin-left: -30px;
+}
+
+.item .search{
+	width: 250px;
+	height: 100%;
+	position: relative;
+	margin: auto 0;
+	
+}
+
+.item form{
+	display: flex;
+}
+
+.item .search .search-input{
+	width: 100%;
+	height: 30px;
+	padding-right: 50px;
+	padding-left: 20px;
+	border-radius: 20px;
+}
+
+.item .search .search-submit{
+	position: absolute;
+	right: 0;
+	width: 30px;
+	height: 30px;
+	border: none;
+	background: transparent;
+	margin: 3px 5px;
+	text-align: center;
+
+}
+
+.item ul li a{
+	text-decoration: none;
+	color: #111111;
+}
+.item ul li a:hover{
+	font-weight: 700;
+}
+/* Mobile */
+.item__bars-btn{
+	width: 30px;
+	height: 30px;
+	color: #333;
+	display: none;
+}
+
+.item__bars-btn i{
+	font-size: 48px;
+}
+
+.item__mobile{
+	display: none;
+	background: #fff;
+	position: fixed;
+	top: 48px;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	max-width: 100%;
+	height: 200px;
+	z-index: 10;
+}
+
+.item__mobile ul li a{
+	text-decoration: none;
+	color: #111111;	
+}
+
+.item ul li a:hover{
+	font-weight: 700;
+}
+
+.item__overlay{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0,0,0,0.3);
+	z-index: 1;
+	display: none;
+}
+
+@media(max-width: 1023px){
+	.menu ul{
+		display: block;
+		list-style-type: none;
+	}
+	.item__bars-btn{
+		display: block;
+	}
+	.item{
+		display: none;
+	}
+	.item__mobile{
+		display: block;
+	}
+	.item__overlay{
+		display: block;
+	}
+
+}
+/*-------Login-------*/
+.login{
+	position: relative;
+}
+.login a{
+	text-decoration: none;
+	color: #111111;
+}
+.login a:hover{
+	font-weight: 700;
+}
+
+
+
+
+.footer{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 40px;
+	width: 100%;
+	background: #333;
+	color: #fff;
+	padding: 0;
+	position: relative;
+	bottom: 0;
+}
