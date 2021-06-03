@@ -1,17 +1,14 @@
-const newsRouter = require('./news')
-
+const newsRouter = require('./news.route')
+const truyensRouter = require('./truyens.route')
 
 function route(app){
 
     app.use('/news', newsRouter)
-
+    app.use('/truyens', truyensRouter)
     app.get('/', (req, res) =>{
         res.render('home');
     })
     
-    // app.get('/news', (req, res) =>{
-    //     res.render('news');
-    // })
     
 }
 
