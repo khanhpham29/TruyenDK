@@ -3,7 +3,6 @@ const express = require('express')
 const morgan = require('morgan')
 const handlebars = require('express-handlebars')
 const db = require('./config/db/server')
-require('dotenv').config()
 // Connect to DB
 db.connect();
 
@@ -23,14 +22,14 @@ app.engine('hbs', handlebars({
     extname: '.hbs'
 }))
 app.set('view engine', '.hbs')
-app.set('views', path.join(__dirname, 'resources\\views'))
+app.set('views', path.join(__dirname, 'resources', 'views'))
 
 // Route init
 route(app)
 
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 
 
 // Listen on enviroment port or 5000

@@ -1,18 +1,21 @@
-const mysql = require('mysql');
+const mongoose = require('mongoose');
 
 
-const con = mysql.createConnection({
-    connectionLimit : 10,
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "truyendk"
-});
-if(con){
-    console.log("Connect successfully!!!")
-}else{
-    console.log("Connect failure")
+async function connect(){
+    try {
+        await mongoose.connect('mongodb://localhost:27017/mangadk', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
+            useCreateIndex: true
+        });
+        console.log('Connect successfully!!!')
+    }catch(error){
+        console.log('connect failure')
+    }
+    
 }
 
 
-module.exports = con;
+
+module.exports = { connect };

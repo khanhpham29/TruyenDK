@@ -1,21 +1,14 @@
-const db = require('../../config/db/server')
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Truyen = {
-    getAllTruyen:(callback)=>{
-        return db.query("select * from truyen",callback);
-    },
-    getTruyenById:(id,callback)=>{
-		return db.query("Select * from truyen where id_truyen=?",[id],callback);
-	}
-	// addTruyen:function(truyen,callback){
-	// 	return db.query("Insert into truyen(tentruyen,theloai,hinh,mota) values(?,?,?,?)",[truyen.tentruyen,truyen.theloai,truyen.hinh,truyen.mota],callback);
-	// },
-	// deleteTruyen:function(id,callback){
-	// 	return db.query("delete from truyen where Id=?",[id],callback);
-	// },
-	// updateTruyen:function(id,truyen,callback){
-	// 	return db.query("update truyen set name=?,class=?,dob=? where Id=?",[truyen.name,truyen.class,truyen.dob,id],callback);
-	// }
-};
+const TruyenSchema = new Schema({
+	tentruyen:{ type: String, default: ''},
+	tenloai:{ type: String, default: ''},
+	theloai:{ type: String, default: ''},
+	mota:{ type: String, default: ''},
+	hinh:{ type: String, default: ''},
+	createAt:{ type: Date, default: Date.now},
+	updateAt:{ type: Date, default: Date.now},
+});
 
-module.exports = Truyen;
+module.exports = mongoose.model('Truyen', TruyenSchema)
