@@ -33,4 +33,4 @@ app.use(express.urlencoded({ extended: true }))
 
 
 // Listen on enviroment port or 5000
-app.listen(port,  () => console.log(`listen on port ${port}`))
+app.listen(port,  () => console.log(`listen on port http://localhost:${port}`))
