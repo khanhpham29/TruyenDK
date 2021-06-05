@@ -1,5 +1,7 @@
 const Truyen = require('../models/Truyen')
+const { mongooseToOject } = require('../../ultil/mongoose')
 class TruyensController{
+
     
     index(req,res,next){
         // Truyen.find({}, function (err, truyens) {
@@ -22,7 +24,7 @@ class TruyensController{
     show(req, res, next){
         Truyen.findOne({ slug: req.params.slug })
             .then(truyen => {
-                res.json(truyen)
+                res.render('truyens', {truyen: mongooseToOject(truyen)})
             })
             .catch(next)
         
