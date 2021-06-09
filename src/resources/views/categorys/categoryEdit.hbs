@@ -1,0 +1,16 @@
+<div class="container">
+    <h1>Cập nhật thể loại</h1>
+    <div class="row">
+        <div class="col-sm-8 offset-2">
+            <form action="/admin/categorys/{{theloais._id}}?_method=PUT" method="POST" name="formCategoryEdit">
+                <div class="form-group">
+                    <label for="theloai">Tên thể loại</label>
+                    <input type="text" class="form-control" value="{{theloais.tenloai}}" id="tenloai" name="tenloai">
+                </div>
+                <div class="mt-2 mb-2">
+                    <button type="submit" class="btn btn-outline-primary">Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

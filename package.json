@@ -15,8 +15,11 @@
         "bootstrap": "^5.0.1",
         "express": "^4.17.1",
         "express-handlebars": "^5.3.2",
+        "method-override": "^3.0.0",
+        "moment": "^2.29.1",
         "mongodb": "^3.6.9",
-        "mongoose": "^5.12.12",
+        "mongoose": "^5.8.9",
+        "mongoose-slug-generator": "^1.0.4",
         "mysql": "^2.18.1"
     },
     "devDependencies": {

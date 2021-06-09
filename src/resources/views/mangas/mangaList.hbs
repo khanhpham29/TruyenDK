@@ -1,0 +1,22 @@
+<div class="mt-4">
+    <div class="row">
+        
+        {{#each mangas}}
+            <div class="col-sm-6 col-lg-4 mb-4">
+                <div class="card" style="width: 18rem">
+                    <div class="left">
+                        <img src="https://i.pinimg.com/236x/ff/df/4e/ffdf4edc47c7c2675101a6eeedca1e53.jpg">
+                    </div>
+                    <div class="content">
+                        <h2 class="name">{{this.tentruyen}}</h2>
+                        <div class="info">
+                            <div class="category">Thể loại: {{this.theloai}}</div>
+                            <div class="status">Tình trạng: {{this.tinhtrang}}</div>
+                            <div class="description">Mô tả: {{this.mota}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
