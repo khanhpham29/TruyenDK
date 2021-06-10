@@ -1,0 +1,75 @@
+    <div class="content">
+        <div class="menu">
+            <ul>
+                <a href="">
+                    <li>
+                        Trang chủ
+                    </li>
+                </a>
+                <a href="/admin/manga/">
+                    <li>
+                        Quản lý truyện
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Quản lý nhân viên
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Tạo phiếu mượn
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Thống kê
+                    </li>
+                </a>
+            </ul>
+        </div>
+        {{!-- info --}}
+        <div class="info">
+            <a href="/admin/manga/add" class="btn-add-manga">
+                <button>Add new manga</button>
+            </a>
+            <div class="manga">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Tên truyện</td>
+                            
+                            <td>Thể loại</td>
+                            <td>Mô tả</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each mangas}}
+                            <tr>
+                                <th>{{sum @index 1}}</td>
+                                <td>{{this.tentruyen}}</td>
+                                
+                                <td>{{this.theloai}}</td>
+                                <td>{{this.mota}}</td>
+                                <div>
+                                <td>
+                                    <a href="">Thêm chap</a>
+                                </td>
+                                 <td>
+                                    <a href="">Sửa</a>
+                                </td>
+                                 <td>
+                                    <a href="">Xóa</a>
+                                </td>
+                                </div>
+                                
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                    
+                </table>
+                    
+            </div>
+        </div>
+    </div>

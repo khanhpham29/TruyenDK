@@ -1,6 +1,10 @@
 @import 'variables';
 
-
+@mixin reset-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+  }
 
 // body{
 // 	padding: 0;
@@ -200,4 +204,48 @@
 		}
 	}
 }
+
+//CSS giao dien admin
+.container{
+	 .content{
+		width: 100%;
+		height: 100%;		
+		display: flex;
+		.menu{
+			width: 20%;
+			height: 100%;
+			background: #333;
+			ul{
+				@include reset-list;
+				a{
+					color: red;
+					text-decoration: none;
+					border-bottom: 1px solid #fff;
+					li{
+						padding: 10px;
+						border-bottom: 1px solid #fff;
+					}
+					
+				}
+			}
+		}
+		.info{
+			background: #fff;
+			width: 80%;
+			height: 100%;
+			border: 1px solid #333;
+			margin-left: 2px;
+			.btn-add-manga{
+				button{
+					float: right;
+					margin-top: 5px;
+					margin-right: 5px;
+					background: rgb(0, 195, 255);
+				}
+			}			
+		}
+
+	}
+}
+
 

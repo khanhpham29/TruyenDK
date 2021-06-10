@@ -16,3 +16,34 @@
     .cover.content.info {
       font-weight: 400;
       margin-left: 30px; }
+
+.container .content {
+  width: 100%;
+  height: 100%;
+  display: flex; }
+  .container .content .menu {
+    width: 20%;
+    height: 100%;
+    background: #333; }
+    .container .content .menu ul {
+      margin: 0;
+      padding: 0;
+      list-style: none; }
+      .container .content .menu ul a {
+        color: red;
+        text-decoration: none;
+        border-bottom: 1px solid #fff; }
+        .container .content .menu ul a li {
+          padding: 10px;
+          border-bottom: 1px solid #fff; }
+  .container .content .info {
+    background: #fff;
+    width: 80%;
+    height: 100%;
+    border: 1px solid #333;
+    margin-left: 2px; }
+    .container .content .info .btn-add-manga button {
+      float: right;
+      margin-top: 5px;
+      margin-right: 5px;
+      background: #00c3ff; }
