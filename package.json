@@ -1,5 +1,5 @@
 {
-    "name": "nodejs-mysql",
+    "name": "nodejs-nosql",
     "version": "1.0.0",
     "description": "",
     "main": "src/index.js",
@@ -19,6 +19,7 @@
         "moment": "^2.29.1",
         "mongodb": "^3.6.9",
         "mongoose": "^5.8.9",
+        "mongoose-delete": "^0.5.3",
         "mongoose-slug-generator": "^1.0.4",
         "mysql": "^2.18.1"
     },

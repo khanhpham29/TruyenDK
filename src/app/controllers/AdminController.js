@@ -25,12 +25,13 @@ class AdminController{
     //Categorys
     //[GET]
     categorys(req, res, next){
-        Category.find({})
-            .then(theloais =>{
+        Promise.all([Category.find({}), Category.countDocumentsDeleted()])
+            .then(([theloais, deletedCount])=> 
                 res.render('categorys/categoryList',{
-                    theloais: mutipleMongooseToOject(theloais)
+                    deletedCount,
+                    theloais: mutipleMongooseToOject(theloais),
                 })
-            })
+            ) 
             .catch(next)
     }
     //[GET]
@@ -62,9 +63,44 @@ class AdminController{
     }
     //[DELETE] /categorys/:id
     categoryDelete(req, res, next){
+        Category.delete({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[GET] /categorys/categoryTrash
+    categoryTrash(req, res, next){
+        Category.findDeleted({})
+            .then(theloais =>{
+                res.render('categorys/categoryTrash',{
+                    theloais: mutipleMongooseToOject(theloais)
+                })
+            })
+            .catch(next)
+    }
+    //[PATCH] /categorys/:id
+    categoryRestore(req, res, next){
+        Category.restore({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[DELETE] /categorys/:id/force
+    categoryForceDelete(req, res, next){
         Category.deleteOne({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
+    }
+    // [POST] /categorys/handle-form-actions
+    handleFormActions(req, res, next){
+        // res.json(req.body)
+        switch(req.body.action) {
+            case 'delete':
+                Category.delete({ _id: {$in: req.body.categoryIds} })
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break
+            default:
+                res.json({message: 'Action is invalid!!!'})
+        }
     }
 }
 

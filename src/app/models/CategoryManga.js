@@ -1,10 +1,19 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const mongooseDelete = require('mongoose-delete')
+const slug = require('mongoose-slug-generator')
+const Schema = mongoose.Schema
 
-const theloai = new Schema({
+
+
+const TheloaiSchema = new Schema({
 	tenloai:{ type: String, default: '', required: true},
-	createAt:{ type: Date, default: Date.now()},
-	updateAt:{ type: Date, default: Date.now()},
+},{
+	timestamps: true,
 });
+mongoose.plugin(slug)
+TheloaiSchema.plugin(mongooseDelete, { 
+	deleteAt:true,
+	overrideMethods: true 
+})
 
-module.exports = mongoose.model('theloai', theloai)
+module.exports = mongoose.model('theloais', TheloaiSchema)
