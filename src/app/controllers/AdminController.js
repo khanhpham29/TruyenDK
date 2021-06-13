@@ -3,15 +3,16 @@ const Detail = require('../models/DetailManga')
 const Category = require('../models/CategoryManga')
 const multer = require('multer')
 const path = require('path')
-const { mutipleMongooseToOject } = require('../../util/mongoose')
+const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
+const { PromiseProvider } = require('mongoose')
 class AdminController{
     
     index(req,res,next){
         Manga.find({})
             .then(mangas => {
                 res.render('mangas/mangaList', {
-                    mangas: mutipleMongooseToOject(mangas)
+                    mangas: multipleMongooseToOject(mangas)
                 })
             })
             .catch(next)
@@ -56,7 +57,7 @@ class AdminController{
             .catch(next)
     }
     //hiển thị danh sách img trong chap
-     tam(req, res, next){
+    tam(req, res, next){
         const all_img =  Detail.find()
         // res.send('abc')
         res.render('admins/test', {all_img: all_img})
@@ -104,15 +105,27 @@ class AdminController{
     //Categorys
     //[GET]
     categorys(req, res, next){
-        Category.find({})
-            .then(theloais =>{
+        Promise.all([   Category.find({}), 
+                        Category.countDocumentsDeleted(),
+                    ])
+            .then(([theloais, deleteCount]) =>{
                 res.render('categorys/categoryList',{
-                    theloais: mutipleMongooseToOject(theloais)
+                    deleteCount,
+                    theloais: multipleMongooseToOject(theloais)
                 })
             })
             .catch(next)
     }
-    //[GET]
+    categoryTrash(req, res, next){
+        Category.findDeleted({})
+            .then(theloais =>{
+                res.render('categorys/categoryTrash',{
+                    theloais: multipleMongooseToOject(theloais)
+                })
+            })
+            .catch(next)
+    }
+    //[GET] 
     formCategoryCreate(req, res, next){
         res.render('admins/create-category')
     }
@@ -135,15 +148,49 @@ class AdminController{
     //[PUT] /categorys/:id
     async categoryUpdate(req, res, next){
         const formdata = req.body
-        await Category.updateOne({ _id: req.params.id  }, formdata)
+        await Category.updateOne({ _id: req.params.id }, formdata)
             .then(() => res.redirect('../categorys'))
             .catch(next)
     }
     //[DELETE] /categorys/:id
     categoryDelete(req, res, next){
+        Category.delete({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[DELETE] /categorys/:id/categoryForceDelete
+    categoryForceDelete(req, res, next){
         Category.deleteOne({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
+    }
+    //[PATCH] /categorys/:id/categoryRestore
+    categoryRestore(req, res, next){
+        Category.restore({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[POST] /categorys/handle-form-actions
+    handleFormActions(req, res, next){
+        switch(req.body.action){
+            case 'delete':
+                Category.delete({ _id: {$in: req.body.categoryIds }})
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break;
+            case 'restore':
+                Category.restore({ _id: {$in: req.body.categoryIds }})
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                    break
+            case 'deleteForce':
+                Category.deleteMany({ _id: {$in: req.body.categoryIds }})   
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                    break
+            default:
+                res.json(req.body)
+        }
     }
 }
 

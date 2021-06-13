@@ -6,7 +6,7 @@ const db = require('./config/db/server')
 const methodOverride = require('method-override')
 const app = express()
 //const port = process.env.PORT || 5000
-const port = process.env.PORT || 6000
+const port = process.env.PORT || 5000
 
 const route = require('./routes/index')
 const bodyParser = require('body-parser')
@@ -26,7 +26,7 @@ app.engine('hbs',
         helpers: {
             sum: (a, b) => a + b,
             dateFormat: (date,options)=>{
-                const formatToUse = (arguments[1] && arguments[1].hash && arguments[1].hash.format) || "DD/MM/YYYY "
+                const formatToUse = (arguments[1] && arguments[1].hash && arguments[1].hash.format) || "dd MM/DD/YYYY HH:mm:ss"
                 return moment(date).format(formatToUse);
             }
         }
@@ -34,13 +34,11 @@ app.engine('hbs',
 )
 app.set('view engine', '.hbs')
 app.set('views', path.join(__dirname, 'resources', 'views'))
-
-// Route init
-route(app)
 // override with the X-HTTP-Method-Override header in the request
 app.use(methodOverride('_method'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+// Route init
+route(app)
 // Listen on enviroment port or 5000
 app.listen(port,  () => console.log(`listen on port http://localhost:${port}`))
