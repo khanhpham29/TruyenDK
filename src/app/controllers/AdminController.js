@@ -103,9 +103,9 @@ class AdminController{
         }
     }
     //Categorys
-    //[GET]
+    //[GET] /admin/categorys
     categorys(req, res, next){
-        Promise.all([   Category.find({}), 
+        Promise.all([   Category.find({}).sorttable(req), 
                         Category.countDocumentsDeleted(),
                     ])
             .then(([theloais, deleteCount]) =>{
@@ -125,7 +125,7 @@ class AdminController{
             })
             .catch(next)
     }
-    //[GET] 
+    //[GET]  /admin/categorys/formCategoryCreate
     formCategoryCreate(req, res, next){
         res.render('admins/create-category')
     }

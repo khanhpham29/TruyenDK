@@ -27,9 +27,15 @@
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">STT</th>
-                        <th scope="col">Tên thể loại</th>
-                        <th scope="col">Thời gian tạo</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">
+                            Tên thể loại
+                            {{{sortTable 'tenloai' _sort}}}
+                        </th>
+                        <th scope="col">
+                            {{{sortTable 'createAt' _sort}}}
+                            Thời gian tạo
+                        </th>
                         <th scope="col" colspan="2"></th>
                     </tr>
                 </thead>
@@ -40,7 +46,7 @@
                             <input class="form-check-input" type="checkbox" value="{{this._id}}" id=""
                             name="categoryIds[]" >
                         </td>
-                        <td>{{sum @index 1}}</td>
+                        <td>{{this._id}}</td>
                         <td>{{this.tenloai}}</td>
                         <td>{{dateFormat this.createAt }}</td>
                         <td>

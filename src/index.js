@@ -10,26 +10,21 @@ const port = process.env.PORT || 5000
 
 const route = require('./routes/index')
 const bodyParser = require('body-parser')
-const moment = require('moment')
 
+const SortMiddleware = require('./app/middlewares/sortMiddleware')
 // Connect to DB    
 db.connect();
 
 app.use(express.static(path.join(__dirname, 'public')))
 // HTTP logger
 app.use(morgan('combined'))
-
+// Customs middlewares
+app.use(SortMiddleware)
 // Template engine
 app.engine('hbs', 
     handlebars({
         extname: '.hbs',
-        helpers: {
-            sum: (a, b) => a + b,
-            dateFormat: (date,options)=>{
-                const formatToUse = (arguments[1] && arguments[1].hash && arguments[1].hash.format) || "dd MM/DD/YYYY HH:mm:ss"
-                return moment(date).format(formatToUse);
-            }
-        }
+        helpers: require('./app/helpres/handblebars')
     })
 )
 app.set('view engine', '.hbs')
