@@ -11,6 +11,8 @@ const mangas = new Schema({
 	hinh:{ type: String,},
 },{
 	timestamps : true,
+},{
+	collection: 'mangas'
 });
 
 module.exports = mongoose.model('mangas', mangas)

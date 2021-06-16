@@ -36,19 +36,23 @@ const upload = multer({
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-router.post('/add',upload.single('avatarManga'), adminController.mangaCreate)
+router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
+//Edit form manga
+router.get('/manga/:slug/edit', adminController.formMangaEdit)
+//Edit manga
+router.post('/manga:slug/edit',upload.single('avatarManga'), adminController.mangaEdit)
 //Form add new chapter of manga: name
 router.get('/manga/:slug/addChap',adminController.createChapterManga)
 //Add new chapter of manga: name
 router.post('/manga/:slug/addChap',upload.array('imgOfManga', 10), adminController.createChapter)
+//Read chapter manga
+router.get('/manga/:tentruyen/:chapter', adminController.readChap)
 //Infomation of manga :name
 router.get('/manga/:slug', adminController.infoManga)
 //Infomation all manga from database
 router.get('/manga', adminController.manga)
 //Index admin
 router.get('/', adminController.index)
-
-router.get('/test', adminController.tam)
 
 //Category
 router.get('/categorys/formCategoryCreate', urlencodedParser , adminController.formCategoryCreate)

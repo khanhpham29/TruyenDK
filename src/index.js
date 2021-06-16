@@ -6,7 +6,7 @@ const db = require('./config/db/server')
 const methodOverride = require('method-override')
 const app = express()
 //const port = process.env.PORT || 5000
-const port = process.env.PORT || 6000
+const port = process.env.PORT || 3000
 
 const route = require('./routes/index')
 const bodyParser = require('body-parser')

@@ -4,15 +4,18 @@ const slug = require('mongoose-slug-generator')
 mongoose.plugin(slug);
 const Schema = mongoose.Schema;
 
+
 const MangaDetailsSchema = new Schema({
+	_id: Schema.Types.ObjectId,
 	tentruyen:{ type: String, default: ''},
-	chapter: { type: String, default: ''},
-	tenfile: { type: String, default: ''},
-	loaifile: { type: String, default: '' },
-	imgBase64: { type: String, default: '', unique: true},
-	slug: { type: String, slug: 'chapter', unique: true },
+	ImgDetail: [{type: Schema.Types.ObjectId, ref: 'ImgDetail'}],
+	//imgManga: { type: Object, default: '', unique: true},
+	slug: { type: String, slug: 'tentruyen', unique: true },
 },{
 	timestamps: true,
+},{
+	collection: 'details'
 });
 
 module.exports = mongoose.model('Detail', MangaDetailsSchema)
+

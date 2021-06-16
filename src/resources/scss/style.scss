@@ -206,46 +206,97 @@
 }
 
 //CSS giao dien admin
-.container{
-	 .content{
-		width: 100%;
-		height: 100%;		
-		display: flex;
-		.menu{
-			width: 20%;
-			height: 100%;
-			background: #333;
-			ul{
-				@include reset-list;
-				a{
-					color: red;
-					text-decoration: none;
+.content{
+	display: flex;
+	width: 100%;
+	height: 100%;
+	//CSS phần menu left
+	
+	.menu{
+		width: 20%;
+		height: 100%;
+		background: #333;
+		ul{
+			@include reset-list;
+			a{
+				color: red;
+				text-decoration: none;
+				border-bottom: 1px solid #fff;
+				li{
+					padding: 10px;
 					border-bottom: 1px solid #fff;
-					li{
-						padding: 10px;
-						border-bottom: 1px solid #fff;
-					}
-					
 				}
+				
 			}
 		}
-		.info{
-			background: #fff;
-			width: 80%;
-			height: 100%;
-			border: 1px solid #333;
-			margin-left: 2px;
-			.btn-add-manga{
-				button{
-					float: right;
-					margin-top: 5px;
-					margin-right: 5px;
-					background: rgb(0, 195, 255);
+	}
+	
+	.info{
+		background: #fff;
+		width: 80%;
+		height: 100%;
+		border: 1px solid #333;
+		margin-left: 2px;
+		.btn-add-manga{
+			button{
+				float: right;
+				margin-top: 5px;
+				margin-right: 5px;
+				background: rgb(0, 195, 255);
+			}
+		}
+		
+		//CSS trang thêm manga(create-manga)
+		.create-manga{
+			.form-group{
+				margin-top: 5px;
+				label{
+					font-weight: 500;
+					width: 80px;
 				}
-			}			
+			}
+			.category{
+				margin-left: 80px;
+			}
+			.btn-create-manga{
+				margin-top: 5px;
+
+			}
 		}
 
+	}			
+}
+
+.details-manga-img{
+	width: 100%;
+	height:100%;
+	img{
+		margin-top: 10px;
 	}
 }
 
 
+.details-manga{
+	width:100%;
+	height:100%;
+	display:flex;
+	.img-avatar{
+		width: 30%;
+		img{
+			width:100%;
+			height:100%;
+		}
+	}
+
+	.content{
+		width:70%;
+		display: block;
+		
+		.name{
+			font-size: 32px;
+			font-weight:400;
+		}
+
+	}
+
+}
