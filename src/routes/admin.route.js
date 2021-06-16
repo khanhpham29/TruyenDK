@@ -40,7 +40,7 @@ router.get('/manga/:slug', adminController.infoManga)
 //Infomation all manga from database
 router.get('/manga', adminController.manga)
 //Index admin
-router.get('/', adminController.index)
+// router.get('/', adminController.index)
 
 router.get('/test', adminController.tam)
 

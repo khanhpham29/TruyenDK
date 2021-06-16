@@ -6,7 +6,6 @@ async function connect(){
         await mongoose.connect('mongodb://localhost:27017/mangadk', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useFindAndModify: false,
             useCreateIndex: true
         });
         console.log('Connect successfully!!!')

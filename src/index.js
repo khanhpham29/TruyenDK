@@ -2,8 +2,11 @@ const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
 const handlebars = require('express-handlebars')
+const cookieParser = require('cookie-parser')
 const db = require('./config/db/server')
 const methodOverride = require('method-override')
+const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
+
 const app = express()
 //const port = process.env.PORT || 5000
 const port = process.env.PORT || 5000
@@ -14,7 +17,7 @@ const bodyParser = require('body-parser')
 const SortMiddleware = require('./app/middlewares/sortMiddleware')
 // Connect to DB    
 db.connect();
-
+app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 // HTTP logger
 app.use(morgan('combined'))
@@ -24,7 +27,9 @@ app.use(SortMiddleware)
 app.engine('hbs', 
     handlebars({
         extname: '.hbs',
-        helpers: require('./app/helpres/handblebars')
+        helpers: require('./app/helpres/handblebars'),
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
     })
 )
 app.set('view engine', '.hbs')
@@ -33,7 +38,12 @@ app.set('views', path.join(__dirname, 'resources', 'views'))
 app.use(methodOverride('_method'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+
 // Route init
 route(app)
+
+
+
 // Listen on enviroment port or 5000
 app.listen(port,  () => console.log(`listen on port http://localhost:${port}`))
