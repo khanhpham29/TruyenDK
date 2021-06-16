@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-3 mt-4 mb-4">
+            <h2>Đăng ký</h2>
+            <form  name="formSignUp" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label" >Email address</label>
+                    <input  type="text" 
+                            class="form-control" 
+                            name="email" 
+                            aria-describedby="emailHelp"
+                            required>
+                    <div class="email error" style="color:red"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input  type="password"
+                            class="form-control"
+                            name="password"
+                            required>
+                    <div class="password error" style="color:red"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var form = document.forms['formSignUp']
+        var emailError = $('.email.error')
+        console.log(emailError)
+        var passwordError = $('.password.error')
+        var haha = $('#haha')
+        form.addEventListener("submit", async (e)=>{
+            e.preventDefault()
+            //reset error
+            emailError.text('')
+            passwordError.text('')
+            // get the values
+            const email = form.email.value
+            const password = form.password.value
+            
+            try{
+                const res = await fetch('/signup',{
+                    method: 'POST',
+                    body: JSON.stringify({ email, password}),
+                    headers: { "Content-Type": "application/json" }
+                })
+                const data = await res.json()
+                console.log(data.errors)
+                if(data.errors){
+                    console.log(data.errors.email)
+                    emailError.text(data.errors.email)
+                    passwordError.text(data.errors.password)
+                }
+                if(data.user){
+                    location.assign('/login')
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
+        })
+    })
+</script>

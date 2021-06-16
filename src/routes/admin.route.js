@@ -2,12 +2,6 @@ const express = require('express')
 const multer = require('multer')
 
 const router = express.Router()
-const { urlencoded } = require('body-parser')
-const bodyParser = require('body-parser')
-const urlencodedParser = express.urlencoded({ extended : true})
-const methodOverride = require('method-override')
-router.use(methodOverride('_method'))
-
 
 const adminController = require('../app/controllers/AdminController')
 
@@ -52,15 +46,30 @@ router.get('/manga/:slug', adminController.infoManga)
 //Infomation all manga from database
 router.get('/manga', adminController.manga)
 //Index admin
-router.get('/', adminController.index)
+// router.get('/', adminController.index)
 
 //Category
-router.get('/categorys/formCategoryCreate', urlencodedParser , adminController.formCategoryCreate)
-router.post('/categoryCreate', urlencodedParser, adminController.categoryCreate)
-router.get('/categorys/:id/categoryEdit',urlencodedParser , adminController.categoryEdit)
-router.put('/categorys/:id',urlencodedParser , adminController.categoryUpdate)
-router.delete('/categorys/:id',urlencodedParser , adminController.categoryDelete)
-router.get('/categorys',urlencodedParser  , adminController.categorys)
+// Form add new category
+router.get('/categorys/formCategoryCreate', adminController.formCategoryCreate)
+// Add new  category
+router.post('/categoryCreate', adminController.categoryCreate)
+// form edit 
+router.get('/categorys/:id/categoryEdit', adminController.categoryEdit)
+// Post checkbox delete
+router.post('/categorys/handleFormActions', adminController.handleFormActions)
+// updated
+router.put('/categorys/:id', adminController.categoryUpdate)
+// Restore
+router.patch('/categorys/:id/categoryRestore', adminController.categoryRestore)
+// Delete soft
+router.delete('/categorys/:id', adminController.categoryDelete)
+// Delete force
+router.delete('/categorys/:id/categoryForceDelete', adminController.categoryForceDelete)
+// form Trash
+router.get('/categorys/categoryTrash', adminController.categoryTrash)
+// index
+router.get('/categorys', adminController.categorys)
+
 
 
 module.exports = router
