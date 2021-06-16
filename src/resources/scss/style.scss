@@ -8,6 +8,8 @@
 .checkbox-select-all-options{
 	width: 120px;
 }
+
+
 // body{
 // 	padding: 0;
 // 	margin: 0;
@@ -232,41 +234,26 @@
 			}
 		}
 	}
-	
-	.info{
-		background: #fff;
-		width: 80%;
-		height: 100%;
-		border: 1px solid #333;
-		margin-left: 2px;
-		.btn-add-manga{
-			button{
-				float: right;
-				margin-top: 5px;
-				margin-right: 5px;
-				background: rgb(0, 195, 255);
-			}
+			
+}
+//CSS trang thêm manga(create-manga)
+.create-manga{
+	.form-group{
+		margin-top: 5px;
+		label{
+			font-weight: 500;
+			width: 80px;
 		}
-		
-		//CSS trang thêm manga(create-manga)
-		.create-manga{
-			.form-group{
-				margin-top: 5px;
-				label{
-					font-weight: 500;
-					width: 80px;
-				}
-			}
-			.category{
-				margin-left: 80px;
-			}
-			.btn-create-manga{
-				margin-top: 5px;
-
-			}
-		}
-
-	}			
+		input[type="text"], textarea{
+			width: 300px;
+		}		
+	}
+	.category{
+		margin-left: 80px;
+	}
+	.btn-create-manga{
+		margin-top: 5px;
+	}
 }
 
 .details-manga-img{
@@ -276,7 +263,6 @@
 		margin-top: 10px;
 	}
 }
-
 
 .details-manga{
 	width:100%;
@@ -298,7 +284,61 @@
 			font-size: 32px;
 			font-weight:400;
 		}
-
+	}
+}
+.create-chapter-manga{
+	width: 80%;
+	height: 100%;
+	margin-left: 10px;
+	margin-top: 5px;
+	.nameManga{
+		font-size: 32px;
+		color: blue;
+		font-weight: 500;
+	}
+	.nameChapter, .linkImg{
+		margin-top: 5px;
+		font-weight: 400;
+		font-size: 20px;
 	}
 
+	.linkImg input[type="file"]{
+		background: #0d6efd;
+		width: 250px;
+	}
+	.btn-create-chapter-manga{
+		margin-top: 5px;
+	}
 }
+
+
+	
+.manga{
+	background: #fff;
+	width: 80%;
+	height: 100%;
+	border: 1px solid #333;
+	margin-left: 2px;
+	.btn-add-manga{
+		button{
+			float: right;
+			margin-top: 5px;
+			margin-right: 5px;
+		}
+	}
+	.mangaList{
+		.table{
+			thead{
+				font-weight: 500;
+			}
+		}
+		a{
+			text-decoration: none;
+		}
+	}		
+}
+
+
+
+
+

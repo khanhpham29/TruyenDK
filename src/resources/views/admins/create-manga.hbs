@@ -1,16 +1,15 @@
 
 <div class="content">
-    {{!-- left menu --}}
     <div class="menu">
         <ul>
-            <a href="">
-                <li>
-                    Trang chủ
-                </li>
-            </a>
             <a href="/admin/manga/">
                 <li>
                     Quản lý truyện
+                </li>
+            </a>
+            <a href="/admin/categorys/">
+                <li>
+                    Quản lý thể loại truyện
                 </li>
             </a>
             <a href="">
@@ -36,11 +35,11 @@
             <form action="/admin/add" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nameManga">Tên truyện</label>
-                    <input type="text" id="nameManga" name="nameManga">
+                    <input type="text" id="nameManga" name="nameManga" class="txtInput">
                 </div>
                 <div class="form-group">
                     <label for="avatarManga">Hình</label>
-                    <input type="file"  id="avatarManga" name="avatarManga">
+                    <input type="file"  id="avatarManga" name="avatarManga" class="txtInput">
                 </div>
                 <div class="form-group">
                     <label for="category">Thể loại: </label>
@@ -54,7 +53,7 @@
 
                 <div class="form-group">
                     <label for="description">Mô tả</label>
-                    <input type="textarea" id="description" name="description">
+                    <textarea id="description" name="description"></textarea>
                 </div>
                 {{!-- btn Submit form --}}
                 <button type="submit" class="btn btn-outline-primary btn-create-manga">Thêm truyện</button>

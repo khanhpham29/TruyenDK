@@ -39,26 +39,20 @@
         .content .menu ul a li {
           padding: 10px;
           border-bottom: 1px solid #fff; }
-  .content .info {
-    background: #fff;
-    width: 80%;
-    height: 100%;
-    border: 1px solid #333;
-    margin-left: 2px; }
-    .content .info .btn-add-manga button {
-      float: right;
-      margin-top: 5px;
-      margin-right: 5px;
-      background: #00c3ff; }
-    .content .info .create-manga .form-group {
-      margin-top: 5px; }
-      .content .info .create-manga .form-group label {
-        font-weight: 500;
-        width: 80px; }
-    .content .info .create-manga .category {
-      margin-left: 80px; }
-    .content .info .create-manga .btn-create-manga {
-      margin-top: 5px; }
+
+.create-manga .form-group {
+  margin-top: 5px; }
+  .create-manga .form-group label {
+    font-weight: 500;
+    width: 80px; }
+  .create-manga .form-group input[type="text"], .create-manga .form-group textarea {
+    width: 300px; }
+
+.create-manga .category {
+  margin-left: 80px; }
+
+.create-manga .btn-create-manga {
+  margin-top: 5px; }
 
 .details-manga-img {
   width: 100%;
@@ -81,3 +75,37 @@
     .details-manga .content .name {
       font-size: 32px;
       font-weight: 400; }
+
+.create-chapter-manga {
+  width: 80%;
+  height: 100%;
+  margin-left: 10px;
+  margin-top: 5px; }
+  .create-chapter-manga .nameManga {
+    font-size: 32px;
+    color: blue;
+    font-weight: 500; }
+  .create-chapter-manga .nameChapter, .create-chapter-manga .linkImg {
+    margin-top: 5px;
+    font-weight: 400;
+    font-size: 20px; }
+  .create-chapter-manga .linkImg input[type="file"] {
+    background: #0d6efd;
+    width: 250px; }
+  .create-chapter-manga .btn-create-chapter-manga {
+    margin-top: 5px; }
+
+.manga {
+  background: #fff;
+  width: 80%;
+  height: 100%;
+  border: 1px solid #333;
+  margin-left: 2px; }
+  .manga .btn-add-manga button {
+    float: right;
+    margin-top: 5px;
+    margin-right: 5px; }
+  .manga .mangaList .table thead {
+    font-weight: 500; }
+  .manga .mangaList a {
+    text-decoration: none; }

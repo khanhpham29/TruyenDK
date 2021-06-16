@@ -15,7 +15,7 @@ class AdminController{
         Manga.find({})
             .then(mangas => {
                 res.render('mangas/mangaList', {
-                    mangas: mutipleMongooseToOject(mangas)
+                    mangas: multipleMongooseToOject(mangas)
                 })
             })
             .catch(next)
@@ -25,7 +25,7 @@ class AdminController{
     formMangaCreate(req, res, next){
         Category.find({})
             .then(categories => {
-                res.render('admins/create-manga', { categories:  mutipleMongooseToOject(categories)})
+                res.render('admins/create-manga', { categories:  multipleMongooseToOject(categories)})
             })
             .catch(err => res.json(err))
         
@@ -58,7 +58,7 @@ class AdminController{
             .then(([mangas, categories]) => {
                     res.render('admins/edit-manga', { 
                         mangas: mongooseToOject(mangas),
-                        categories:  mutipleMongooseToOject(categories)
+                        categories:  multipleMongooseToOject(categories)
                     })
                 })
             .catch(next)
@@ -76,7 +76,7 @@ class AdminController{
         Manga.find({})
             .then(mangas => {
                 res.render('admins/manga', {
-                    mangas: mutipleMongooseToOject(mangas)
+                    mangas: multipleMongooseToOject(mangas)
                 })
             })
             .catch(next)   
@@ -92,7 +92,7 @@ class AdminController{
                 //res.json(chap)
                 res.render('admins/details-manga', {
                     truyen: mongooseToOject(truyen),
-                    chap: mutipleMongooseToOject(chap)
+                    chap: multipleMongooseToOject(chap)
                 })
             })
             .catch(next)

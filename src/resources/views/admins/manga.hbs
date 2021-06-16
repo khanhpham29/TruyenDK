@@ -1,14 +1,14 @@
-    <div class="content">
+   <div class="content">
         <div class="menu">
             <ul>
-                <a href="">
-                    <li>
-                        Trang chủ
-                    </li>
-                </a>
                 <a href="/admin/manga/">
                     <li>
                         Quản lý truyện
+                    </li>
+                </a>
+                <a href="/admin/categorys/">
+                    <li>
+                        Quản lý thể loại truyện
                     </li>
                 </a>
                 <a href="">
@@ -29,11 +29,11 @@
             </ul>
         </div>
         {{!-- info --}}
-        <div class="info">
+        <div class="manga">
             <a href="/admin/manga/add" class="btn-add-manga">
-                <button>Add new manga</button>
+                <button class="btn btn-primary" >Add new manga</button>
             </a>
-            <div class="manga">
+            <div class="mangaList">
                 <table class="table">
                     <thead>
                         <tr>
@@ -48,20 +48,19 @@
                         {{#each mangas}}
                             <tr>
                                 <th>{{sum @index 1}}</td>
-                                <td>{{this.tentruyen}}</td>
-                                
+                                <td>{{this.tentruyen}}</td> 
                                 <td>{{this.theloai}}</td>
                                 <td>{{this.mota}}</td>
-                                <div>
-                                <td>
-                                    <a href="/admin/manga/{{this.tentruyen}}/addchap">Thêm chap</a>
-                                </td>
-                                 <td>
-                                    <a href="/admin/manga/{{this.tentruyen}}/edit">Sửa</a>
-                                </td>
-                                 <td>
-                                    <a href="">Xóa</a>
-                                </td>
+                                <div class="control">
+                                    <td>
+                                        <a href="/admin/manga/{{this.tentruyen}}/addchap">Thêm chap</a>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/manga/{{this.tentruyen}}/edit">Sửa</a>
+                                    </td>
+                                    {{!-- <td>
+                                        <a href="">Xóa</a>
+                                    </td> --}}
                                 </div>
                                 
                             </tr>
