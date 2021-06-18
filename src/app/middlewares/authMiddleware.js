@@ -40,7 +40,7 @@ const checkUser = (req, res, next) =>{
     }else{
         res.locals.user = null
         next()
-    }
+    }   
 }
 const checkMember = (req, res, next) =>{
     if (req.data)
