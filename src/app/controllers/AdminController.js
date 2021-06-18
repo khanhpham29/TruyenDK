@@ -12,13 +12,15 @@ class AdminController{
     
 
     index(req,res,next){
-        Manga.find({})
-            .then(mangas => {
-                res.render('mangas/mangaList', {
-                    mangas: multipleMongooseToOject(mangas)
-                })
-            })
-            .catch(next)
+        // Manga.find({})
+        //     .then(mangas => {
+        //         res.render('mangas/mangaList', {
+        //             mangas: multipleMongooseToOject(mangas)
+        //         })
+        //     })
+        //     .catch(next)
+
+        res.send('đây là trang admin')
     }
     //Mở form thêm manga
     //[GET] /manga/add
@@ -75,9 +77,9 @@ class AdminController{
     manga(req, res, next){
         Manga.find({})
             .then(mangas => {
-                res.render('admins/manga', {
-                    mangas: multipleMongooseToOject(mangas)
-                })
+                    res.render('admins/manga', {
+                        mangas: multipleMongooseToOject(mangas)
+                    })    
             })
             .catch(next)   
     }
@@ -90,10 +92,16 @@ class AdminController{
         ])
             .then(([truyen, chap]) => {
                 //res.json(chap)
-                res.render('admins/details-manga', {
-                    truyen: mongooseToOject(truyen),
-                    chap: multipleMongooseToOject(chap)
-                })
+                if(truyen == null){
+                    return res.render('null')                   
+                }
+                else{
+                    res.render('admins/details-manga', {
+                        truyen: mongooseToOject(truyen),
+                        chap: multipleMongooseToOject(chap)
+                    })
+                }
+                
             })
             .catch(next)
     }
@@ -101,21 +109,32 @@ class AdminController{
     // [GET]/manga/:tentruyen/:chapter
      readChap(req, res, next){
          Promise.all([
-            Detail.findOne({tentruyen: req.params.tentruyen})
-                .populate('ImgDetail'), 
+            Detail.findOne({tentruyen: req.params.tentruyen}),
+                //.populate('ImgDetail'), 
             ImgDetail.find({chapter: req.params.chapter})
          ])            
             .then(([name, chap]) => {
-                for(var i = 0; i < chap.length;i++){                   
+                if(name == null){
+                    return res.render('null')
+                }
+                else if(chap == null){
+                    return res.render('null')
+                }
+                else if(name != null && chap != null){
+                    for(var i = 0; i < chap.length;i++){                   
                         //console.log(chap[i]._id)
                         for(var j =0;j<name.ImgDetail.length;j++){
                             //console.log(name.ImgDetail[j])
+                            console.log(i +' - '+ j +' : '+chap[i]._id + ' - ' + name.ImgDetail[j])
                             if(chap[i]._id.toString() === name.ImgDetail[j].toString()){
-                                res.render('admins/details-manga-img', {chapImg: chap[i]})
+                                return res.render('admins/details-manga-img', {chapImg: chap[i]})
                             }
                         }
-                    }     
-                })
+                    }
+                    return res.render('null')    
+                }
+            })
+
                 // name.forEach(function(names, index1){
                 //     chap.forEach(function(chaps, index2){
                 //         if(names.ImgDetail.toString() == chaps._id.toString()){

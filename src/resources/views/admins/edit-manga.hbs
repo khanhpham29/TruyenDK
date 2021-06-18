@@ -29,7 +29,6 @@
                 </a>
             </ul>
         </div>
-    </div>
     {{!-- Nội dung trang  --}}
     <div class="info">
         <form action="/admin/{{this.tentruyen}}/edit" method="POST" enctype="multipart/form-data">
@@ -47,10 +46,10 @@
                     <label for="category">Thể loại: </label>
                     <div class="category">
                          
-                        <input type="hidden"  name="dataCategories" value="{{mangas.theloai}}">
+                        <div name="dataCategories[]" hidden value="{{mangas.theloai}}">{{mangas.theloai}}</div>
                         {{#each categories}}
                             <label >{{this.tenloai}}</label>
-                            <input type="checkbox"  name="category[]" value="{{this.tenloai}}">
+                            <input type="checkbox" class="category-arr"  name="category[]" value="{{this.tenloai}}">
                         {{/each}}   
                     </div>
                 </div>
@@ -68,3 +67,19 @@
 </div>
     
 
+<script>
+    var valueArrCategories = document.getElementsByClassName('category-arr')
+    var valueArrCategoriesInData = document.getElementsByName('dataCategories[]')
+    for(var i = 0; i < valueArrCategories.length; i++){
+        for(var j = 0; j < valueArrCategoriesInData.length; j++){
+            var arr = valueArrCategories[i].value 
+            var data = valueArrCategoriesInData[j].innerText
+            if(data == arr){
+                var a = valueArrCategories[i].setAttribute('checked','checked')
+            }
+        }
+    }
+   
+
+    
+</script>

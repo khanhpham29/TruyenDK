@@ -39,7 +39,6 @@
                         <tr>
                             <td>#</td>
                             <td>Tên truyện</td>
-                            
                             <td>Thể loại</td>
                             <td>Mô tả</td>
                         </tr>
@@ -49,7 +48,11 @@
                             <tr>
                                 <th>{{sum @index 1}}</td>
                                 <td>{{this.tentruyen}}</td> 
-                                <td>{{this.theloai}}</td>
+                                <td class="theloai">
+                                    {{#each this.theloai}}                              
+                                        {{this}},  
+                                    {{/each}}  
+                                </td>                           
                                 <td>{{this.mota}}</td>
                                 <div class="control">
                                     <td>
@@ -72,3 +75,14 @@
             </div>
         </div>
     </div>
+
+<script>  
+    var a = document.getElementsByClassName('theloai').length
+    for(var i = 0; i< a ;i++){
+        q = document.getElementsByClassName('theloai')[i].innerText
+        b = q.lastIndexOf(',')
+        c = q.slice(0,b)
+        d = document.getElementsByClassName('theloai')[i].innerText = c
+    }
+
+</script>

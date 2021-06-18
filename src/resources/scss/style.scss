@@ -304,7 +304,7 @@
 
 	.linkImg input[type="file"]{
 		background: #0d6efd;
-		width: 250px;
+		width: 280px;
 	}
 	.btn-create-chapter-manga{
 		margin-top: 5px;
@@ -322,8 +322,9 @@
 	.btn-add-manga{
 		button{
 			float: right;
-			margin-top: 5px;
-			margin-right: 5px;
+			margin-top: 10px;
+			margin-right: 10px;
+			border: 1px solid #333;
 		}
 	}
 	.mangaList{
@@ -332,9 +333,12 @@
 				font-weight: 500;
 			}
 		}
-		a{
-			text-decoration: none;
+		.control{
+			a{
+				text-decoration: none;
+			}
 		}
+		
 	}		
 }
 
