@@ -1,68 +1,171 @@
 const Manga = require('../models/Manga')
-const Detail = require('../models/DetailManga')
+const DetailManga = require('../models/DetailManga')
+const ImageDetail = require('../models/ImageDetail')
 const Category = require('../models/CategoryManga')
 const multer = require('multer')
+const mongoose = require('mongoose')
 const path = require('path')
-const { mutipleMongooseToOject } = require('../../util/mongoose')
+const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
+const { PromiseProvider } = require('mongoose')
 class AdminController{
     
+
     index(req,res,next){
-        Manga.find({})
-            .then(mangas => {
-                res.render('mangas/mangaList', {
-                    mangas: mutipleMongooseToOject(mangas)
-                })
+        // Manga.find({})
+        //     .then(mangas => {
+        //         res.render('mangas/mangaList', {
+        //             mangas: multipleMongooseToOject(mangas)
+        //         })
+        //     })
+        //     .catch(next)
+
+        res.send('đây là trang admin')
+    }
+    //Mở form thêm manga
+    //[GET] /manga/add
+    formMangaCreate(req, res, next){
+        Category.find({})
+            .then(categories => {
+                res.render('admins/create-manga', { categories:  multipleMongooseToOject(categories)})
+            })
+            .catch(err => res.json(err))
+        
+    }
+    //Thêm manga
+    //[POST] /manga/add
+    mangaCreate(req, res, next){
+        Manga.findOne({tentruyen: req.body.nameManga })
+            .then(mangas =>{
+                if(mangas == null || mangas.tinhtrang == 'Ngưng'){
+                    const manga = new Manga({
+                        tentruyen: req.body.nameManga,
+                        theloai: req.body.category,
+                        mota: req.body.description,
+                        hinh: req.file.filename,
+                    })
+                    manga.save(function(err){
+                        if(err){
+                            res.json({'errMess':err})
+                        }
+                        else{
+                            return res.redirect('/admin/manga');
+                        }
+                    })
+                }
+                else{
+                    res.json('truyện đã tồn tại, xem lại!!!')
+                }
             })
             .catch(next)
+        
+        
     }
-    //[GET]
-    formMangaCreate(req, res, next){
-        res.render('admins/create-manga')
+    //form edit manga
+    //[GET] /manga/edit
+    formMangaEdit(req, res, next){
+        Promise.all([
+            Manga.findOne({slug: req.params.slug}), 
+            Category.find({}),
+        ])
+            .then(([mangas, categories]) => {
+                    res.render('admins/edit-manga', { 
+                        mangas: mongooseToOject(mangas),
+                        categories:  multipleMongooseToOject(categories)
+                    })
+                })
+            .catch(next)
+    }   
+    
+
+    //form edit manga
+    //[POST] /manga/edit
+    mangaEdit(req, res, next){
+        //res.json(req.file)
+        if(!req.file){
+            Manga.updateOne({ slug: req.params.slug }, {
+                
+            })
+
+        }
+       
     }
-    //[POST]
-    mangaCreate(req, res, next){
-        const manga = new Manga({
-            tentruyen: req.body.nameManga,
-            tenloai: req.body.abc,
-            theloai: req.body.category,
-            mota: req.body.description,
-            hinh: req.file.filename,
-        })
-        manga.save(function(err){
-            if(err){
-                res.json({'kq': 0, 'errMess':err})
-            }
-            else{
-                return res.redirect('/admins/manga');
-            }
-        })
-    }
+    // [GET] /manga
+    // Hiển thị tất cả manga trong db
     manga(req, res, next){
         Manga.find({})
             .then(mangas => {
-                res.render('admins/manga', {
-                    mangas: multipleMongooseToOject(mangas)
-                })
+                    res.render('admins/manga', {
+                        mangas: multipleMongooseToOject(mangas)
+                    })    
             })
             .catch(next)   
     }
-
+    // [GET] /manga/:slug
+    //Thông tin chi tiết của 1 manga
     infoManga(req, res, next){
-        Manga.findOne({ slug: req.params.slug })
-            .then(truyen => {
-                res.render('admins/details-manga', {truyen: mongooseToOject(truyen)})
+        Promise.all([
+            Manga.findOne({ slug: req.params.slug }),
+            DetailManga.find({ slug: req.params.slug })
+        ])
+            .then(([truyen, chap]) => {
+                //res.json(chap)
+                if(truyen == null){
+                    return res.render('null')                   
+                }
+                else{
+                    res.render('admins/details-manga', {
+                        truyen: mongooseToOject(truyen),
+                        chap: multipleMongooseToOject(chap)
+                    })
+                }
+                
             })
             .catch(next)
     }
     //hiển thị danh sách img trong chap
-     tam(req, res, next){
-        const all_img =  Detail.find()
-        // res.send('abc')
-        res.render('admins/test', {all_img: all_img})
-        
-    }
+    // [GET]/manga/:tentruyen/:chapter
+     readChap(req, res, next){
+         Promise.all([
+            DetailManga.findOne({tentruyen: req.params.tentruyen}),
+                //.populate('ImgDetail'), 
+                ImageDetail.find({chapter: req.params.chapter})
+         ])            
+            .then(([name, chap]) => {
+                if(name == null){
+                    return res.render('null')
+                }
+                else if(chap == null){
+                    return res.render('null')
+                }
+                else if(name != null && chap != null){
+                    for(var i = 0; i < chap.length;i++){                   
+                        //console.log(chap[i]._id)
+                        for(var j =0;j<name.ImgDetail.length;j++){
+                            //console.log(name.ImgDetail[j])
+                            console.log(i +' - '+ j +' : '+chap[i]._id + ' - ' + name.ImgDetail[j])
+                            if(chap[i]._id.toString() === name.ImgDetail[j].toString()){
+                                return res.render('admins/details-manga-img', {chapImg: chap[i]})
+                            }
+                        }
+                    }
+                    return res.render('null')    
+                }
+            })
+
+                // name.forEach(function(names, index1){
+                //     chap.forEach(function(chaps, index2){
+                //         if(names.ImgDetail.toString() == chaps._id.toString()){
+                //             res.json(chaps)
+                //             break
+                //         }
+                //     })
+                // })            
+            //})
+            .catch(err => {res.json(err)})
+     }   
     //Mở form thêm chap
+    //[GET] /manga/:tentruyen/addChap
     createChapterManga(req,res,next){
         Manga.findOne({ slug: req.params.slug })
         .then(truyen => {
@@ -70,6 +173,8 @@ class AdminController{
         })
         .catch(next)
     }
+    //Thêm chap
+    //[POST] /manga/:tentruyen/addChap
     createChapter(req, res, next){
         const files = req.files
         if(!files){
@@ -81,38 +186,86 @@ class AdminController{
                 const file = {
                     fileName: element.originalname,
                     fileType: element.mimetype,
-                    filePath: element.path,
+                    filePath: element.path.split('\\').slice(2).join('\\'),
                 }
                 filesArr.push(file)
             });
-            const details = new detail({
-                tentruyen: req.body.nameManga,
-                chapter: req.body.chapter,
+            const imgChapManga = new ImageDetail({
+                _id: new mongoose.Types.ObjectId(),
                 imgManga: filesArr,
+                chapter: req.body.chapter,
             })
-            // res.json(detailsChapManga)
-            details.save(function(err){
+            imgChapManga.save(function(err){
                 if(err){
-                    res.json(err)
+                    console.log(err)
                 }
                 else{
-                    res.json('abc')
+                    const name = DetailManga.findOne({
+                        slug: req.params.slug
+                    })
+                        .then((nameM) => {
+                            if(nameM == null){
+                                const details = new DetailManga({
+                                        _id: new mongoose.Types.ObjectId(),
+                                        tentruyen: req.params.slug,
+                                        ImgDetail: imgChapManga._id,
+                                    })
+                                    console.log(details)
+                                    details.save()
+                                        .then(() => res.redirect('/admin/manga'))
+                                        .catch(err =>{
+                                            res.json(err)
+                                        })
+                            }
+                            else{
+                                DetailManga.updateOne({slug: req.params.slug }, {
+                                    $push:{
+                                        ImgDetail: imgChapManga._id,
+                                    }
+                                }, function(err){
+                                    if(err){
+                                        res.json(err)
+                                    }
+                                    else{
+                                        res.redirect('/admin/manga')
+                                    }
+                                })
+                            }
+                        })
+                        .catch((err) => res.json(err))
+                    
                 }
             })
+                
+            
         }
     }
+
+
     //Categorys
-    //[GET]
+    //[GET] /admin/categorys
     categorys(req, res, next){
-        Category.find({})
-            .then(theloais =>{
+        Promise.all([   Category.find({}).sorttable(req), 
+                        Category.countDocumentsDeleted(),
+                    ])
+            .then(([theloais, deleteCount]) =>{
                 res.render('categorys/categoryList',{
-                    theloais: mutipleMongooseToOject(theloais)
+                    deleteCount,
+                    theloais: multipleMongooseToOject(theloais)
                 })
             })
             .catch(next)
     }
-    //[GET]
+    categoryTrash(req, res, next){
+        Category.findDeleted({})
+            .then(theloais =>{
+                res.render('categorys/categoryTrash',{
+                    theloais: multipleMongooseToOject(theloais)
+                })
+            })
+            .catch(next)
+    }
+    //[GET]  /admin/categorys/formCategoryCreate
     formCategoryCreate(req, res, next){
         res.render('admins/create-category')
     }
@@ -135,15 +288,49 @@ class AdminController{
     //[PUT] /categorys/:id
     async categoryUpdate(req, res, next){
         const formdata = req.body
-        await Category.updateOne({ _id: req.params.id  }, formdata)
+        await Category.updateOne({ _id: req.params.id }, formdata)
             .then(() => res.redirect('../categorys'))
             .catch(next)
     }
     //[DELETE] /categorys/:id
     categoryDelete(req, res, next){
+        Category.delete({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[DELETE] /categorys/:id/categoryForceDelete
+    categoryForceDelete(req, res, next){
         Category.deleteOne({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
+    }
+    //[PATCH] /categorys/:id/categoryRestore
+    categoryRestore(req, res, next){
+        Category.restore({ _id: req.params.id})
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    //[POST] /categorys/handle-form-actions
+    handleFormActions(req, res, next){
+        switch(req.body.action){
+            case 'delete':
+                Category.delete({ _id: {$in: req.body.categoryIds }})
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break;
+            case 'restore':
+                Category.restore({ _id: {$in: req.body.categoryIds }})
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                    break
+            case 'deleteForce':
+                Category.deleteMany({ _id: {$in: req.body.categoryIds }})   
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                    break
+            default:
+                res.json(req.body)
+        }
     }
 }
 

@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-3 mt-4 mb-4">
+            <div class="alert alert-danger login fade" role="alert"></div>
+            <h2 class="h3 mb-3 fw-normal">Đăng Nhập</h2>
+            <form  name="formLogIn" method="POST">
+                <div class="mb-3">
+                    <label for="floatingInput" class="form-label" >Email address</label>
+                    <input  type="gmail" 
+                            placeholder="name@example.com"
+                            class="form-control" 
+                            name="email" 
+                            id = "floatingInput"
+                            required>
+                    
+                </div>
+                <div class="mb-3">
+                    <label for="floatingPassword" class="form-label">Password</label>
+                    <input  type="password"
+                            class="form-control"
+                            name="password"
+                            id = "floatingPassword"
+                            placeholder="Password"
+                            required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var form = document.forms['formLogIn']
+        var alertLogin = $('.alert.alert-danger.login')
+
+        form.addEventListener("submit", async (e)=>{
+            e.preventDefault()
+            //reset error
+            //emailError.text('')
+            //passwordError.text('')
+            // get the values
+            const email = form.email.value
+            const password = form.password.value
+            alertLogin.text('')
+
+            try{
+                const res = await fetch('/login',{
+                    method: 'POST',
+                    body: JSON.stringify({ email, password}),
+                    headers: { "Content-Type": "application/json" }
+                })
+                const data = await res.json()
+                if(data.errors){
+                    alertLogin.removeClass("fade")
+                    alertLogin.text(data.errors.email)
+                }
+                
+                if(data.user){
+                    location.assign('/')
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
+        })
+    })
+</script>

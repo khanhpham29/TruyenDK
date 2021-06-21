@@ -1,3 +1,6 @@
+.checkbox-select-all-options {
+  width: 120px; }
+
 .cover {
   display: flex;
   width: 100%; }
@@ -17,33 +20,93 @@
       font-weight: 400;
       margin-left: 30px; }
 
-.container .content {
+.content {
+  display: flex;
   width: 100%;
-  height: 100%;
-  display: flex; }
-  .container .content .menu {
+  height: 100%; }
+  .content .menu {
     width: 20%;
     height: 100%;
     background: #333; }
-    .container .content .menu ul {
+    .content .menu ul {
       margin: 0;
       padding: 0;
       list-style: none; }
-      .container .content .menu ul a {
+      .content .menu ul a {
         color: red;
         text-decoration: none;
         border-bottom: 1px solid #fff; }
-        .container .content .menu ul a li {
+        .content .menu ul a li {
           padding: 10px;
           border-bottom: 1px solid #fff; }
-  .container .content .info {
-    background: #fff;
-    width: 80%;
-    height: 100%;
-    border: 1px solid #333;
-    margin-left: 2px; }
-    .container .content .info .btn-add-manga button {
-      float: right;
-      margin-top: 5px;
-      margin-right: 5px;
-      background: #00c3ff; }
+
+.create-manga .form-group, .edit-manga .form-group {
+  margin-top: 5px; }
+  .create-manga .form-group label, .edit-manga .form-group label {
+    font-weight: 500;
+    width: 80px; }
+  .create-manga .form-group input[type="text"], .create-manga .form-group textarea, .edit-manga .form-group input[type="text"], .edit-manga .form-group textarea {
+    width: 300px; }
+
+.create-manga .category, .edit-manga .category {
+  margin-left: 80px; }
+
+.create-manga .btn-create-manga, .edit-manga .btn-create-manga {
+  margin-top: 5px; }
+
+.details-manga-img {
+  width: 100%;
+  height: 100%; }
+  .details-manga-img img {
+    margin-top: 10px; }
+
+.details-manga {
+  width: 100%;
+  height: 100%;
+  display: flex; }
+  .details-manga .img-avatar {
+    width: 30%; }
+    .details-manga .img-avatar img {
+      width: 100%;
+      height: 100%; }
+  .details-manga .content {
+    width: 70%;
+    display: block; }
+    .details-manga .content .name {
+      font-size: 32px;
+      font-weight: 400; }
+
+.create-chapter-manga {
+  width: 80%;
+  height: 100%;
+  margin-left: 10px;
+  margin-top: 5px; }
+  .create-chapter-manga .nameManga {
+    font-size: 32px;
+    color: blue;
+    font-weight: 500; }
+  .create-chapter-manga .nameChapter, .create-chapter-manga .linkImg {
+    margin-top: 5px;
+    font-weight: 400;
+    font-size: 20px; }
+  .create-chapter-manga .linkImg input[type="file"] {
+    background: #0d6efd;
+    width: 280px; }
+  .create-chapter-manga .btn-create-chapter-manga {
+    margin-top: 5px; }
+
+.manga {
+  background: #fff;
+  width: 80%;
+  height: 100%;
+  border: 1px solid #333;
+  margin-left: 2px; }
+  .manga .btn-add-manga button {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: 1px solid #333; }
+  .manga .mangaList .table thead {
+    font-weight: 500; }
+  .manga .mangaList .control a {
+    text-decoration: none; }

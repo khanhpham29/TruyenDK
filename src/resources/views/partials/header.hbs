@@ -22,10 +22,19 @@
 					<a class="nav-link" href="#">Truyện hot</a>
 				</li> 
 			</ul>
-			<form class="d-flex">
+			{{!-- <form class="d-flex">
 				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
 				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
+			</form> --}}
+			<div class="d-flex">
+				{{#if user}}
+					<div class="">welcome, {{user.email}}</div>
+					<a class="" style="text-decoration:none"  href="/logout">Đăng Xuất</a>
+				{{else}}
+					<a class="" style="text-decoration:none"  href="/login">Đăng nhập/</a>
+					<a class="" style="text-decoration:none" href="/signup">Đăng ký</a>
+				{{/if}}
+			</div>	
 		</div>
 	</div>
 </nav>
