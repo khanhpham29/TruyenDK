@@ -6,6 +6,7 @@ const path = require('path')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 const { PromiseProvider } = require('mongoose')
+
 class AdminController{
     
     // index(req,res,next){
@@ -22,7 +23,7 @@ class AdminController{
         res.render('admins/create-manga')
     }
     //[POST]
-    mangaCreate(req, res, next){
+    async mangaCreate(req, res, next){
         const manga = new Manga({
             tentruyen: req.body.nameManga,
             tenloai: req.body.abc,
@@ -30,7 +31,7 @@ class AdminController{
             mota: req.body.description,
             hinh: req.file.filename,
         })
-        manga.save(function(err){
+        await manga.save(function(err){
             if(err){
                 res.json({'kq': 0, 'errMess':err})
             }

@@ -1,5 +1,6 @@
-.checkbox-select-all-options {
-  width: 120px; }
+.align-items-center .checkbox-select-all-options {
+  width: 120px;
+  margin: 0 8px; }
 
 .cover {
   display: flex;

@@ -30,9 +30,7 @@
     document.addEventListener("DOMContentLoaded", function(){
         var form = document.forms['formSignUp']
         var emailError = $('.email.error')
-        console.log(emailError)
         var passwordError = $('.password.error')
-        var haha = $('#haha')
         form.addEventListener("submit", async (e)=>{
             e.preventDefault()
             //reset error
@@ -49,9 +47,7 @@
                     headers: { "Content-Type": "application/json" }
                 })
                 const data = await res.json()
-                console.log(data.errors)
                 if(data.errors){
-                    console.log(data.errors.email)
                     emailError.text(data.errors.email)
                     passwordError.text(data.errors.password)
                 }
@@ -65,3 +61,4 @@
         })
     })
 </script>
+

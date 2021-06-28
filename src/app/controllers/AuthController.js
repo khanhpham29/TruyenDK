@@ -23,7 +23,6 @@ const handleErrors = (err) => {
             errors[properties.path] = properties.message
         })
     }
-
     return errors
 }
 
