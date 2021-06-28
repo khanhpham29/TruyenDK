@@ -1,0 +1,105 @@
+
+<div class="content">
+    <div class="menu">
+        <ul>
+            <a href="/admin/manga/">
+                <li>
+                    Quản lý truyện
+                </li>
+            </a>
+            <a href="/admin/categorys/">
+                <li>
+                    Quản lý thể loại truyện
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Quản lý nhân viên
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Tạo phiếu mượn
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Thống kê
+                </li>
+            </a>
+        </ul>
+    </div>
+    {{!-- Nội dung Trang --}}
+    <div class="manga-rentals-list-details">
+        <form action="/admin/rentals/addToCart" method="POST">
+            <a href="/admin/rentals/list/" class="btn-back">
+                Quay lại
+            </a>
+            <H2 class="ten-truyen">Danh sách truyện: {{mangas.tentruyen}}</H2>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                <label class="form-check-label" for="checkbox-all">
+                    Chọn tất cả
+                </label>
+                <button type="submit" class="btn-primary btn-add-call-card" name="addCard">Thêm vào phiếu</button>
+                
+            </div>
+            <div class="rentalsListData">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <th>#</th>
+                            <td>
+                                Ảnh bìa
+                            </td>
+                            <td>Tên truyện</td>
+                            <td>Tên tập</td>
+                            <td>Giá</td>
+                            <td>Nxb</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td><input type="text" hidden name="tentruyen" value="{{mangas.tentruyen}}">
+                        </td>
+                        {{#each rentals.books}}
+                            <tr>
+                                <td scope="row">
+                                    <input class="form-check-input" type="checkbox" value="{{this._id}}" name="bookIds[]" >
+                                </td>
+                                <th>{{sum @index 1}}</th>
+                                <td>
+                                    <img src="img/{{this.anhbia}}" class="img" alt="">
+                                </td>
+                                
+                                <td>{{this.tentap}}</td>
+                                <td>{{this.gia}}</td>
+                                <td>{{this.nxb}}</td>    
+                            </tr>  
+                        {{/each}} 
+                    </tbody>
+                </table>    
+            </div>
+        </form>
+    </div>
+ </div>
+
+<script>
+     document.addEventListener("DOMContentLoaded", function (){
+        var checkboxAll = $('#checkbox-all')
+        var mangaRentalsItemCheckbox = $('input[name="bookIds[]"]')
+        //checkbox all change
+        checkboxAll.change(function(){
+            var isCheckAll =  $(this).prop('checked')
+            mangaRentalsItemCheckbox.prop('checked', isCheckAll)
+
+        })
+
+        //manga rentals item change
+        mangaRentalsItemCheckbox.change(function() {
+            var isCheckedAll = mangaRentalsItemCheckbox.length === $('input[name="bookIds[]"]:checked').length
+            checkboxAll.prop('checked', isCheckedAll)
+        })
+     })
+</script>

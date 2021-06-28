@@ -6,11 +6,21 @@ const router = express.Router()
 const adminController = require('../app/controllers/AdminController')
 const upload = require('../app/middlewares/multer')
 
-//Manga
+//--------------------MANGA------------------//
+//Search bar manga
+router.get('/manga/rentals/search', adminController.search)
+//List rentals for manga
+router.get('/manga/rentals', adminController.mangaRentals)
+//Form create vol books
+router.get('/manga/rentals/:slug/addbook', adminController.retailsCreateBooks)
+//Create vol books
+router.post('/manga/rentals/:slug/createbook',upload.single('avatarNumberVol'), adminController.retailsCreate)
+//Details rentals manga
+router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
+router.post('/manga/add',upload.fields([{name: 'avatarManga'},{name: 'avatarNumberVol'}]), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
 //Edit manga
@@ -28,7 +38,7 @@ router.get('/manga', adminController.manga)
 //Index admin
 // router.get('/', adminController.index)
 
-//Category
+//----------------------CATEGORY---------------------------//
 // Form add new category
 router.get('/categorys/formCategoryCreate', adminController.formCategoryCreate)
 // Add new  category
@@ -50,6 +60,12 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 // index
 router.get('/categorys', adminController.categorys)
 
+//-------------------------RENTAL------------------------//
+router.get('/rentals/list/', adminController.listMangaRentals)
+router.get('/rentals/list/:slug', adminController.detailsMangaRentals)
 
 
+router.get('/rentals/callcard', adminController.callCardUser)
+router.post('/rentals/callcard', adminController.callCard)
+router.post('/rentals/addtocart', adminController.addToCart)
 module.exports = router
