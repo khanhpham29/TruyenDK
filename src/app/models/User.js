@@ -17,14 +17,14 @@ const userSchema =  new Schema({
         required: [true, 'Vui lòng nhập mật khẩu'],
         minLength: [6, 'Mật khẩu ít nhất phải có 6 ký tự'],
     },
-    name: {
-        type: String,
-    },
-    phone: {
-        type: String,
-        lenghth: [10, 'Phone có phải có 10 số'],
-        required: true
-    },
+    // name: {
+    //     type: String,
+    // },
+    // phone: {
+    //     type: String,
+    //     lenghth: [10, 'Phone có phải có 10 số'],
+    //     required: true
+    // },
     role:{ 
         type: String,
         default: 'member',

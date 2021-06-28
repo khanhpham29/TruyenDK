@@ -31,7 +31,7 @@ class AdminController{
     }
     //Thêm manga
     //[POST] /manga/add
-     mangaCreate(req, res, next){
+    mangaCreate(req, res, next){
         Manga.findOne({tentruyen: req.body.nameManga })
             .then(mangas =>{
                 if(mangas == null || mangas.tinhtrang == 'Ngưng'){
@@ -68,9 +68,9 @@ class AdminController{
                                 truyenChoThue.save()
                                 
                                 .then(() =>
-                                   Manga.updateOne({_id: manga._id}, {
-                                         $push:{truyenchothue :truyenChoThue.books[0]._id},
-                                   }),
+                                    Manga.updateOne({_id: manga._id}, {
+                                        $push:{truyenchothue :truyenChoThue.books[0]._id},
+                                    }),
                                     
                                     res.redirect('/admin/manga')
                                     )
@@ -189,12 +189,12 @@ class AdminController{
     //hiển thị danh sách img trong chap
     //----------------------
     // [GET]/manga/:tentruyen/:chapter
-     readChap(req, res, next){
-         Promise.all([
+    readChap(req, res, next){
+        Promise.all([
             DetailManga.findOne({tentruyen: req.params.tentruyen}),
                 //.populate('ImgDetail'), 
                 ImageDetail.find({chapter: req.params.chapter})
-         ])            
+        ])            
             .then(([name, chap]) => {
                 if(name == null){
                     return res.render('null')
@@ -225,7 +225,7 @@ class AdminController{
                 // })            
             //})
             .catch(err => {res.json(err)})
-     }   
+    }   
     //Mở form thêm chap mới vào truyện
     //-------------------
     //[GET] /manga/:tentruyen/addChap
@@ -360,35 +360,33 @@ class AdminController{
             else{
                 res.json('Không tìm thấy truyện này!!!')
             }
-           
         })
     }
 
     async retailsCreate(req, res, next){
-
-            // Manga.findOne({slug: req.params.slug})
-
-            // .then((mangas) => {
-                
-            // })
-            // .catch(next)
-        let booksNew =  {  
-            tentap: req.body.numberVol,
-            anhbia: req.file.filename, 
-            gia: req.body.price,
-            soluong: req.body.amount,
-            tacgia:req.body.author, 
-            nxb: req.body.publisher,
-        }
-        console.log(booksNew)
-        RentalForManga.findOneAndUpdate(
-            { 
-                _id: '60d62455a7ca551718884cc0'
-            }, 
-            {
-                $push: { books: { booksNew } } 
-            }, 
-        )
+        Promise.all([Manga.findOne({slug: req.params.slug}), RentalForManga({})])
+        .then(([mangas , rentals])=>{
+            let booksNew =  {  
+                tentap: req.body.numberVol,
+                anhbia: req.file.filename, 
+                gia: req.body.price,
+                soluong: req.body.amount,
+                tacgia:req.body.author, 
+                nxb: req.body.publisher,
+            }
+            RentalForManga.findOneAndUpdate(
+                { 
+                    idManga: mangas._id
+                }, 
+                {
+                    $push: { books: booksNew } 
+                },
+                {
+                    new: true
+                }
+            )
+            .then((rentals)=> res.json(rentals))
+        })
     }
     
 
@@ -438,7 +436,6 @@ class AdminController{
     }
     //[POST]
     categoryCreate(req, res, next){
-  
         const formdata = req.body
         const theLoai = new Category(formdata)
         theLoai.save()
