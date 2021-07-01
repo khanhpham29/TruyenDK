@@ -32,8 +32,8 @@
                             {{{sortTable 'tenloai' _sort}}}
                         </th>
                         <th scope="col">
-                            {{{sortTable 'createAt' _sort}}}
                             Thời gian tạo
+                            {{{sortTable 'createAt' _sort}}}
                         </th>
                         <th scope="col" colspan="2"></th>
                     </tr>
@@ -61,7 +61,7 @@
                         </td>
                     </tr>
                     {{/each}}
-                </tbody>
+                </tbody>    
             </table>
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -93,7 +93,6 @@
         var checkBoxAll = $('#checkbox-all')
         var categoryItemCheckbox = $('input[name="categoryIds[]"]')
         var checkAllSubmitBtn = $('.check-all-submit-btn')
-        console.log(checkAllSubmitBtn)
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             categoryId = button.getAttribute('data-id')

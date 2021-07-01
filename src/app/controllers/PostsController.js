@@ -2,46 +2,57 @@ const post_model = require('../models/post')
 const comment_model = require('../models/comment')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
-require('express-async-errors')
-
+const multer = require('multer')
 class PostsController{
-    async posts(req, res, next){
+    async listPosts(req, res, next){
         try{
-            const post = await post_model.find({})
-            res.json(post)
+            const sort = { createdAt: -1}
+            const posts = post_model.find({}).sort(sort)
+            .then((posts) =>{
+                res.render("posts/listPosts",{
+                    posts: multipleMongooseToOject(posts)
+                })
+            })
         }
         catch(error){
+            console.log(error)
             res.status(500)
         }
     }
+
     formPostsPost(req, res, next){
         res.render('posts/formPost')
     }
     async postsPost(req, res, next){
         try{
-            const formdata = req.body
-            const post = new post_model(formdata)
-            await post.save()
-            .then(() =>{
-                res.json({ message: "thành công"})
+            const post = new post_model({
+                title: req.body.title,
+                content: req.body.content,
+                imgPost: req.file.filename
             })
-        }catch(error){
-            res.status(500)
-        }
-    }
-    async postsGetById(req, res, next){
-        try{
-
-            const post =  await post_model.findById({ _id: req.params.postId }).populate(
-                "comments"
-            )
-            .then((post)=>{
-                res.render('users/post',{ 
-                    post: mongooseToOject(post) 
+            await post.save()
+            .then((post) =>{
+                res.status(200).send({ 
+                    message: "Đăng bài thành công",
+                    post: mongooseToOject(post)
                 })
             })
-            // res.json(post)
-
+        }catch(error){
+            res.status(500).json({err: error})
+        }
+    }
+    
+    async postsGetById(req, res, next){
+        try{
+            const post =  await post_model.findById({ _id: req.params.postId }).populate({
+                path: "comments",
+                options: { sort: { createdAt: -1 } }
+            })
+            .then((post)=>{
+                res.render('posts/comments',{ 
+                    post: mongooseToOject(post),
+                })
+            })
         }catch(error){
             console.log(error)
             res.status(500)
@@ -57,7 +68,7 @@ class PostsController{
             })
             res.json(post)
         }catch(error){
-
+            
         }
     }
     async postsDelete(req, res, next){
@@ -75,15 +86,19 @@ class PostsController{
         try{
             const post = await post_model.findById(req.params.postId)
             // create a comment
-            const comment = new comment_model()
-            comment.post = post._id
-            comment.content = req.body.content
-            comment.userId = req.body.userId
+            const comment = new comment_model({
+                postId: post._id,
+                content: req.body.content,
+                userId: req.body.userId,
+            })
+            
             await comment.save()
             // liên kết vs trang bình luận
             post.comments.push(comment)
             await post.save()
-            res.json({ message: "thành công"})
+            res.status(200).json({ 
+                comment: mongooseToOject(comment)
+            })
         }catch(error){
             res.status(500).json(error)
         }

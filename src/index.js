@@ -6,12 +6,17 @@ const handlebars = require('express-handlebars')
 const cookieParser = require('cookie-parser')
 const db = require('./config/db/server')
 const methodOverride = require('method-override')
+
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
 
 const app = express()
 //const port = process.env.PORT || 5000
 const port = process.env.PORT || 5000
+const http = require('http')
+const server = http.createServer(app)
+const socketAPI = require('./socketAPI')
 
+socketAPI.io.attach(server)
 const route = require('./routes/index')
 const bodyParser = require('body-parser')
 
@@ -44,7 +49,5 @@ app.use(express.urlencoded({ extended: true }))
 // Route init
 route(app)
 
-
-
 // Listen on enviroment port or 5000
-app.listen(port,  () => console.log(`listen on port http://localhost:${port}`))
+server.listen(port,  () => console.log(`listen on port http://localhost:${port}`))

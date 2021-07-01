@@ -1,10 +1,14 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <form id="form-test" method="POST">
+            <form id="form-test" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="">Title</label>
-                    <input type="text" name="title" class="form-control">
+                    <input type="text" name="title" class="form-control" >
+                </div>
+                <div class="form-group mt-2 mb-2">
+                    <label for="">Upload file</label>
+                    <input type="file" name="post-img" id="post-img">
                 </div>
                 <div class="form-group">
                     <label for="">Content</label>
@@ -16,24 +20,41 @@
     </div>
 </div>
 <script>
-    document.getElementById("form-test").addEventListener("submit", function (event) {
+    document.addEventListener("DOMContentLoaded", function (){
+        console.log($('#post-img'))
+        $('#post-img').change( function()
+        {   
+            var haha = $(this).val()
+            console.log(haha.slice(12));
+        })
+        document.getElementById("form-test").addEventListener("submit", function (event) {
         event.preventDefault()
         var titleElement = this.querySelector('input[name="title"]').value
         var contentElement = this.querySelector('textarea[name="content"]').value
-        let data = {
-            title: titleElement,
-            content: contentElement,
-            
-        }
-        axios.post(
-            "/postsPost",
-            data
-        )
-        .then(function (response) {
-            console.log(response)
+        var postImgElement = document.getElementById("post-img").files
+        let formData = new FormData();
+        formData.append("title", titleElement);
+        formData.append("content", contentElement);
+        formData.append("imgPost", postImgElement[0])
+        console.log(formData)
+        axios.post("/postPost",formData,{
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data'
+            }
         })
-        .catch(function (error) {
-            console.log(error)
+        .then(function (res) {
+            alert(res.data.message)
+            console.log(res.data)   
+            // socket
+            var data = res.data
+            var socket = io()
+            socket.emit("new_post", data)
+        })
+        .catch(function (err) {
+            console.log(err)
         })
     })
+    })
+    
 </script>
