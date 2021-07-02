@@ -31,7 +31,7 @@ class AdminController{
     }
     //Thêm manga
     //[POST] /manga/add
-    mangaCreate(req, res, next){
+     mangaCreate(req, res, next){
         Manga.findOne({tentruyen: req.body.nameManga })
             .then(mangas =>{
                 if(mangas == null || mangas.tinhtrang == 'Ngưng'){
@@ -68,9 +68,9 @@ class AdminController{
                                 truyenChoThue.save()
                                 
                                 .then(() =>
-                                    Manga.updateOne({_id: manga._id}, {
-                                        $push:{truyenchothue :truyenChoThue.books[0]._id},
-                                    }),
+                                   Manga.updateOne({_id: manga._id}, {
+                                         $push:{truyenchothue :truyenChoThue.books[0]._id},
+                                   }),
                                     
                                     res.redirect('/admin/manga')
                                     )
@@ -156,6 +156,7 @@ class AdminController{
     // [GET] /manga
     // Hiển thị tất cả manga trong db
     manga(req, res, next){
+        // console.log('User: ',req.user)
         Manga.find({})
             .then(mangas => {
                     res.render('admins/mangas/manga-list', {
@@ -189,12 +190,12 @@ class AdminController{
     //hiển thị danh sách img trong chap
     //----------------------
     // [GET]/manga/:tentruyen/:chapter
-    readChap(req, res, next){
-        Promise.all([
+     readChap(req, res, next){
+         Promise.all([
             DetailManga.findOne({tentruyen: req.params.tentruyen}),
                 //.populate('ImgDetail'), 
                 ImageDetail.find({chapter: req.params.chapter})
-        ])            
+         ])            
             .then(([name, chap]) => {
                 if(name == null){
                     return res.render('null')
@@ -225,7 +226,7 @@ class AdminController{
                 // })            
             //})
             .catch(err => {res.json(err)})
-    }   
+     }   
     //Mở form thêm chap mới vào truyện
     //-------------------
     //[GET] /manga/:tentruyen/addChap
@@ -360,6 +361,7 @@ class AdminController{
             else{
                 res.json('Không tìm thấy truyện này!!!')
             }
+           
         })
     }
 
@@ -373,6 +375,7 @@ class AdminController{
                 soluong: req.body.amount,
                 tacgia:req.body.author, 
                 nxb: req.body.publisher,
+                _id: new mongoose.Types.ObjectId(),
             }
             RentalForManga.findOneAndUpdate(
                 { 
@@ -384,18 +387,35 @@ class AdminController{
                 {
                     new: true
                 }
-            )
-            .then((rentals)=> res.json(rentals))
+            )    
+                .then((rentals) => Manga.findOneAndUpdate(
+                    {
+                        _id: mangas._id
+                    },
+                    {
+                        $push: {
+                            truyenchothue: booksNew._id
+                        }
+                    },
+                    {
+                        new: true
+                    }
+                    )
+                    .then((rentals)=> res.json(rentals))
+                )
+                console.log(booksNew)
+                .catch(next)
+        .catch(next)
         })
     }
     
-
+    //search with tentruyen or tenkhac
     async search(req, res, next){
         const value = req.query.tentruyen
         await Manga.find({
             $or:[
-                {tentruyen: {$regex: new RegExp(value)}},
-                {tenkhac: {$regex: new RegExp(value)}}
+                {tentruyen: {$regex: new RegExp(value), $option: 'i'}},
+                {tenkhac: {$regex: new RegExp(value), $option: 'i'}}
             ]
         }
         )
@@ -436,6 +456,7 @@ class AdminController{
     }
     //[POST]
     categoryCreate(req, res, next){
+  
         const formdata = req.body
         const theLoai = new Category(formdata)
         theLoai.save()
@@ -527,38 +548,35 @@ class AdminController{
         })
 
     }
+    
+
     //[POST] /admin/rentals/addToCart
     addToCart(req, res, next){
-        Promise.all([
-            Manga.findOne({tentruyen: req.body.tentruyen}),
-            RentalForManga.find({})
-        ])
-        .then(([mangas, rentals]) => {
-            if(mangas != null){  
-                for(var i =0;i< rentals.length; i++){
-                    console.log(i)
-                    if(mangas._id.toString() ==  rentals[i].idManga){
-                        console.log(mangas.tentruyen)
-                        for(var j =0 ;j < rentals[i].books.length;j++){
-                            for(var k = 0; k< req.body.bookIds.length;k++){
-                                console.log(rentals[i].books[j]._id, ' - ' , req.body.bookIds[k])
-                                console.log(rentals[i].books[j].gia)
-                            }
-                            
+        Manga.findOne({slug: req.params.slug})
+            .then((manga) => {
+                console.log(req.body)
+                // Duyệt mảng id sách cho thuê
+                for(var i =0;i<req.body.bookIds.length; i++){
+                    //Duyệt mảng các tập truyện cho thuê của 1 manga
+                    for(var j =0; j<manga.truyenchothue.length; j++){
+                        //Nếu giống nhau
+                        if(req.body.bookIds[i].toString() == manga.truyenchothue[j].toString()){
+                            console.log(req.body.bookIds[i])
+                            const idRentals = req.body.bookIds[i]
+                            //gọi hàm addToCart trong models User
+                            req.user.addToCart(manga, idRentals)
+                                .save()
+                                .then(() => console.log('abc'))
                         }
+
                     }
                     
                 }
                 
-            }
-            else{
-                res.json('Không tìm thấy truyện')
-            }
-        })
-
-        
+                    
+                res.json(manga)
+            })
     }
-
     //[GET]/admin/rentals/list
     listMangaRentals(req, res, next){
         Promise.all([

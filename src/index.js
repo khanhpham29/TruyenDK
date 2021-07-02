@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const db = require('./config/db/server')
 const methodOverride = require('method-override')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
-
+const User = require('./app/models/User')
 const app = express()
 const port = process.env.PORT || 5000
 
@@ -15,6 +15,10 @@ const route = require('./routes/index')
 const bodyParser = require('body-parser')
 
 const SortMiddleware = require('./app/middlewares/sortMiddleware')
+const findUser = require('./app/middlewares/findUser')
+
+
+
 // Connect to DB    
 db.connect();
 app.use(cookieParser())
@@ -24,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Customs middlewares
 app.use(SortMiddleware)
+app.use(findUser)
 // Template engine
 app.engine('hbs', 
     handlebars({

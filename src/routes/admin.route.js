@@ -67,5 +67,5 @@ router.get('/rentals/list/:slug', adminController.detailsMangaRentals)
 
 router.get('/rentals/callcard', adminController.callCardUser)
 router.post('/rentals/callcard', adminController.callCard)
-router.post('/rentals/addtocart', adminController.addToCart)
+router.post('/rentals/addtocart/:slug', adminController.addToCart)
 module.exports = router

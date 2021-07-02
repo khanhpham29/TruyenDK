@@ -17,18 +17,42 @@ const userSchema =  new Schema({
         required: [true, 'Vui lòng nhập mật khẩu'],
         minLength: [6, 'Mật khẩu ít nhất phải có 6 ký tự'],
     },
-    // name: {
-    //     type: String,
-    // },
-    // phone: {
-    //     type: String,
-    //     lenghth: [10, 'Phone có phải có 10 số'],
-    //     required: true
-    // },
+    name: {
+        type: String,
+    },
+    phone: {
+        type: String,
+        lenghth: [10, 'Phone có phải có 10 số'],
+    },
+    cart: {
+        items: [{
+                mangaId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Manga',
+                    requied: true,
+                },
+                rentalIds: [{
+                    renIds: {
+                        type: Schema.Types.ObjectId,
+                    },
+                    quantity: {
+                        type: Number,
+                        requied: true,
+                    }
+                }],
+                
+            }],
+        totalPrice: {
+            type: Number
+        }
+        
+    },
     role:{ 
         type: String,
         default: 'member',
     }
+},{
+    collection: 'users'
 })
 
 // kích hoạt một chức năng trước khi dữ liệu được lưu vào db
@@ -52,5 +76,27 @@ userSchema.statics.login = async function(email, password){
     throw Error('Sai tài khoản hoặc mật khẩu')
 }
 
+
+userSchema.methods.addToCart = function(manga, rentalIds){
+    let cart = this.cart
+    //Nếu cart chưa có manga nào
+    if(cart.items.length == 0){
+        cart.items.push(
+            {
+                mangaId: manga._id, 
+                rentalIds: {renId: rentalIds, quantity: 1} 
+            }
+        )
+        cart.totalPrice = manga.price
+    }
+    //Nếu cart đã tồn tại manga
+    else{
+        //Kiểm tra xem tập manga đã tồn tại chưa
+        const existingManga= cart.items.rentalIds
+        console.log('existingMangaIndex:', existingManga)
+    }
+    console.log('đây là user:',this.cart)
+    return this.cart
+}
 
 module.exports = mongoose.model('user', userSchema)
