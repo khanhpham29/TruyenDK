@@ -43,7 +43,8 @@ const userSchema =  new Schema({
                 
             }],
         totalPrice: {
-            type: Number
+            type: Number,
+            default:' '
         }
         
     },
@@ -77,14 +78,19 @@ userSchema.statics.login = async function(email, password){
 }
 
 
-userSchema.methods.addToCart = function(manga, rentalIds){
+
+userSchema.methods.addToCart = async function(manga, rentalIds){
     let cart = this.cart
+    let renArr = {
+        rendId: rentalIds,
+        quantity: 1
+    }
     //Nếu cart chưa có manga nào
     if(cart.items.length == 0){
         cart.items.push(
             {
                 mangaId: manga._id, 
-                rentalIds: {renId: rentalIds, quantity: 1} 
+                rentalIds: renArr
             }
         )
         cart.totalPrice = manga.price
@@ -96,7 +102,7 @@ userSchema.methods.addToCart = function(manga, rentalIds){
         console.log('existingMangaIndex:', existingManga)
     }
     console.log('đây là user:',this.cart)
-    return this.cart
+    return this.save()
 }
 
 module.exports = mongoose.model('user', userSchema)

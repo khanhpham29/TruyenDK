@@ -31,7 +31,7 @@ class AdminController{
     }
     //Thêm manga
     //[POST] /manga/add
-     mangaCreate(req, res, next){
+    mangaCreate(req, res, next){
         Manga.findOne({tentruyen: req.body.nameManga })
             .then(mangas =>{
                 if(mangas == null || mangas.tinhtrang == 'Ngưng'){
@@ -68,9 +68,9 @@ class AdminController{
                                 truyenChoThue.save()
                                 
                                 .then(() =>
-                                   Manga.updateOne({_id: manga._id}, {
-                                         $push:{truyenchothue :truyenChoThue.books[0]._id},
-                                   }),
+                                    Manga.updateOne({_id: manga._id}, {
+                                            $push:{truyenchothue :truyenChoThue.books[0]._id},
+                                    }),
                                     
                                     res.redirect('/admin/manga')
                                     )
@@ -190,12 +190,12 @@ class AdminController{
     //hiển thị danh sách img trong chap
     //----------------------
     // [GET]/manga/:tentruyen/:chapter
-     readChap(req, res, next){
-         Promise.all([
+    readChap(req, res, next){
+        Promise.all([
             DetailManga.findOne({tentruyen: req.params.tentruyen}),
                 //.populate('ImgDetail'), 
                 ImageDetail.find({chapter: req.params.chapter})
-         ])            
+        ])            
             .then(([name, chap]) => {
                 if(name == null){
                     return res.render('null')
@@ -226,7 +226,7 @@ class AdminController{
                 // })            
             //})
             .catch(err => {res.json(err)})
-     }   
+    }   
     //Mở form thêm chap mới vào truyện
     //-------------------
     //[GET] /manga/:tentruyen/addChap
@@ -361,7 +361,6 @@ class AdminController{
             else{
                 res.json('Không tìm thấy truyện này!!!')
             }
-           
         })
     }
 
@@ -554,25 +553,29 @@ class AdminController{
     addToCart(req, res, next){
         Manga.findOne({slug: req.params.slug})
             .then((manga) => {
-                console.log(req.body)
                 // Duyệt mảng id sách cho thuê
-                for(var i =0;i<req.body.bookIds.length; i++){
-                    //Duyệt mảng các tập truyện cho thuê của 1 manga
-                    for(var j =0; j<manga.truyenchothue.length; j++){
-                        //Nếu giống nhau
-                        if(req.body.bookIds[i].toString() == manga.truyenchothue[j].toString()){
-                            console.log(req.body.bookIds[i])
-                            const idRentals = req.body.bookIds[i]
-                            //gọi hàm addToCart trong models User
-                            req.user.addToCart(manga, idRentals)
-                                .save()
-                                .then(() => console.log('abc'))
-                        }
-
-                    }
+                // for(var i = 0; i<req.body.bookIds.length; i++){
+                //     //Duyệt mảng các tập truyện cho thuê của 1 manga
+                //     for(var j = 0; j<manga.truyenchothue.length; j++){
+                //         //Nếu giống nhau
+                //         if(req.body.bookIds[i].toString() === manga.truyenchothue[j].toString()){
+                //             const idRentals = req.body.bookIds[i]
+                //             //gọi hàm addToCart trong models User
+                //             req.user.addToCart(manga, idRentals)
+                //         }
+                //     }
                     
-                }
-                
+                // }
+                var books = req.body.bookIds
+                books.forEach( (book)=>{
+                    var booksRental = manga.truyenchothue
+                    booksRental.forEach( (bookRental)=> {
+                        if( bookRental.value === book.value){
+                            const idRentals = bookRental.value
+                            req.user.addToCart(manga, idRentals)
+                        }
+                    })
+                })
                     
                 res.json(manga)
             })

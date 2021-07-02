@@ -54,7 +54,6 @@
                             <td>
                                 Ảnh bìa
                             </td>
-                            <td>Tên truyện</td>
                             <td>Tên tập</td>
                             <td>Giá</td>
                             <td>Nxb</td>
@@ -83,10 +82,10 @@
             </div>
         </form>
     </div>
- </div>
+</div>
 
 <script>
-     document.addEventListener("DOMContentLoaded", function (){
+    document.addEventListener("DOMContentLoaded", function (){
         var checkboxAll = $('#checkbox-all')
         var mangaRentalsItemCheckbox = $('input[name="bookIds[]"]')
         //checkbox all change
@@ -101,5 +100,5 @@
             var isCheckedAll = mangaRentalsItemCheckbox.length === $('input[name="bookIds[]"]:checked').length
             checkboxAll.prop('checked', isCheckedAll)
         })
-     })
+    })
 </script>

@@ -1,7 +1,7 @@
 const User = require('../models/User')
 
 const findUser = (req, res, next) =>{
-    User.findById('60cc89dc05d3a309d4502ff4')
+    User.findById('60ded00a3ac40f16e0c76049')
     .then((userDB) => {
         req.user = userDB
         next()
