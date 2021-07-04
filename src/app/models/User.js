@@ -22,31 +22,8 @@ const userSchema =  new Schema({
     },
     phone: {
         type: String,
+        //required: [true, 'Vui lòng nhập số điện thoại'],
         lenghth: [10, 'Phone có phải có 10 số'],
-    },
-    cart: {
-        items: [{
-                mangaId: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Manga',
-                    requied: true,
-                },
-                rentalIds: [{
-                    renIds: {
-                        type: Schema.Types.ObjectId,
-                    },
-                    quantity: {
-                        type: Number,
-                        requied: true,
-                    }
-                }],
-                
-            }],
-        totalPrice: {
-            type: Number,
-            default:' '
-        }
-        
     },
     role:{ 
         type: String,

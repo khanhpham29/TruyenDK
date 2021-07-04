@@ -1,33 +1,24 @@
-let cart = null
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-module.exports = class Cart {
-    static save(manga){
-        if(cart === null){
-            cart = {mangas: [], totalPrice: 0}
-
-            manga.quantity = 1
-            cart.mangas.push(manga)
-            cart.totalPrice = manga.price
-        }
-        else if(cart){
-            const existingMangaIndex = cart.mangas.findIndex(p => p.id = manga.id)
-            console.log('existingMangaIndex:', existingMangaIndex)
-            if(existingMangaIndex > 0){//Manga existing
-                const existingManga = cart.mangas[existingMangaIndex]
-                existingManga.quantity += 1
-                cart.totalPrice += manga.price
-            }
-            else{//Manga not existing
-                manga.quantity = 1
-                cart.mangas.push(manga)
-                cart.totalPrice += manga.price
-            }
-        }
-
-        
+const cartSchema =  new Schema({
+    phone: {
+        type: String,
+        require: true,
+    },
+    idDetailsCart: {
+        type: Schema.Types.ObjectId,
+        ref: 'DetailsCart'
+    },
+    totalPrice: {
+        type: Number,
+        default: 0
     }
+},{
+    timestamps : true,
+},{
+    collection: 'carts'
+})
 
-    static getCard(){
-        return cart
-    }
-}
+
+module.exports = mongoose.model('Cart', cartSchema)

@@ -47,17 +47,19 @@
                     </thead>
                     <tbody>
                         
+                        <input type="hidden" value="{{user._id}}" id="userId">
                         {{#each mangas}}
                             <tr>
                                 <th>{{sum @index 1}}</td>
-                                <td><a href="/admin/rentals/list/{{this.slug}}">{{this.tentruyen}}</a></td>   
-                                <td>{{this.mota}}</td> 
+                                <td><a href="/admin/rentals/list/{{this.slug}}"
+                                        name="btn-Thue-Truyen">{{this.tentruyen}}</a></td>   
+                                <td>{{this.mota}}</td>
                                 <div class="control">
                                     <td>
                                         <a href="/admin/rentals/list/{{this.slug}}">Chi tiết</a>
                                     </td>
-                                </div>                 
-                            </tr>
+                                </div>
+                            </tr>          
                         {{/each}}
                     </tbody>
                     
@@ -66,4 +68,12 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var userIdElement = $('#userId')
+            var btnThueTruyen = $('.btn-Thue-Truyen')
+            console.log(btnThueTruyen)
+            console.log(userIdElement)
+        })
+    </script>
 

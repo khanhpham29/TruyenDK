@@ -4,6 +4,9 @@ const ImageDetail = require('../models/ImageDetail')
 const Category = require('../models/CategoryManga')
 const RentalForManga = require('../models/RentalForManga')
 const User_Model = require('../models/User')
+const Cart_Model = require('../models/Cart')
+const DetailsCart_Model = require('../models/DetailsCart')
+
 
 const multer = require('multer')
 const mongoose = require('mongoose')
@@ -215,16 +218,6 @@ class AdminController{
                     return res.render('null')    
                 }
             })
-
-                // name.forEach(function(names, index1){
-                //     chap.forEach(function(chaps, index2){
-                //         if(names.ImgDetail.toString() == chaps._id.toString()){
-                //             res.json(chaps)
-                //             break
-                //         }
-                //     })
-                // })            
-            //})
             .catch(err => {res.json(err)})
     }   
     //Mở form thêm chap mới vào truyện
@@ -550,40 +543,58 @@ class AdminController{
     
 
     //[POST] /admin/rentals/addToCart
-    addToCart(req, res, next){
-        Manga.findOne({slug: req.params.slug})
-            .then((manga) => {
-                // Duyệt mảng id sách cho thuê
-                // for(var i = 0; i<req.body.bookIds.length; i++){
-                //     //Duyệt mảng các tập truyện cho thuê của 1 manga
-                //     for(var j = 0; j<manga.truyenchothue.length; j++){
-                //         //Nếu giống nhau
-                //         if(req.body.bookIds[i].toString() === manga.truyenchothue[j].toString()){
-                //             const idRentals = req.body.bookIds[i]
-                //             //gọi hàm addToCart trong models User
-                //             req.user.addToCart(manga, idRentals)
-                //         }
-                //     }
-                    
-                // }
+    async addToCart(req, res, next){
+        Promise.all([
+            Manga.findOne({slug: req.params.slug}),
+            RentalForManga.find({})
+        ])
+       
+            .then(([manga, rentals]) => {
                 var books = req.body.bookIds
-                books.forEach( (book)=>{
-                    var booksRental = manga.truyenchothue
-                    booksRental.forEach( (bookRental)=> {
-                        if( bookRental.value === book.value){
-                            const idRentals = bookRental.value
-                            req.user.addToCart(manga, idRentals)
-                        }
-                    })
+                let flag = false
+                const detailsCart = new DetailsCart_Model({
+                    _id: new mongoose.Types.ObjectId(),
                 })
-                    
-                res.json(manga)
+                detailsCart.save()
+                .then((detailsCartNew) => {
+                    console.log(detailsCartNew)
+                    books.forEach((book) => {
+                        console.log('Id books ng dùng chọn: ', book)
+                        var booksRental = manga.truyenchothue
+                        console.log('đây là sách cho thuê: ', booksRental)
+                        booksRental.forEach((bookRentals) => {
+                            console.log('Id books trong db: ', bookRentals)
+                            if(bookRentals == book){
+                                console.log(bookRentals, ' -------- ', book)
+                                const idRentals = bookRentals
+                                console.log(bookRentals)
+                                DetailsCart_Model.findOneAndUpdate(
+                                    { 
+                                        _id: detailsCartNew._id
+                                    }, 
+                                    {
+                                        $push: { idRentalBooks: bookRentals } 
+                                    },
+                                    {
+                                        new: true
+                                    }
+                                )
+                                .then((details) => console.log(details))
+                            } 
+                        })
+                    })    
+                    res.json(manga)
+                })
+                .catch(next)   
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
     //[GET]/admin/rentals/list
     listMangaRentals(req, res, next){
         Promise.all([
-            User_Model.findOne({email: req.body.emailCustomer}),
+            User_Model.findOne({_id: req.params._id}),
             Manga.find({chothue: true})
         ])
         
@@ -593,19 +604,21 @@ class AdminController{
             })
         })
     }
-    //[GET]/admin/rentals/list/:slug
+    //[GET]/admin/rentals/list/:id/:slug
     detailsMangaRentals(req, res, next){
         Promise.all([
             Manga.findOne({slug: req.params.slug}),
-            RentalForManga.find({})
+            User_Model.findOne({_id: req.params._id}),
+            RentalForManga.find({}),
         ])
-        .then(([mangas, rentals]) => {
+        .then(([mangas, user, rentals]) => {
             if(mangas != null){  
                 for(var i =0;i< rentals.length; i++){
                     if(mangas._id.toString() ==  rentals[i].idManga){
                         
                         return res.render('admins/rentals/manga-rentals-list-details', {
                             mangas: mongooseToOject(mangas),
+                            user: mongooseToOject(user),
                             rentals: mongooseToOject(rentals[i])
                         })
                     }
@@ -618,6 +631,31 @@ class AdminController{
         })
         .catch(next)
     }
+
+
+    //--------------USER--------------------//
+    async listUsers(req, res, next){
+        await User_Model.find({role: "member"})
+        .then((users) => {
+            res.render('admins/users/list-users', {
+                users: multipleMongooseToOject(users)
+            })
+        })
+        .catch(next)
+    }
+
+    async searchUsers(req, res, next){
+        const value = req.query.user
+        await User_Model.findOne({
+            phone: {$regex: new RegExp(value)}
+        }
+        )
+        .then((user) => res.render('admins/users/search-user', {
+            user: mongooseToOject(user)
+        }))
+        .catch(next)
+    }
+
 
 }
 

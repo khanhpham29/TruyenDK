@@ -7,6 +7,7 @@ const adminController = require('../app/controllers/AdminController')
 const upload = require('../app/middlewares/multer')
 
 //--------------------MANGA------------------//
+
 //Search bar manga
 router.get('/manga/rentals/search', adminController.search)
 //List rentals for manga
@@ -61,11 +62,20 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
+
 router.get('/rentals/list/', adminController.listMangaRentals)
 router.get('/rentals/list/:slug', adminController.detailsMangaRentals)
-
-
 router.get('/rentals/callcard', adminController.callCardUser)
 router.post('/rentals/callcard', adminController.callCard)
 router.post('/rentals/addtocart/:slug', adminController.addToCart)
+
+
+//-----------------------USERS--------------------//
+router.get('/users', adminController.listUsers)
+router.get('/users/search', adminController.searchUsers)
+
+// router.get('/users/add', adminController.addUsers)
+// router.post('/users/add', adminController.addUsers)
+
+
 module.exports = router
