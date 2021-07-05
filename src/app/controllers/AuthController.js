@@ -39,11 +39,11 @@ class AuthController{
         res.render('admins/manga')
     }
     // [GET] /signup
-    signupGet(req , res , next){
-        res.render("auths/signup")
+    registerGet(req , res , next){
+        res.render("auths/register")
     }
     // [POST] /signup
-    async signupPost(req , res , next){
+    async registerPost(req , res , next){
         const { email, password } = req.body
         
         try{

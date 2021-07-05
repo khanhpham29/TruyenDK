@@ -9,15 +9,16 @@ const { PromiseProvider } = require('mongoose')
 
 class AdminController{
     
-    // index(req,res,next){
-    //     Manga.find({})
-    //         .then(mangas => {
-    //             res.render('mangas/mangaList', {
-    //                 mangas: multipleMongooseToOject(mangas)
-    //             })
-    //         })
-    //         .catch(next)
-    // }
+    index(req,res,next){
+        Manga.find({})
+            .then(mangas => {
+                res.render('mangas/mangaList', {
+                    mangas: multipleMongooseToOject(mangas),
+                    layout: 'admin.hbs'
+                })
+            })
+            .catch(next)
+    }
     //[GET]
     formMangaCreate(req, res, next){
         res.render('admins/create-manga')

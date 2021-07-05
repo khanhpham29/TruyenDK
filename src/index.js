@@ -33,12 +33,14 @@ app.use(SortMiddleware)
 app.engine('hbs', 
     handlebars({
         extname: '.hbs',
+        defaultLayout: 'user.hbs',
         helpers: require('./app/helpres/handblebars'),
         allowProtoPropertiesByDefault: true,
         allowProtoMethodsByDefault: true,
     })
 )
 app.set('view engine', '.hbs')
+app.set('view options', { layout: 'other' })
 app.set('views', path.join(__dirname, 'resources', 'views'))
 // override with the X-HTTP-Method-Override header in the request
 app.use(methodOverride('_method'))
