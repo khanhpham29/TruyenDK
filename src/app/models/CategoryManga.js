@@ -37,7 +37,7 @@ mongoose.plugin(slug)
 theloaiSchema.plugin(AutoIncrement)
 theloaiSchema.plugin(mongoosedelete, { 
 		overrideMethods: true,
-		deleteAt: {type:Date, trim: true, default: Date.now},
+		deleteAt: {type:Date, trim: true, default: Date.now()},
 	})
 
 module.exports = mongoose.model('theloais', theloaiSchema)

@@ -12,12 +12,14 @@
     "license": "ISC",
     "dependencies": {
         "@handlebars/allow-prototype-access": "^1.0.5",
+        "axios": "^0.21.1",
         "bcrypt": "^5.0.1",
         "body-parser": "^1.19.0",
         "bootstrap": "^5.0.1",
         "bootstrap-icons": "^1.5.0",
         "cookie-parser": "^1.4.5",
         "express": "^4.17.1",
+        "express-async-errors": "^3.1.1",
         "express-handlebars": "^5.3.2",
         "handlebars": "4.7.7",
         "jsonwebtoken": "^8.5.1",
@@ -27,10 +29,12 @@
         "mongodb": "^3.6.9",
         "mongoose": "^5.8.9",
         "mongoose-delete": "^0.5.3",
+        "mongoose-mongodb-errors": "0.0.2",
         "mongoose-sequence": "^5.3.1",
         "mongoose-slug-generator": "^1.0.4",
         "multer": "^1.4.2",
         "mysql": "^2.18.1",
+        "socket.io": "^4.1.2",
         "validator": "^13.6.0"
     },
     "devDependencies": {

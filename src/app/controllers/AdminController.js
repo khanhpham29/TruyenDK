@@ -8,22 +8,19 @@ const path = require('path')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 const { PromiseProvider } = require('mongoose')
+
 class AdminController{
-    
-
     index(req,res,next){
-        // Manga.find({})
-        //     .then(mangas => {
-        //         res.render('mangas/mangaList', {
-        //             mangas: multipleMongooseToOject(mangas)
-        //         })
-        //     })
-        //     .catch(next)
-
-        res.send('đây là trang admin')
+        Manga.find({})
+            .then(mangas => {
+                res.render('mangas/mangaList', {
+                    mangas: multipleMongooseToOject(mangas),
+                    layout: 'admin.hbs'
+                })
+            })
+            .catch(next)
     }
-    //Mở form thêm manga
-    //[GET] /manga/add
+    //[GET]
     formMangaCreate(req, res, next){
         Category.find({})
             .then(categories => {
@@ -32,16 +29,17 @@ class AdminController{
             .catch(err => res.json(err))
         
     }
+
     //Thêm manga
     //[POST] /manga/add
-    mangaCreate(req, res, next){
+    async mangaCreate(req, res, next){
         const manga = new Manga({
             tentruyen: req.body.nameManga,
             theloai: req.body.category,
             mota: req.body.description,
             hinh: req.file.filename,
         })
-        manga.save(function(err){
+        await manga.save(function(err){
             if(err){
                 res.json({'errMess':err})
             }

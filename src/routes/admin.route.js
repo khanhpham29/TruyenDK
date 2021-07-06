@@ -70,6 +70,8 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 // index
 router.get('/categorys', adminController.categorys)
 
+router.get('/', adminController.index)
+
 
 
 module.exports = router

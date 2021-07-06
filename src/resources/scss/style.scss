@@ -5,15 +5,22 @@
 	padding: 0;
 	list-style: none;
 }
-.checkbox-select-all-options{
-	width: 120px;
+.align-items-center{
+	.checkbox-select-all-options{
+		width: 120px;
+		margin: 0 8px
+	}
 }
 
 
-// body{
-// 	padding: 0;
-// 	margin: 0;
-// }
+body{
+	background: whitesmoke;
+	-webkit-font-smoothing: subpixel-antialiased;
+	font-family: 'Muli', sans-self;
+	padding: 0;
+	margin: 0;
+}
+
 // .header{
 // 	position: fixed;
 // 	/*margin-top: -16px;*/

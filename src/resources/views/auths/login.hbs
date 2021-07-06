@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    {{!-- <div class="row">
         <div class="col-sm-6 offset-3 mt-4 mb-4">
             <div class="alert alert-danger login fade" role="alert"></div>
             <h2 class="h3 mb-3 fw-normal">Đăng Nhập</h2>
@@ -26,6 +26,44 @@
                 <button type="submit" class="btn btn-primary">Sign up</button>
             </form>
         </div>
+    </div> --}}
+    <div class="account-box mt-5">
+        <div class="account-wrapper">
+            <div class="alert alert-danger login fade" role="alert"></div>
+            <h3 class="account-title">Login</h3>
+            <p class="account-subtitle">Access to our dashboard</p>
+            <!-- Account Form -->
+            <form name="formLogIn" method="POST">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input  class="form-control" 
+                            type="text"
+                            name="email"
+                            required>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label>Password</label>
+                        </div>
+                    </div>
+                    <input  class="form-control" 
+                            type="password"
+                            name="password"
+                            required>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary account-btn" type="submit">Login</button>
+                </div>
+                <div class="account-footer">
+                    <p>Don't have an account yet? <a href="/register">Register</a></p>
+                </div>
+            </form>
+            <!-- /Account Form -->
+            
+        </div>
+    </div>
+        
     </div>
 </div>
 <script>

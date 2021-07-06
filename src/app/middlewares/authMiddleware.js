@@ -25,14 +25,14 @@ const checkUser = (req, res, next) =>{
     if(token){
         jwt.verify(token, 'next user secret',async (err, decodedToken)=>{
             if(err){
-                console.log(err,message)
+                // console.log(err,message)
                 res.locals.user = null
                 res.status(500).json('token khong hop le')
                 next()
             }else{
                 let user = await User.findById(decodedToken.id)
+                // console.log(user)
                 req.data = user
-                console.log(user)
                 res.locals.user = user.toObject()
                 next()
             }
@@ -46,7 +46,6 @@ const checkMember = (req, res, next) =>{
     if (req.data)
     {
         let role = req.data.role
-        console.log(role)
         if (role ==='member' || role === 'admin')
         {
             next()
@@ -63,7 +62,6 @@ const checkAdmin = (req, res, next) =>{
     if (req.data)
     {
         let role = req.data.role
-        console.log(role)
         if (role === 'admin')
         {
             next()
