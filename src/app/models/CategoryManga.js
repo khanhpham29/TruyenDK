@@ -6,9 +6,13 @@ const slug = require('mongoose-slug-generator')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
 const Schema = mongoose.Schema;
 
-const theloaiSchema = new Schema({
+const categorySchema = new Schema({
 	_id :{ type: Number},
-	tenloai:{ type: String, default: '', required: true},
+	tenloai:{   type: String, 
+				default: '',
+				unique: true,
+				required: true
+	},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 	
@@ -18,7 +22,7 @@ const theloaiSchema = new Schema({
 );
 
 // Custom query helpers
-theloaiSchema.query.sorttable =  function(req){
+categorySchema.query.sorttable =  function(req){
 	if (req.query.hasOwnProperty('_sort')){
 		const isValiedtype = ['asc', 'desc'].includes(req.query.type)
 		return this.sort({
@@ -32,10 +36,10 @@ theloaiSchema.query.sorttable =  function(req){
 //add  plugin
 mongoose.plugin(slug)
 
-theloaiSchema.plugin(AutoIncrement)
-theloaiSchema.plugin(mongoosedelete, { 
+categorySchema.plugin(AutoIncrement)
+categorySchema.plugin(mongoosedelete, { 
 		overrideMethods: true,
 		deleteAt: {type:Date, trim: true, default: Date.now()},
 	})
 
-module.exports = mongoose.model('theloais', theloaiSchema)
+module.exports = mongoose.model('categorys', categorySchema)

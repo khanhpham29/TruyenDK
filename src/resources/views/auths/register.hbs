@@ -79,7 +79,7 @@
             const password = form.password.value
             
             try{
-                const res = await fetch('/signup',{
+                const res = await fetch('/register',{
                     method: 'POST',
                     body: JSON.stringify({ email, password}),
                     headers: { "Content-Type": "application/json" }

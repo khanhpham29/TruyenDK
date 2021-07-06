@@ -1,11 +1,26 @@
 const Manga = require('../models/Manga')
 const Detail = require('../models/DetailManga')
 const Category = require('../models/CategoryManga')
+const post_model = require('../models/post')
+const comment_model = require('../models/comment')
 const multer = require('multer')
 const path = require('path')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 const { PromiseProvider } = require('mongoose')
+
+const handleErrors = (err) => {
+    let errors = { theloai: ''}
+    // duplicate error code-point
+    if( err.code === 11000){
+        errors.tenloai = 'Thể loại này đã tồn tại'
+        return errors
+    }
+    // validation erros
+    return errors
+}
+
+
 
 class AdminController{
     
@@ -110,39 +125,47 @@ class AdminController{
         Promise.all([   Category.find({}).sorttable(req), 
                         Category.countDocumentsDeleted(),
                     ])
-            .then(([theloais, deleteCount]) =>{
+            .then(([categorys, deleteCount]) =>{
                 res.render('categorys/categoryList',{
                     deleteCount,
-                    theloais: multipleMongooseToOject(theloais)
+                    categorys: multipleMongooseToOject(categorys),
+                    layout: 'admin'
                 })
             })
             .catch(next)
     }
     categoryTrash(req, res, next){
         Category.findDeleted({})
-            .then(theloais =>{
+            .then(categorys =>{
                 res.render('categorys/categoryTrash',{
-                    theloais: multipleMongooseToOject(theloais)
+                    categorys: multipleMongooseToOject(categorys),
+                    layout: 'admin'
                 })
             })
             .catch(next)
     }
     //[GET]  /admin/categorys/formCategoryCreate
     formCategoryCreate(req, res, next){
-        res.render('admins/create-category')
+        res.render('admins/create-category',{layout: 'admin'})
     }
     //[POST]
     categoryCreate(req, res, next){
-        const formdata = req.body
-        const theLoai = new Category(formdata)
-        theLoai.save()
+        const category = new Category(req.body)
+        category.save()
             .then(()=> res.redirect(`categorys`))
+            .catch(err =>{
+                const errors = handleErrors(err);
+                res.status(400).json({
+                    errors,
+                    layout: 'admin'})
+            })
     }
     //[GET] /categorys/:id/categoryEdit
     categoryEdit(req, res, next){
         Category.findById(req.params.id)
-            .then(theloais => res.render('categorys/categoryEdit',{
-                    theloais: mongooseToOject(theloais)
+            .then(categorys => res.render('categorys/categoryEdit',{
+                    categorys: mongooseToOject(categorys),
+                    layout: 'admin'
                 })
             )
             .catch(next)
@@ -192,6 +215,111 @@ class AdminController{
                     break
             default:
                 res.json(req.body)
+        }
+    }
+
+    //Posts
+    async listPosts(req, res, next){
+        try{
+            const sort = { createdAt: -1}
+            const posts = post_model.find({}).sort(sort)
+            .then((posts) =>{
+                res.render("posts/listPosts",{
+                    posts: multipleMongooseToOject(posts),
+                    layout: 'admin'
+                })
+            })
+        }
+        catch(error){
+            console.log(error)
+            res.status(500)
+        }
+    }
+
+    formPostsPost(req, res, next){
+        res.render('posts/formPost',{layout: 'admin'})
+    }
+    async postsPost(req, res, next){
+        try{
+            const post = new post_model({
+                title: req.body.title,
+                content: req.body.content,
+                imgPost: req.file.filename
+            })
+            await post.save()
+            .then((post) =>{
+                res.status(200).send({ 
+                    message: "Đăng bài thành công",
+                    post: mongooseToOject(post),
+                    layout: 'admin'
+                })
+            })
+        }catch(error){
+            res.status(500).json({err: error})
+        }
+    }
+    
+    async postsGetById(req, res, next){
+        try{
+            const post =  await post_model.findById({ _id: req.params.postId }).populate({
+                path: "comments",
+                options: { sort: { createdAt: -1 } }
+            })
+            .then((post)=>{
+                res.render('posts/comments',{ 
+                    post: mongooseToOject(post),
+                    layout: 'admin'
+                })
+            })
+        }catch(error){
+            console.log(error)
+            res.status(500)
+        }
+    }
+    async postsUpdate(req, res, next){
+        try{
+            const post = await post_model.findByIdAndUpdate({
+                _id: req.params.postId
+            }, req.body,{
+                new: true,
+                runValidators: true,
+            })
+            res.json(post)
+        }catch(error){
+            
+        }
+    }
+    async postsDelete(req, res, next){
+        try{
+            const post = await post_model.findByIdAndRemove({
+                _id: req.params.postId
+            })
+            res.json(post)
+        }
+        catch(error){
+            res.status(500).json(error)
+        }
+    }
+    async postsComment(req, res, next){
+        try{
+            const post = await post_model.findById(req.params.postId)
+            // create a comment
+            const comment = new comment_model({
+                postId: post._id,
+                content: req.body.content,
+                userId: req.body.userId,
+            })
+            
+            await comment.save()
+            // liên kết vs trang bình luận
+            post.comments.push(comment)
+            await post.save()
+            res.status(200).json({ 
+                comment: mongooseToOject(comment),
+                layout: 'admin'
+            })
+        }catch(error){
+            res.status(500).json(error)
         }
     }
 }

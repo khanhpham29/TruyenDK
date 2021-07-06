@@ -1,4 +1,4 @@
-<div class="container">
+<div class="content container-fluid">
     <div class="row">
         <form action="categorys/handleFormActions" method="POST" >
             <div>
@@ -22,29 +22,26 @@
                     <button class="btn btn-primary btm-sm check-all-submit-btn disabled">Thực hiện</button>
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-striped custom-table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">ID</th>
-                        <th scope="col">
-                            Tên thể loại
+                        <th>#</th>
+                        <th>Id</th>
+                        <th>
+                            Category
                             {{{sortTable 'tenloai' _sort}}}
                         </th>
-                        <th scope="col">
-                            Thời gian tạo
+                        <th>
+                            Creation time
                             {{{sortTable 'createAt' _sort}}}
                         </th>
-                        <th scope="col" colspan="2"></th>
+                        <th colspan="2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each theloais}}
+                    {{#each categorys}}
                     <tr>
-                        <td scope="row">
-                            <input class="form-check-input" type="checkbox" value="{{this._id}}" id=""
-                            name="categoryIds[]" >
-                        </td>
+                        <td> <input type="checkbox" value="{{this._id}}" id="" name="categoryIds[]"/>&nbsp;</td>
                         <td>{{this._id}}</td>
                         <td>{{this.tenloai}}</td>
                         <td>{{dateFormat this.createAt }}</td>

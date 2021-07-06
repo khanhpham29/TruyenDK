@@ -68,6 +68,14 @@ router.get('/categorys', adminController.categorys)
 
 router.get('/', adminController.index)
 
+//Posts
 
+router.get('/formPosts', adminController.formPostsPost)
+router.post('/postPost',upload.single('imgPost'), adminController.postsPost)
+router.get('/post/:postId', adminController.postsGetById)
+router.put('/post/:postId', adminController.postsUpdate)
+router.delete('/post/:postId', adminController.postsDelete)
+router.post('/post/:postId/comment', adminController.postsComment)
+router.get('/posts', adminController.listPosts)
 
 module.exports = router

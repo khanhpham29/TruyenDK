@@ -2,7 +2,7 @@
     <h1>Thể loại</h1>
     <div class="row">
         <div class="col-sm-8 offset-2">
-            <form action="/admin/categoryCreate" method="POST">
+            <form action="/admin/categoryCreate" method="POST" id="categoryCreate">
                 <div class="form-group">
                     <label for="theloai">Tên thể loại</label>
                     <input type="text" class="form-control" id="tenloai" name="tenloai" value="">
@@ -14,3 +14,32 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var formAddCategory = document.getElementById("categoryCreate")
+        console.log(formAddCategory)
+        var categoryErr = $('.category.error')
+        form.addEventListener("submit", async (e)=>{
+            e.preventDefault()
+            //reset error
+            categoryErr.text('')
+            const category = form.theloai.value
+            axios.post("/categoryCreate",{
+                theloai: category
+            })
+            .then(function (res){
+                const data = await err.json()
+                if(data.errors){
+                    categoryErr.text(data.errors.theloai)
+                }
+            })
+            .catch(function (err){
+                
+            })
+        })
+    })
+</script>
+                {{!-- const data = await res.json()
+                if(data.errors){
+                    category.errors.text(data.errors.theloai)
+                } --}}
