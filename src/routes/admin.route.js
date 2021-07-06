@@ -63,11 +63,7 @@ router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
 
-router.get('/rentals/list/', adminController.listMangaRentals)
-router.get('/rentals/list/:slug', adminController.detailsMangaRentals)
-router.get('/rentals/callcard', adminController.callCardUser)
-router.post('/rentals/callcard', adminController.callCard)
-router.post('/rentals/addtocart/:slug', adminController.addToCart)
+
 
 
 //-----------------------USERS--------------------//

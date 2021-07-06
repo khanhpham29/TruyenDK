@@ -615,7 +615,7 @@ class AdminController{
             if(mangas != null){  
                 for(var i =0;i< rentals.length; i++){
                     if(mangas._id.toString() ==  rentals[i].idManga){
-                        
+                        console.log(user)
                         return res.render('admins/rentals/manga-rentals-list-details', {
                             mangas: mongooseToOject(mangas),
                             user: mongooseToOject(user),
