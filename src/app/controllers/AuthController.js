@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 // handle errors
 const handleErrors = (err) => {
+    console.log(err.message, err.code)
     let errors = { email: '', password: ''}
 
     // sai tài khoản hoặc mật khẩu
@@ -39,11 +40,11 @@ class AuthController{
         res.render('admins/manga')
     }
     // [GET] /signup
-    registerGet(req , res , next){
-        res.render("auths/register")
+    signupGet(req , res , next){
+        res.render("auths/signup")
     }
     // [POST] /signup
-    async registerPost(req , res , next){
+    async signupPost(req , res , next){
         const { email, password } = req.body
         
         try{

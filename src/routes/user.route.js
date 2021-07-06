@@ -7,4 +7,5 @@ const usersController = require('../app/controllers/UsersController')
 router.get('/', requireAuth, usersController.index)
 
 
+
 module.exports = router

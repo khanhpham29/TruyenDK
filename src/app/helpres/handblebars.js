@@ -7,7 +7,7 @@ module.exports = {
         const formatToUse = (arguments[1] && arguments[1].hash && arguments[1].hash.format) || "dd MM/DD/YYYY HH:mm:ss"
         return moment(date).format(formatToUse);
     },
-    sortTable: ( field, sort) =>{
+    sortTable: (field, sort) =>{
         const sortType = field === sort.column ? sort.type : 'default'
         const icons = {
             default: 'oi oi-elevator',
@@ -28,4 +28,5 @@ module.exports = {
                     </a>`
         return new  Handlebars.SafeString(output)
     },
+
 }

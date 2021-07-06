@@ -4,37 +4,29 @@ const multer = require('multer')
 const router = express.Router()
 
 const adminController = require('../app/controllers/AdminController')
+const upload = require('../app/middlewares/multer')
 
+//--------------------MANGA------------------//
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'src/public/img')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now()  + "-" + file.originalname)
-    }
-})
-
-const upload = multer({ 
-    storage: storage,
-    fileFilter: function (req, file, cb) {
-        console.log(file);
-        if(file.mimetype=="image/bmp" || file.mimetype=="image/png" || file.mimetype=="image/jpg" ||  file.mimetype=='image/jpeg'){
-            cb(null, true)
-        }else{
-            return cb(new Error('Only image are allowed!'))
-        }
-    }
-})
-//Manga
+//Search bar manga
+router.get('/manga/rentals/search', adminController.search)
+//List rentals for manga
+router.get('/manga/rentals', adminController.mangaRentals)
+//Form create vol books
+router.get('/manga/rentals/:slug/addbook', adminController.retailsCreateBooks)
+//Create vol books
+router.post('/manga/rentals/:slug/createbook',upload.single('avatarNumberVol'), adminController.retailsCreate)
+//Details rentals manga
+router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
+
+router.post('/manga/add',upload.fields([{name: 'avatarManga'},{name: 'avatarNumberVol'}]), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
 //Edit manga
-router.post('/manga:slug/edit',upload.single('avatarManga'), adminController.mangaEdit)
+router.put('/manga/:slug',upload.single('avatarManga'), adminController.mangaEdit)
 //Form add new chapter of manga: name
 router.get('/manga/:slug/addChap',adminController.createChapterManga)
 //Add new chapter of manga: name
@@ -48,7 +40,8 @@ router.get('/manga', adminController.manga)
 //Index admin
 // router.get('/', adminController.index)
 
-//Category
+
+//----------------------CATEGORY---------------------------//
 // Form add new category
 router.get('/categorys/formCategoryCreate', adminController.formCategoryCreate)
 // Add new  category
@@ -70,8 +63,17 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 // index
 router.get('/categorys', adminController.categorys)
 
-router.get('/', adminController.index)
+//-------------------------RENTAL------------------------//
 
+
+
+
+//-----------------------USERS--------------------//
+router.get('/users', adminController.listUsers)
+router.get('/users/search', adminController.searchUsers)
+
+// router.get('/users/add', adminController.addUsers)
+// router.post('/users/add', adminController.addUsers)
 
 
 module.exports = router

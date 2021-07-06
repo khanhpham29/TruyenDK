@@ -17,10 +17,26 @@ const userSchema =  new Schema({
         required: [true, 'Vui lòng nhập mật khẩu'],
         minLength: [6, 'Mật khẩu ít nhất phải có 6 ký tự'],
     },
+<<<<<<< HEAD
+=======
+    name: {
+        type: String,
+    },
+    phone: {
+        type: String,
+        //required: [true, 'Vui lòng nhập số điện thoại'],
+        lenghth: [10, 'Phone có phải có 10 số'],
+    },
+>>>>>>> dat
     role:{ 
         type: String,
         default: 'member',
     }
+<<<<<<< HEAD
+=======
+},{
+    collection: 'users'
+>>>>>>> dat
 })
 
 // kích hoạt một chức năng trước khi dữ liệu được lưu vào db
@@ -30,6 +46,10 @@ userSchema.pre('save', async function (next){
     next()
 })
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dat
 // phương thức tĩnh để đăng nhập người dùng
 userSchema.statics.login = async function(email, password){
     const user = await this.findOne({ email })
@@ -44,4 +64,34 @@ userSchema.statics.login = async function(email, password){
 }
 
 
+<<<<<<< HEAD
+=======
+
+userSchema.methods.addToCart = async function(manga, rentalIds){
+    let cart = this.cart
+    let renArr = {
+        rendId: rentalIds,
+        quantity: 1
+    }
+    //Nếu cart chưa có manga nào
+    if(cart.items.length == 0){
+        cart.items.push(
+            {
+                mangaId: manga._id, 
+                rentalIds: renArr
+            }
+        )
+        cart.totalPrice = manga.price
+    }
+    //Nếu cart đã tồn tại manga
+    else{
+        //Kiểm tra xem tập manga đã tồn tại chưa
+        const existingManga= cart.items.rentalIds
+        console.log('existingMangaIndex:', existingManga)
+    }
+    console.log('đây là user:',this.cart)
+    return this.save()
+}
+
+>>>>>>> dat
 module.exports = mongoose.model('user', userSchema)

@@ -14,6 +14,7 @@
                     </div>
                     <select class="form-control form-control-sm checkbox-select-all-options" 
                             aria-label="Default select example"
+                            style="width:120px; margin: 0 8px"
                             required="required"
                             name="action">
                         <option value="">--Hành động--</option>
@@ -34,6 +35,7 @@
                         <th scope="col">
                             Thời gian tạo
                             {{{sortTable 'createAt' _sort}}}
+
                         </th>
                         <th scope="col" colspan="2"></th>
                     </tr>
@@ -61,7 +63,7 @@
                         </td>
                     </tr>
                     {{/each}}
-                </tbody>    
+                </tbody>
             </table>
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

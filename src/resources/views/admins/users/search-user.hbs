@@ -1,0 +1,69 @@
+
+    <div class="content">
+        <div class="menu">
+            <ul>
+                <a href="/admin/manga/">
+                    <li>
+                        Quản lý truyện
+                    </li>
+                </a>
+                <a href="/admin/categorys/">
+                    <li>
+                        Quản lý thể loại truyện
+                    </li>
+                </a>
+                <a href="/admin/users/">
+                    <li>
+                        Quản lý thành viên
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Tạo phiếu mượn
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Thống kê
+                    </li>
+                </a>
+            </ul>
+        </div>
+        {{!-- Nội dung Trang --}}
+        <div class="list-users">
+            <div class="top">
+                <form action="/admin/users/search">
+                    <input type="text" class="search-input" id="search" name="member" placeholder="Nhập số điện thoại 10 số">
+                    <button class="search-submit"  type="submit">Tìm</button>
+                </form>
+                <div class="button">
+                    <a href="/admin/users" class="btn-back">
+                        <button class="btn btn-primary" >Quay lại</button>
+                    </a>
+                </div>
+                
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <td>Name</td>
+                        <td>Phone</td>
+                        <td></td>
+                    </tr>                    
+                </thead>
+                <tbody>
+                        <tr>
+                            <th>{{user._id}}</th>
+                            <td>{{user.name}}</td>
+                            <td>{{user.phone}}</td>
+                            <td>
+                                <a href="/admin/rentals/list/{{user._id}}">Tạo phiếu thuê</a>
+                            </td>
+                        </tr> 
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    

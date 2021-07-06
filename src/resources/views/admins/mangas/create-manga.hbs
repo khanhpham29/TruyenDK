@@ -1,0 +1,134 @@
+
+<div class="content">
+    <div class="menu">
+        <ul>
+            <a href="/admin/manga/">
+                <li>
+                    Quản lý truyện
+                </li>
+            </a>
+            <a href="/admin/categorys/">
+                <li>
+                    Quản lý thể loại truyện
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Quản lý nhân viên
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Tạo phiếu mượn
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Thống kê
+                </li>
+            </a>
+        </ul>
+    </div>
+    {{!-- Nội dung trang  --}}
+    <div class="create-manga">
+        <form action="/admin/manga/add" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nameManga">Tên truyện</label>
+                <input type="text" id="nameManga" name="nameManga" class="txtInput">
+            </div>
+             <div class="form-group">
+                <label for="nameManga2">Tên khác</label>
+                <input type="text" id="nameManga2" name="nameManga2" class="txtInput">
+            </div>
+            <div class="form-group">
+                <label for="avatarManga">Hình</label>
+                <input type="file"  id="avatarManga" name="avatarManga">
+            </div>
+            <div class="form-group">
+                <label for="category">Thể loại: </label>
+                <div class="category">
+                    {{#each categories}}
+                        <label >{{this.tenloai}}</label>
+                        <input type="checkbox"  name="category[]" value="{{this.tenloai}}" >
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="cbRental">Cho thuê</label>
+                <input type="checkbox" id="cbRental" name="cbRental" value="true">
+            </div>
+            <!--Rental-->
+            <a class="btn-rental">Nhập sau</a>
+            <div class="rental">
+                    <div class="form-rental">
+                        <label for="numberVol">Số tập:</label>
+                        <input type="text" id="numberVol" name="numberVol" class="txtInputRentalSmall">
+
+                        <label for="amount">Số lượng: </label>
+                        <input type="text" id="amount" name="amount" class="txtInputRentalSmall">
+                    </div>
+                    <div class="form-rental">
+                        <label >Ảnh bìa:</label>
+                        <input type="file" name="avatarNumberVol">
+                    </div>
+                    <div class="form-rental">
+                        <label for="price">Giá: </label>
+                        <input type="text" id="price" name="price" class="txtInputRental">
+                    </div>
+                    <div  class="form-rental">
+                        <label for="author">Tác giả: </label>
+                        <input type="text" id="author" name="author" class="txtInputRental">
+                    </div>
+                    <div class="form-rental">
+                        <label for="publisher">Nhà xuất bản: </label>
+                        <input type="text" id="publisher" name="publisher" class="txtInputRentalFull">
+                    </div>
+                    
+            </div>
+
+            {{!-- btn Submit form --}}
+            <button type="submit" class="btn btn-outline-primary btn-create-manga">Thêm truyện</button>
+        </form>
+    </div>
+</div>
+    
+
+<script>
+    var checkRental = document.getElementById('cbRental')
+    var rental = document.querySelector('.rental')
+    var btnRental = document.querySelector('.btn-rental')
+    console.log(checkRental)
+    console.log(rental)
+    checkRental.onchange = function(){
+        if(checkRental.checked){
+            rental.style.display = 'block'
+            btnRental.style.display = 'block'
+            btnRental.innerText = 'Nhập sau'
+            btnRental.style.background = 'aqua'
+        }           
+        else if(!checkRental.checked){
+            rental.style.display = 'none'
+            btnRental.style.display = 'none'
+        }
+    }
+    btnRental.onclick = function(){
+        if(btnRental.innerText == 'Nhập'){
+            btnRental.innerText = 'Nhập sau'
+            btnRental.style.background = 'aqua'
+            rental.style.display = 'block'
+        }
+        else if(btnRental.innerText == "Nhập sau"){
+            btnRental.innerText = 'Nhập'
+            btnRental.style.background = 'blue'
+            rental.style.display = 'none'
+            
+        }
+    }
+
+</script>

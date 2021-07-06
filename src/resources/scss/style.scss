@@ -11,8 +11,6 @@
 		margin: 0 8px
 	}
 }
-
-
 body{
 	background: whitesmoke;
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -20,6 +18,7 @@ body{
 	padding: 0;
 	margin: 0;
 }
+
 
 // .header{
 // 	position: fixed;
@@ -224,7 +223,7 @@ body{
 	//CSS phần menu left
 	
 	.menu{
-		width: 20%;
+		width: $width-menu-admin;
 		height: 100%;
 		background: #333;
 		ul{
@@ -244,7 +243,8 @@ body{
 			
 }
 //CSS trang thêm manga(create-manga)
-.create-manga{
+
+.create-manga, .edit-manga{
 	.form-group{
 		margin-top: 5px;
 		label{
@@ -260,6 +260,45 @@ body{
 	}
 	.btn-create-manga{
 		margin-top: 5px;
+	}
+}
+
+.create-manga{
+	.btn-rental{
+		width: 100%;
+		background: aqua;
+		color: #333;
+		float: right;
+		margin-bottom: 10px;
+		text-decoration: none;
+		text-align: center;
+		margin: 0px auto;
+		border: 1px solid #0d6efd;
+		cursor: pointer;
+		display: none;
+		margin-bottom: 10px;
+	}
+	.rental{
+		width:100%;
+		margin-left: 80px;
+		display: none;
+		.form-rental{
+			width:100%;
+			margin-top: 5px;
+			label{
+				font-weight: 500;
+				width: 100px;
+			}
+			.txtInputRentalSmall{
+				width: 50px;
+			}
+			.txtInputRental{
+				width:150px;
+			}
+			.txtInputRentalFull{
+				width:300px;
+			}
+		}
 	}
 }
 
@@ -294,7 +333,7 @@ body{
 	}
 }
 .create-chapter-manga{
-	width: 80%;
+	width: calc(100% - $width-menu-admin);
 	height: 100%;
 	margin-left: 10px;
 	margin-top: 5px;
@@ -322,18 +361,35 @@ body{
 	
 .manga{
 	background: #fff;
-	width: 80%;
+	width: calc(100% - $width-menu-admin);
 	height: 100%;
 	border: 1px solid #333;
 	margin-left: 2px;
-	.btn-add-manga{
-		button{
-			float: right;
+	
+	.top{
+		display: flex;
+		width: 100%;
+		.search-submit, .search-input{
 			margin-top: 10px;
 			margin-right: 10px;
-			border: 1px solid #333;
 		}
+		.button{
+			position: relative;
+			right: 0;
+			top: 0;
+			.btn-add-manga, .btn-rentals-manga{
+				button{
+					float: right;
+					margin-top: 10px;
+					margin-right: 10px;
+					min-width: 50px;
+					border: 1px solid #333;
+				}
+			}
+		}
+		
 	}
+	
 	.mangaList{
 		.table{
 			thead{
@@ -349,7 +405,62 @@ body{
 	}		
 }
 
+.edit-manga{
+	
+}
 
+.details-rental-manga{
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	margin-left: 5px;
+	.btn-back{
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+	.tentruyen{
+		width: 100%;
+		text-align: center;
+	}
+}
 
+.rentals-create{
+	width: calc(100% - $width-menu-admin);
 
+	.nameManga{
+		color: blue;
+	}
+
+	.numberVolNew{
+		font-weight: 500;
+		font-size: 24px;
+	}
+	.form-rental{
+		width:100%;
+		margin-top: 5px;
+		label{
+			font-weight: 500;
+			width: 100px;
+		}
+		.txtInputRentalSmall{
+			width: 50px;
+		}
+		.txtInputRental{
+			width:150px;
+		}
+		.txtInputRentalFull{
+			width:300px;
+		}
+	}
+}
+
+.manga-rentals-list-details{
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	.rentalsListData{
+		.img{
+			width: 40px;
+			height: 40px;
+		}
+	}
+}
 

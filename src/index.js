@@ -17,19 +17,28 @@ const socketAPI = require('./socketAPI')
 
 
 
+
 socketAPI.io.attach(server)
 const route = require('./routes/index')
 const bodyParser = require('body-parser')
+
+const SortMiddleware = require('./app/middlewares/sortMiddleware')
+const findUser = require('./app/middlewares/findUser')
+
 
 const SortMiddleware = require('./app/middlewares/sortMiddleware')
 // Connect to DB    
 db.connect();
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
 // HTTP logger
-app.use(morgan('combined'))
+//app.use(morgan('combined'))
+
 // Customs middlewares
 app.use(SortMiddleware)
+app.use(findUser)
+
 // Template engine
 app.engine('hbs', 
     handlebars({
@@ -51,6 +60,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Route init
 route(app)
+
 
 // Listen on enviroment port or 5000
 server.listen(port,  () => console.log(`listen on port http://localhost:${port}`))
