@@ -226,8 +226,8 @@ class AdminController{
                         for(var j =0;j<name.ImgDetail.length;j++){
                             console.log(i +' - '+ j +' : '+chap[i]._id + ' - ' + name.ImgDetail[j])
                             if(chap[i]._id.toString() === name.ImgDetail[j].toString()){
-                                return res.render('admins/mangas/details-manga-img', {chapImg: chap[i]},
-                                    layout: 'admin.hbs'
+                                return res.render('admins/mangas/details-manga-img', {chapImg: chap[i], layout: 'admin.hbs'}
+                                   
                                 )
                             }
                         }
