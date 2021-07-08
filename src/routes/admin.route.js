@@ -63,7 +63,15 @@ router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
 
+<<<<<<< HEAD
 
+=======
+router.get('/rentals/list/:id', adminController.listMangaRentals)
+router.get('/rentals/list/:slug', adminController.detailsMangaRentals)
+router.get('/rentals/callcard', adminController.callCardUser)
+router.post('/rentals/callcard', adminController.callCard)
+router.post('/rentals/addtocart/:slug', adminController.addToCart)
+>>>>>>> b2b9d40b4373f60f5ba828ff488b2b5d701246e4
 
 
 //-----------------------USERS--------------------//

@@ -548,7 +548,6 @@ class AdminController{
             Manga.findOne({slug: req.params.slug}),
             RentalForManga.find({})
         ])
-       
             .then(([manga, rentals]) => {
                 var books = req.body.bookIds
                 let flag = false
@@ -594,13 +593,14 @@ class AdminController{
     //[GET]/admin/rentals/list
     listMangaRentals(req, res, next){
         Promise.all([
-            User_Model.findOne({_id: req.params._id}),
+            User_Model.findOne({_id: req.params.id}),
             Manga.find({chothue: true})
         ])
         
         .then(([user, mangas]) => {
             res.render('admins/rentals/manga-rentals-list',{
-                mangas: multipleMongooseToOject(mangas)
+                mangas: multipleMongooseToOject(mangas),
+                member: mongooseToOject(user)
             })
         })
     }
@@ -608,18 +608,19 @@ class AdminController{
     detailsMangaRentals(req, res, next){
         Promise.all([
             Manga.findOne({slug: req.params.slug}),
-            User_Model.findOne({_id: req.params._id}),
             RentalForManga.find({}),
         ])
-        .then(([mangas, user, rentals]) => {
+        .then(([mangas, rentals]) => {
             if(mangas != null){  
                 for(var i =0;i< rentals.length; i++){
                     if(mangas._id.toString() ==  rentals[i].idManga){
+<<<<<<< HEAD
                         console.log(user)
+=======
+>>>>>>> b2b9d40b4373f60f5ba828ff488b2b5d701246e4
                         return res.render('admins/rentals/manga-rentals-list-details', {
                             mangas: mongooseToOject(mangas),
-                            user: mongooseToOject(user),
-                            rentals: mongooseToOject(rentals[i])
+                            rentals: mongooseToOject(rentals[i]),
                         })
                     }
                 }
