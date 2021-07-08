@@ -11,7 +11,6 @@ const requireAuth = (req, res, next) =>{
                 console.log(err,message)
                 res.redirect('/login')
             }else{
-                console.log(decodedToken)
                 next()
             }
         })
@@ -31,7 +30,7 @@ const checkUser = (req, res, next) =>{
                 next()
             }else{
                 let user = await User.findById(decodedToken.id)
-                // console.log(user)
+                console.log(user)
                 req.data = user
                 res.locals.user = user.toObject()
                 next()

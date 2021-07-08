@@ -10,7 +10,7 @@ const { mongooseToOject } = require('../../util/mongoose')
 const { PromiseProvider } = require('mongoose')
 
 const handleErrors = (err) => {
-    let errors = { theloai: ''}
+    let errors = { tenloai: ''}
     // duplicate error code-point
     if( err.code === 11000){
         errors.tenloai = 'Thể loại này đã tồn tại'
@@ -150,15 +150,15 @@ class AdminController{
     }
     //[POST]
     categoryCreate(req, res, next){
-        const category = new Category(req.body)
+        const data = req.body
+        const category = new Category(data)
         category.save()
-            .then(()=> res.redirect(`categorys`))
-            .catch(err =>{
-                const errors = handleErrors(err);
-                res.status(400).json({
-                    errors,
-                    layout: 'admin'})
-            })
+        .then(()=> res.status(200).json({message: "Thêm thành công"}))
+        .catch(err =>{
+            const errors = handleErrors(err) 
+            res.status(400).json( { errors } )
+        })
+        
     }
     //[GET] /categorys/:id/categoryEdit
     categoryEdit(req, res, next){
@@ -172,7 +172,6 @@ class AdminController{
     }
     //[PUT] /categorys/:id
     async categoryUpdate(req, res, next){
-        const formdata = req.body
         await Category.updateOne({ _id: req.params.id }, formdata)
             .then(() => res.redirect('../categorys'))
             .catch(next)

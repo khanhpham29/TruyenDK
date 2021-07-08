@@ -2,11 +2,13 @@
     <h1>Thể loại</h1>
     <div class="row">
         <div class="col-sm-8 offset-2">
-            <form action="/admin/categoryCreate" method="POST" id="categoryCreate">
+            <form method="POST" id="categoryCreate">
                 <div class="form-group">
                     <label for="theloai">Tên thể loại</label>
-                    <input type="text" class="form-control" id="tenloai" name="tenloai" value="">
+                    <input type="text" class="form-control" name="category" value="">
+                    <div class="category error" style="color:red" value=""></div>
                 </div>
+                
                 <div class="mt-2 mb-2">
                     <button type="submit" class="btn btn-outline-primary">Tạo thể loại</button>
                 </div>
@@ -16,30 +18,30 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded",function(){
-        var formAddCategory = document.getElementById("categoryCreate")
-        console.log(formAddCategory)
+        var form = document.forms["categoryCreate"]
         var categoryErr = $('.category.error')
+        console.log(categoryErr)
         form.addEventListener("submit", async (e)=>{
             e.preventDefault()
             //reset error
             categoryErr.text('')
-            const category = form.theloai.value
-            axios.post("/categoryCreate",{
-                theloai: category
+            const category = form.category.value
+            axios.post("../categorys/categoryCreate",{
+                tenloai: category,
             })
             .then(function (res){
-                const data = await err.json()
-                if(data.errors){
-                    categoryErr.text(data.errors.theloai)
-                }
+                console.log(res)
+                const message = res.data.message
+                alert(message)
             })
             .catch(function (err){
-                
+                if(err.response){
+                    const data = err.response.data
+                    const tenloaiErr = data.errors.tenloai 
+                    console.log(data.errors.tenloai)
+                    categoryErr.text(tenloaiErr)
+                }
             })
         })
     })
 </script>
-                {{!-- const data = await res.json()
-                if(data.errors){
-                    category.errors.text(data.errors.theloai)
-                } --}}

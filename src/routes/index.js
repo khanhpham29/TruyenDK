@@ -10,12 +10,10 @@ const { requireAuth } = require('../app/middlewares/authMiddleware')
 
 
 function route(app){
-    app.use('*', checkUser )
     app.use('/truyens', truyensRouter)
     app.use('/admin',requireAuth , checkUser , checkAdmin , adminRouter)
     app.use('/', authRouter)
     app.use('/', usersRouter)
-
 }
 
 module.exports = route

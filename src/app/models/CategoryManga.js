@@ -9,9 +9,8 @@ const Schema = mongoose.Schema;
 const categorySchema = new Schema({
 	_id :{ type: Number},
 	tenloai:{   type: String, 
-				default: '',
+				required: [true, 'Vui lòng nhập thể loại'],
 				unique: true,
-				required: true
 	},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},

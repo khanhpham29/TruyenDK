@@ -48,7 +48,7 @@ router.get('/test', adminController.tam)
 // Form add new category
 router.get('/categorys/formCategoryCreate', adminController.formCategoryCreate)
 // Add new  category
-router.post('/categoryCreate', adminController.categoryCreate)
+router.post('/categorys/categoryCreate', adminController.categoryCreate)
 // form edit 
 router.get('/categorys/:id/categoryEdit', adminController.categoryEdit)
 // Post checkbox delete

@@ -10,17 +10,29 @@ const userSchema =  new Schema({
         required: [true, 'Vui lòng nhập Email'],
         unique: true,
         lowercase: true,
-        validate:[ isEmail, 'Vui lòng nhập email hợp lệ']
+        validate:[ isEmail, 'Vui lòng nhập email hợp lệ'],
     },
     password:{ 
         type: String, 
         required: [true, 'Vui lòng nhập mật khẩu'],
         minLength: [6, 'Mật khẩu ít nhất phải có 6 ký tự'],
     },
+    name:{ 
+        type: String,
+        required: [true, 'Vui lòng nhập tên'],
+        maxLength: [25, 'Tên quá dài vui lòng nhập lại']
+    },
+    phone:{ 
+        type: Number,
+        required: [true, 'Vui lòng nhập Số điện thoại'],
+        minLength:[10, 'Số điện thoại ít nhất phải có 10 số'],
+        
+    },
     role:{ 
         type: String,
         default: 'member',
     }
+
 })
 
 // kích hoạt một chức năng trước khi dữ liệu được lưu vào db
