@@ -15,7 +15,7 @@ function route(app){
     app.use('/truyens', truyensRouter)
     app.use('/admin',requireAuth , checkUser , checkAdmin , adminRouter)
     app.use('/', authRouter)
-    app.use('/', usersRouter)
+    app.use('/users', usersRouter)
 }
 
 module.exports = route

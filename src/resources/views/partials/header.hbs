@@ -1,42 +1,72 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<div class="container">
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-			<a class="navbar-brand" href="#">Hidden brand</a>
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="#">Trang chủ</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Danh sách</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Thể loại</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Truyện thuê</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Truyện hot</a>
-				</li> 
-			</ul>
-			{{!-- <form class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form> --}}
-			<div class="d-flex">
-				{{#if user}}
-					<div class="">welcome, {{user.email}}</div>
-					<a class="" style="text-decoration:none"  href="/logout">Đăng Xuất</a>
-				{{else}}
-					<a class="" style="text-decoration:none"  href="/login">Đăng nhập/</a>
-					<a class="" style="text-decoration:none" href="/signup">Đăng ký</a>
-				{{/if}}
-			</div>	
+		<div class="header">
+			<div class="logo">
+				<img src="" alt="logo">
+			</div>
+			<div class="content-header">
+				<div class="menu">
+					<ul>
+						<li>
+							<a href="">Truyện cho thuê</a>
+						</li>
+						<li>
+							<a href="">Thể loại</a>
+						</li>
+						<li>
+							<a href="">Xem nhiều</a>
+						</li>
+					</ul>
+				</div>
+				<div class="search">
+					<form action="/search/">
+						<input class="search-input" type="text" placeholder="Nhập nội dung" name="keywords" id="keywords">
+						<button class="search-submit" type="submit" value="Tìm kiếm">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+				
+			<div class="user">
+				<div class="follow-icon">
+					<i class="fas fa-heart"></i>
+				</div>
+				<div class="noti-icon">
+					<i class="fas fa-bell"></i>
+				</div>
+				<div class="user-icon">
+
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>
 
 
+<script>
+	$(function(){
+		$('#keywords').autocomplete({
+			source: function(req, res){
+				$.ajax({
+					url:"/autocomplete",
+					dataType:"jsonp",
+					type: "GET",
+					data:req,
+					success: function(data){
+						console.log(data)
+					},
+					error: function(err){
+						console.log(err.status)
+					}
+				})
+			},
+			minLength: 3,
+			select: function(event, ui){
+				if(ui.item){
+					$('#keywords').text(ui.item.label)
+				}
+			}
+		})
+	})
+</script>
