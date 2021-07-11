@@ -1,1 +1,200 @@
+.align-items-center .checkbox-select-all-options {
+  width: 120px;
+  margin: 0 8px; }
 
+body {
+  background: whitesmoke;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-family: 'Muli', sans-self;
+  padding: 0;
+  margin: 0; }
+
+.cover {
+  display: flex;
+  width: 100%; }
+  .cover.left {
+    border: 1px solid #333;
+    border-radius: 3px;
+    width: 250px;
+    height: 300px; }
+    .cover.left img {
+      width: 100%;
+      height: 100%; }
+  .cover.content {
+    width: 100%; }
+    .cover.content.name {
+      color: red; }
+    .cover.content.info {
+      font-weight: 400;
+      margin-left: 30px; }
+
+.content {
+  display: flex;
+  width: 100%;
+  height: 100%; }
+  .content .menu {
+    width: 20%;
+    height: 100%;
+    background: #333; }
+    .content .menu ul {
+      margin: 0;
+      padding: 0;
+      list-style: none; }
+      .content .menu ul a {
+        color: red;
+        text-decoration: none;
+        border-bottom: 1px solid #fff; }
+        .content .menu ul a li {
+          padding: 10px;
+          border-bottom: 1px solid #fff; }
+
+.create-manga .form-group, .edit-manga .form-group {
+  margin-top: 5px; }
+  .create-manga .form-group label, .edit-manga .form-group label {
+    font-weight: 500;
+    width: 80px; }
+  .create-manga .form-group input[type="text"], .create-manga .form-group textarea, .edit-manga .form-group input[type="text"], .edit-manga .form-group textarea {
+    width: 300px; }
+
+.create-manga .category, .edit-manga .category {
+  margin-left: 80px; }
+
+.create-manga .btn-create-manga, .edit-manga .btn-create-manga {
+  margin-top: 5px; }
+
+.create-manga .btn-rental {
+  width: 100%;
+  background: aqua;
+  color: #333;
+  float: right;
+  margin-bottom: 10px;
+  text-decoration: none;
+  text-align: center;
+  margin: 0px auto;
+  border: 1px solid #0d6efd;
+  cursor: pointer;
+  display: none;
+  margin-bottom: 10px; }
+
+.create-manga .rental {
+  width: 100%;
+  margin-left: 80px;
+  display: none; }
+  .create-manga .rental .form-rental {
+    width: 100%;
+    margin-top: 5px; }
+    .create-manga .rental .form-rental label {
+      font-weight: 500;
+      width: 100px; }
+    .create-manga .rental .form-rental .txtInputRentalSmall {
+      width: 50px; }
+    .create-manga .rental .form-rental .txtInputRental {
+      width: 150px; }
+    .create-manga .rental .form-rental .txtInputRentalFull {
+      width: 300px; }
+
+.details-manga-img {
+  width: 100%;
+  height: 100%; }
+  .details-manga-img img {
+    margin-top: 10px; }
+
+.details-manga {
+  width: 100%;
+  height: 100%;
+  display: flex; }
+  .details-manga .img-avatar {
+    width: 30%; }
+    .details-manga .img-avatar img {
+      width: 100%;
+      height: 100%; }
+  .details-manga .content {
+    width: 70%;
+    display: block; }
+    .details-manga .content .name {
+      font-size: 32px;
+      font-weight: 400; }
+
+.create-chapter-manga {
+  width: calc(100% - $width-menu-admin);
+  height: 100%;
+  margin-left: 10px;
+  margin-top: 5px; }
+  .create-chapter-manga .nameManga {
+    font-size: 32px;
+    color: blue;
+    font-weight: 500; }
+  .create-chapter-manga .nameChapter, .create-chapter-manga .linkImg {
+    margin-top: 5px;
+    font-weight: 400;
+    font-size: 20px; }
+  .create-chapter-manga .linkImg input[type="file"] {
+    background: #0d6efd;
+    width: 280px; }
+  .create-chapter-manga .btn-create-chapter-manga {
+    margin-top: 5px; }
+
+.manga {
+  background: #fff;
+  width: calc(100% - $width-menu-admin);
+  height: 100%;
+  border: 1px solid #333;
+  margin-left: 2px; }
+  .manga .top {
+    display: flex;
+    width: 100%; }
+    .manga .top .search-submit, .manga .top .search-input {
+      margin-top: 10px;
+      margin-right: 10px; }
+    .manga .top .button {
+      position: relative;
+      right: 0;
+      top: 0; }
+      .manga .top .button .btn-add-manga button, .manga .top .button .btn-rentals-manga button {
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+        min-width: 50px;
+        border: 1px solid #333; }
+  .manga .mangaList .table thead {
+    font-weight: 500; }
+  .manga .mangaList .control a {
+    text-decoration: none; }
+
+.details-rental-manga {
+  width: calc(100% - $width-menu-admin);
+  height: 100%;
+  margin-left: 5px; }
+  .details-rental-manga .btn-back {
+    margin-top: 5px;
+    margin-left: 5px; }
+  .details-rental-manga .tentruyen {
+    width: 100%;
+    text-align: center; }
+
+.rentals-create {
+  width: calc(100% - $width-menu-admin); }
+  .rentals-create .nameManga {
+    color: blue; }
+  .rentals-create .numberVolNew {
+    font-weight: 500;
+    font-size: 24px; }
+  .rentals-create .form-rental {
+    width: 100%;
+    margin-top: 5px; }
+    .rentals-create .form-rental label {
+      font-weight: 500;
+      width: 100px; }
+    .rentals-create .form-rental .txtInputRentalSmall {
+      width: 50px; }
+    .rentals-create .form-rental .txtInputRental {
+      width: 150px; }
+    .rentals-create .form-rental .txtInputRentalFull {
+      width: 300px; }
+
+.manga-rentals-list-details {
+  width: calc(100% - $width-menu-admin);
+  height: 100%; }
+  .manga-rentals-list-details .rentalsListData .img {
+    width: 40px;
+    height: 40px; }

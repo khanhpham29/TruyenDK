@@ -1,75 +1,8 @@
 <div class="container">
-    <div class="row">
-<<<<<<< HEAD
-        <div>
-            <a href="/admin/categorys" class="btn btn-outline-primary mt-2 mb-2">Quay lại</a>
-            <h3>Danh sách thể loại đã xóa của bạn</h3>
-            
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên thể loại</th>
-                    <th scope="col">Thời gian xóa</th>
-                    <th scope="col" colspan="2"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each theloais}}
-                <tr>
-                    <th scope="row">{{sum @index 1}}</th>
-                    <td>{{this.tenloai}}</td>
-                    <td>{{dateFormat this.deleteAt format='DD/MM/YYYY'}}</td>
-                    <td>
-                        <a href="#" class="btn btn-outline-warning btn-restore" data-id="{{this._id}}">Khôi phục</a> 
-                        <a href="/admin/categorys/{{this._id}}/categoryDelete" class="btn btn-outline-danger test" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{this._id}}" >Xóa vĩnh viễn</a>
-                    </td>
-                </tr>
-                {{else}}
-                <tr>
-                    <td colspan="4" class="text-center">
-                        Thùng rác rỗng: 
-                        <a href="/admin/categorys" style="text-decoration: none">Danh sách thể loại</a>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Xóa thể loại</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Bạn có chác muốn xóa thể loại này không ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="btn-delete-category" data-bs-dismiss="modal">Xóa bỏ</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<form  method="POST" name="form-Category-Delete" ></form>
-<form  method="POST" name="form-Category-Restore" ></form>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function (){
-        var categoryId
-        var deleteForm = document.forms['form-Category-Delete']
-        var restoreForm = document.forms['form-Category-Restore']
-        var btnDeleteCategory = document.getElementById('btn-delete-category')
-        var btnRestore = $('.btn-restore')
-=======
+    <div class="row mt-4">
         <form action="handleFormActions" method="POST">
             <div>
-                <a href="../categorys" class="btn btn-outline-primary">Quay lại</a>
+                <a href="../categorys" class="btn btn-outline-primary ">Quay lại</a>
                 <h1>Danh sách thể loại đã bị xóa</h1>
                 <div class="mt-4 d-flex align-items-center">
                         <div class="form-check">
@@ -97,7 +30,7 @@
                         <th scope="col">STT</th>
                         <th scope="col">Tên thể loại</th>
                         <th scope="col">Thời gian Xóa</th>
-                        <th scope="col" colspan="2"></th>
+                        <th scope="col" colspan="2">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -159,7 +92,6 @@
         var checkboxAll = $('#checkbox-all')
         var categoryItemCheckbox = $('input[name="categoryIds[]"]')
         var checkAllSubmitBtn = $('.check-all-submit-btn')
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             categoryId = button.getAttribute('data-id')
@@ -168,17 +100,6 @@
             deleteForm.action = '/admin/categorys/' + categoryId + '/categoryForceDelete?_method=DELETE'
             deleteForm.submit()
         }
-<<<<<<< HEAD
-
-        //Restore btn clicked
-        btnRestore.click(function(e){
-            e.preventDefault
-            
-            var categoryId = $(this).data('id')
-            restoreForm.action = '/admin/categorys/' + categoryId + '/categoryRestore?_method=PATCH'
-            restoreForm.submit()
-        })
-=======
         restoreBtn.click(function(e){
             e.preventDefault()
             var categoryId = $(this).data('id')
@@ -203,7 +124,6 @@
                 checkAllSubmitBtn.addClass('disabled')
             }
         }
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
     })
 
 </script>

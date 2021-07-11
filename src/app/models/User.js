@@ -10,20 +10,22 @@ const userSchema =  new Schema({
         required: [true, 'Vui lòng nhập Email'],
         unique: true,
         lowercase: true,
-        validate:[ isEmail, 'Vui lòng nhập email hợp lệ']
+        validate:[ isEmail, 'Vui lòng nhập email hợp lệ'],
     },
     password:{ 
         type: String, 
         required: [true, 'Vui lòng nhập mật khẩu'],
         minLength: [6, 'Mật khẩu ít nhất phải có 6 ký tự'],
     },
-    name: {
+    name:{ 
         type: String,
+        required: [true, 'Vui lòng nhập tên'],
+        maxLength: [25, 'Tên quá dài vui lòng nhập lại']
     },
-    phone: {
+    phone:{ 
         type: String,
-        //required: [true, 'Vui lòng nhập số điện thoại'],
-        lenghth: [10, 'Phone có phải có 10 số'],
+        required: [true, 'Vui lòng nhập Số điện thoại'],
+        minLength:[10, 'Số điện thoại ít nhất phải có 10 số'],
     },
     role:{ 
         type: String,

@@ -32,9 +32,9 @@
         var titleElement = this.querySelector('input[name="title"]').value
         var contentElement = this.querySelector('textarea[name="content"]').value
         var postImgElement = document.getElementById("post-img").files
-        let formData = new FormData();
-        formData.append("title", titleElement);
-        formData.append("content", contentElement);
+        let formData = new FormData()
+        formData.append("title", titleElement)
+        formData.append("content", contentElement)
         formData.append("imgPost", postImgElement[0])
         console.log(formData)
         axios.post("/postPost",formData,{

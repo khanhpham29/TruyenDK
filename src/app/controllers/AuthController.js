@@ -3,9 +3,7 @@ const jwt = require('jsonwebtoken')
 
 // handle errors
 const handleErrors = (err) => {
-    console.log(err.message, err.code)
-    let errors = { email: '', password: ''}
-
+    let errors = { email: '', password: '', name: '', phone: ''}
     // sai tài khoản hoặc mật khẩu
     if(err.message === 'Sai tài khoản hoặc mật khẩu') {
         errors.email = 'Sai tài khoản hoặc mật khẩu'
@@ -41,22 +39,22 @@ class AuthController{
     }
     // [GET] /signup
     registerGet(req , res , next){
-        res.render("auths/signup")
+        res.render("auths/register")
     }
     // [POST] /signup
     async registerPost(req , res , next){
-        const { email, password } = req.body
-        
+        const { email, password, name , phone } = req.body
         try{
-            const user =  await User.create({ email, password });
+            const user =  await User.create({ email, password, name , phone })
             // tạo token
             const token = createToken(user._id)
             res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000})
             res.status(201).json({ user: user._id })
         }
         catch(err){
-            const errors = handleErrors(err);
-            res.status(400).json( { errors } )
+            console.error(err)
+            const errors = handleErrors(err)
+            res.status(400).json( { errors} )
         }
     }
     // [GET] /login
@@ -80,7 +78,7 @@ class AuthController{
     }
     async logout_get(req, res, next){
         res.cookie('jwt', '', {maxAge: 1 })
-        res.redirect('/')
+        res.redirect('/')   
     }
 }
 

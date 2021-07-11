@@ -1,34 +1,7 @@
-<div class="container">
-    {{!-- <div class="row">
-        <div class="col-sm-6 offset-3 mt-4 mb-4">
-            <h2>Đăng ký</h2>
-            <form  name="formSignUp" method="POST">
-                <div class="mb-3">
-                    <label for="email" class="form-label" >Email address</label>
-                    <input  type="text" 
-                            class="form-control" 
-                            name="email" 
-                            aria-describedby="emailHelp"
-                            required>
-                    <div class="email error" style="color:red"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input  type="password"
-                            class="form-control"
-                            name="password"
-                            required>
-                    <div class="password error" style="color:red"></div>
-                </div>
-                <button type="submit" class="btn btn-primary">Sign up</button>
-            </form>
-        </div>
-    </div> --}}
+<div class="content container-fluid">
     <div class="account-box mt-5">
         <div class="account-wrapper">
             <h3 class="account-title">Register</h3>
-            <p class="account-subtitle">Access to our dashboard</p>
-            
             <!-- Account Form -->
             <form name="formSignUp" method="POST">
                 <div class="form-group">
@@ -36,22 +9,38 @@
                     <input  class="form-control" 
                             type="text"
                             name="email"
-                            required>
-                    <div class="email error" style="color:red"></div>
+                            >
+                    <div class="email error mt-2" style="color:red"></div>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input  class="form-control" 
                             type="password"
                             name="password"
-                            required>
-                    <div class="password error" style="color:red"></div>
+                            >
+                    <div class="password error mt-2" style="color:red"></div>
                 </div>
                 {{!-- <div class="form-group">
                     <label>Repeat Password</label>
-                    <input class="form-control" type="password" required>
-
+                    <input class="form-control" type="password" name="repeat_password"required>
                 </div> --}}
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input  class="form-control" 
+                            type="text" 
+                            name="phone" 
+                            >
+                    <div class="phone error mt-2" style="color:red"></div>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input  class="form-control" 
+                            type="text" 
+                            name="name" 
+                            value=""
+                            >
+                    <div class="name error mt-2" style="color:red"></div>
+                </div>
                 <div class="form-group text-center">
                     <button class="btn btn-primary account-btn" type="submit">Register</button>
                 </div>
@@ -67,19 +56,58 @@
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         var form = document.forms['formSignUp']
+        console.log(form)
         var emailError = $('.email.error')
         var passwordError = $('.password.error')
+        var nameError = $('.name.error')
+        var phoneError = $('.phone.error')
         form.addEventListener("submit", async (e)=>{
             e.preventDefault()
             //reset error
             emailError.text('')
             passwordError.text('')
+            nameError.text('')
+            phoneError.text('')
             // get the values
             const email = form.email.value
             const password = form.password.value
+            const name = form.name.value
+            const phone = form.phone.value
             
-            try{
-                const res = await fetch('/signup',{
+            axios.post('../register',{
+                email: email,
+                password: password,
+                name: name,
+                phone: phone
+            })
+            .then( async (res) =>{
+                console.log(res.data)
+                const user = await res.data.user
+                if(user){
+                    location.assign('/login')
+                }
+            })
+            .catch(function (err){
+                console.error(err.response)
+                if(err.response){
+                    const data = err.response.data
+                    console.error(data)
+                    const emailErr = data.errors.email
+                    const passwordErr = data.errors.password
+                    const nameErr = data.errors.name
+                    const phoneErr = data.errors.phone
+                    emailError.text(emailErr)
+                    passwordError.text(passwordErr)
+                    nameError.text(nameErr)
+                    phoneError.text(phoneErr)
+                }
+            })
+        })
+    })
+</script>
+
+            {{!-- try{
+                const res = await fetch('/register',{
                     method: 'POST',
                     body: JSON.stringify({ email, password}),
                     headers: { "Content-Type": "application/json" }
@@ -95,8 +123,5 @@
             }
             catch(err){
                 console.log(err)
-            }
-        })
-    })
-</script>
+            } --}}
 

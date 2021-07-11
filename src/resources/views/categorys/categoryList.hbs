@@ -1,24 +1,5 @@
 <div class="container">
-    <div class="row">
-<<<<<<< HEAD
-        <form method="POST" action="/admin/categorys/handle-form-actions"  name="container-form">
-            <div>
-                <h3>Danh sách thể loại của bạn</h3>
-                <a href="/admin/categorys/categoryTrash" class="btn btn-outline-warning mt-2 mb-2">Thùng rác ({{deletedCount}})</a>
-                <a href="/admin/categorys/formCategoryCreate" class="btn btn-outline-info mt-2 mb-2">Thêm thể loại </a>
-                <div class="mt-4 d-flex align-items-center">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
-                        <label class="form-check-label" for="flexCheckDefault" id="checkbox-all">
-                            Chọn tất cả
-                        </label>
-                    </div>
-                    <select class="form-control form-control-sm checkbox-select-all-options" name="action" aria-label="Default select example" style="width:140px ; margin: 0 8px" required="required">
-                        <option value="">-- Hành động --</option>
-                        <option value="delete">Xóa</option>
-                    </select>
-                    <button class="btn btn-primary check-all-submit-btn btn-sm disabled">Thực hiện</button>
-=======
+    <div class="row mt-4">
         <form action="categorys/handleFormActions" method="POST" >
             <div>
                 <h1>Danh sách thể loại</h1>
@@ -40,51 +21,31 @@
                         <option value="delete">Xóa</option>
                     </select>
                     <button class="btn btn-primary btm-sm check-all-submit-btn disabled">Thực hiện</button>
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
                 </div>
             </div>
-            <table class="table">
+            <table class="table table-striped custom-table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-<<<<<<< HEAD
-                        <th scope="col">STT</th>
-                        <th scope="col">Tên thể loại</th>
-                        <th scope="col">Thời gian tạo</th>
-=======
-                        <th scope="col">ID</th>
-                        <th scope="col">
-                            Tên thể loại
+                        <th>#</th>
+                        <th>Id</th>
+                        <th>
+                            Category
                             {{{sortTable 'tenloai' _sort}}}
                         </th>
-                        <th scope="col">
-                            Thời gian tạo
+                        <th>
+                            Creation time
                             {{{sortTable 'createAt' _sort}}}
-
                         </th>
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
-                        <th scope="col" colspan="2"></th>
+                        <th colspan="2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each theloais}}
+                    {{#each categorys}}
                     <tr>
-<<<<<<< HEAD
-                        <th scope="row"> 
-                            <input class="form-check-input" type="checkbox" name="categoryIds[]" value="{{this._id}}">
-                        </th>
-                        <th>{{sum @index 1}}</th>
-                        <td>{{this.tenloai}}</td>
-                        <td>{{dateFormat this.createAt format='DD/MM/YYYY'}}</td>
-=======
-                        <td scope="row">
-                            <input class="form-check-input" type="checkbox" value="{{this._id}}" id=""
-                            name="categoryIds[]" >
-                        </td>
+                        <td> <input type="checkbox" value="{{this._id}}" id="" name="categoryIds[]"/>&nbsp;</td>
                         <td>{{this._id}}</td>
                         <td>{{this.tenloai}}</td>
                         <td>{{dateFormat this.createAt }}</td>
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
                         <td>
                             <a href="/admin/categorys/{{this._id}}/categoryEdit" class="btn btn-outline-warning">Sửa</a>
                             <a href="/admin/categorys/{{this._id}}/categoryDelete" class="btn btn-outline-danger test" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{this._id}}" >Xóa</a>
@@ -93,13 +54,8 @@
                     {{else}}
                     <tr>
                         <td colspan="4" class="text-center">
-<<<<<<< HEAD
-                            Bạn chưa có thể loại nào:
-                            <a href="/admin/categorys/formCategoryCreate" style="text-decoration: none">Thêm thể loại</a>
-=======
                             Bạn chưa thêm thể loại nào
                             <a href="../admin/categorys/formCategoryCreate" style="text-decoration:none">Thêm thể loại</a>
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
                         </td>
                     </tr>
                     {{/each}}
@@ -125,28 +81,17 @@
         </form>
     </div>
 </div>
-<<<<<<< HEAD
 {{!-- delete hidden form --}}
-=======
-
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
 <form  method="POST" name="formCategoryDelete" ></form>
 
 <script>
     document.addEventListener("DOMContentLoaded", function (){
         var deleteForm = document.forms['formCategoryDelete']
-<<<<<<< HEAD
-        var btnDeleteCategory = $('#btn-delete-category')
-        var checkboxAll = $('#checkbox-all')
-        var categoryItemcheckbox = $('input[name="categoryIds[]"]')
-        var btnCheckAllSubmit = $('.check-all-submit-btn')
-        var containerForm = $('#container-form')
-=======
+
         var btnDeleteCategory = document.getElementById('btn-delete-category')
         var checkBoxAll = $('#checkbox-all')
         var categoryItemCheckbox = $('input[name="categoryIds[]"]')
         var checkAllSubmitBtn = $('.check-all-submit-btn')
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             categoryId = button.getAttribute('data-id')
@@ -155,29 +100,7 @@
             deleteForm.action = '/admin/categorys/' + categoryId + '?_method=DELETE'
             deleteForm.submit()
         }
-<<<<<<< HEAD
-        // checkbox all changed
-        checkboxAll.change(function () {
-            var isCheckedAll = $(this).prop('checked')
-            categoryItemcheckbox.prop('checked', isCheckedAll)
-            renderCheckAllSubmitBtn()
-        })
-        // category item checkbox changed
-        categoryItemcheckbox.change(function () {
-            var isCheckedAll = categoryItemcheckbox.length === $('input[name="categoryIds[]"]:checked').length
-            checkboxAll.prop('checked', isCheckedAll)
-            renderCheckAllSubmitBtn()
-        })
-        //Re-render check all submit button
-        function renderCheckAllSubmitBtn(){
-            var checkCount =  $('input[name="categoryIds[]"]:checked').length
-            if (checkCount > 0){
-                btnCheckAllSubmit.removeClass('disabled')
-            }else{
-                btnCheckAllSubmit.addClass('disabled')
-            }
-        }
-=======
+
         //Check box all clicked
         checkBoxAll.change(function (){
             var isCheckAll = $(this).prop('checked')
@@ -201,7 +124,6 @@
             }
         }
         
->>>>>>> 97ecda29fe0640bd6627c26b2fa22d7b0052013a
     })
 
 </script>
