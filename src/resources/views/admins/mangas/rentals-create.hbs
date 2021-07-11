@@ -1,0 +1,66 @@
+
+<div class="content">
+    <div class="menu">
+        <ul>
+            <a href="/admin/manga/">
+                <li>
+                    Quản lý truyện
+                </li>
+            </a>
+            <a href="/admin/categorys/">
+                <li>
+                    Quản lý thể loại truyện
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Quản lý nhân viên
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Tạo phiếu mượn
+                </li>
+            </a>
+            <a href="">
+                <li>
+                    Thống kê
+                </li>
+            </a>
+        </ul>
+    </div>
+
+    <div class="rentals-create">
+        <form action="/admin/manga/rentals/{{mangas.slug}}/createbook" method="POST" enctype="multipart/form-data">
+            <div class="form-rental">
+                <label for="numberVol">Số tập:</label>
+                <input type="text" id="numberVol" name="numberVol" class="txtInputRentalSmall">
+
+                <label for="amount">Số lượng: </label>
+                <input type="text" id="amount" name="amount" class="txtInputRentalSmall">
+            </div>
+            <div class="form-rental">
+                <label >Ảnh bìa:</label>
+                <input type="file" name="avatarNumberVol">
+            </div>
+            <div class="form-rental">
+                <label for="price">Giá: </label>
+                <input type="text" id="price" name="price" class="txtInputRental">
+            </div>
+            <div  class="form-rental">
+                <label for="author">Tác giả: </label>
+                <input type="text" id="author" name="author" class="txtInputRental">
+            </div>
+            <div class="form-rental">
+                <label for="publisher">Nhà xuất bản: </label>
+                <input type="text" id="publisher" name="publisher" class="txtInputRentalFull">
+            </div>
+
+            <div >
+                <button type="submit" class="btn btn-outline-primary">Tạo</button>
+            </div>
+        </form>
+    </div>
+
+        
+</div>

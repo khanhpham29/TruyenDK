@@ -1,0 +1,12 @@
+<table class="table">
+    {{#each posts}}
+        <thead>
+            <tr>
+            <th scope="col">{{this.content}}</th>
+            <th scope="col">{{dateFormat this.createdAt}}</th>
+            </tr>
+        </thead>
+    {{/each}}
+    <tbody>
+    </tbody>
+</table>

@@ -1,13 +1,23 @@
 @import 'variables';
 
-
-.checkbox-select-all-options{
-	width: 120px;
+@mixin reset-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
-// body{
-// 	padding: 0;
-// 	margin: 0;
-// }
+.align-items-center{
+	.checkbox-select-all-options{
+		width: 120px;
+		margin: 0 8px
+	}
+}
+body{
+	background: whitesmoke;
+	-webkit-font-smoothing: subpixel-antialiased;
+	font-family: 'Muli', sans-self;
+	padding: 0;
+	margin: 0;
+}
 // .header{
 // 	position: fixed;
 // 	/*margin-top: -16px;*/
@@ -199,6 +209,255 @@
 		&.info{
 			font-weight: 400;
 			margin-left: 30px;
+		}
+	}
+}
+
+//CSS giao dien admin
+.content{
+	display: flex;
+	width: 100%;
+	height: 100%;
+	//CSS phần menu left
+	
+	.menu{
+		width: $width-menu-admin;
+		height: 100%;
+		background: #333;
+		ul{
+			@include reset-list;
+			a{
+				color: red;
+				text-decoration: none;
+				border-bottom: 1px solid #fff;
+				li{
+					padding: 10px;
+					border-bottom: 1px solid #fff;
+				}
+				
+			}
+		}
+	}
+			
+}
+//CSS trang thêm manga(create-manga)
+
+.create-manga, .edit-manga{
+	.form-group{
+		margin-top: 5px;
+		label{
+			font-weight: 500;
+			width: 80px;
+		}
+		input[type="text"], textarea{
+			width: 300px;
+		}		
+	}
+	.category{
+		margin-left: 80px;
+	}
+	.btn-create-manga{
+		margin-top: 5px;
+	}
+}
+
+.create-manga{
+	.btn-rental{
+		width: 100%;
+		background: aqua;
+		color: #333;
+		float: right;
+		margin-bottom: 10px;
+		text-decoration: none;
+		text-align: center;
+		margin: 0px auto;
+		border: 1px solid #0d6efd;
+		cursor: pointer;
+		display: none;
+		margin-bottom: 10px;
+	}
+	.rental{
+		width:100%;
+		margin-left: 80px;
+		display: none;
+		.form-rental{
+			width:100%;
+			margin-top: 5px;
+			label{
+				font-weight: 500;
+				width: 100px;
+			}
+			.txtInputRentalSmall{
+				width: 50px;
+			}
+			.txtInputRental{
+				width:150px;
+			}
+			.txtInputRentalFull{
+				width:300px;
+			}
+		}
+	}
+}
+
+.details-manga-img{
+	width: 100%;
+	height:100%;
+	img{
+		margin-top: 10px;
+	}
+}
+
+.details-manga{
+	width:100%;
+	height:100%;
+	display:flex;
+	.img-avatar{
+		width: 30%;
+		img{
+			width:100%;
+			height:100%;
+		}
+	}
+
+	.content{
+		width:70%;
+		display: block;
+		
+		.name{
+			font-size: 32px;
+			font-weight:400;
+		}
+	}
+}
+.create-chapter-manga{
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	margin-left: 10px;
+	margin-top: 5px;
+	.nameManga{
+		font-size: 32px;
+		color: blue;
+		font-weight: 500;
+	}
+	.nameChapter, .linkImg{
+		margin-top: 5px;
+		font-weight: 400;
+		font-size: 20px;
+	}
+
+	.linkImg input[type="file"]{
+		background: #0d6efd;
+		width: 280px;
+	}
+	.btn-create-chapter-manga{
+		margin-top: 5px;
+	}
+}
+
+
+	
+.manga{
+	background: #fff;
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	border: 1px solid #333;
+	margin-left: 2px;
+	
+	.top{
+		display: flex;
+		width: 100%;
+		.search-submit, .search-input{
+			margin-top: 10px;
+			margin-right: 10px;
+		}
+		.button{
+			position: relative;
+			right: 0;
+			top: 0;
+			.btn-add-manga, .btn-rentals-manga{
+				button{
+					float: right;
+					margin-top: 10px;
+					margin-right: 10px;
+					min-width: 50px;
+					border: 1px solid #333;
+				}
+			}
+		}
+		
+	}
+	
+	.mangaList{
+		.table{
+			thead{
+				font-weight: 500;
+			}
+		}
+		.control{
+			a{
+				text-decoration: none;
+			}
+		}
+		
+	}		
+}
+
+.edit-manga{
+	
+}
+
+.details-rental-manga{
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	margin-left: 5px;
+	.btn-back{
+		margin-top: 5px;
+		margin-left: 5px;
+	}
+	.tentruyen{
+		width: 100%;
+		text-align: center;
+	}
+}
+
+.rentals-create{
+	width: calc(100% - $width-menu-admin);
+
+	.nameManga{
+		color: blue;
+	}
+
+	.numberVolNew{
+		font-weight: 500;
+		font-size: 24px;
+	}
+	.form-rental{
+		width:100%;
+		margin-top: 5px;
+		label{
+			font-weight: 500;
+			width: 100px;
+		}
+		.txtInputRentalSmall{
+			width: 50px;
+		}
+		.txtInputRental{
+			width:150px;
+		}
+		.txtInputRentalFull{
+			width:300px;
+		}
+	}
+}
+
+.manga-rentals-list-details{
+	width: calc(100% - $width-menu-admin);
+	height: 100%;
+	.rentalsListData{
+		.img{
+			width: 40px;
+			height: 40px;
 		}
 	}
 }

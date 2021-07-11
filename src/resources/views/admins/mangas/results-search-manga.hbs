@@ -1,0 +1,76 @@
+   <div class="content">
+        <div class="menu">
+            <ul>
+                <a href="/admin/manga/">
+                    <li>
+                        Quản lý truyện
+                    </li>
+                </a>
+                <a href="/admin/categorys/">
+                    <li>
+                        Quản lý thể loại truyện
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Quản lý nhân viên
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Tạo phiếu mượn
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Thống kê
+                    </li>
+                </a>
+            </ul>
+        </div>
+        {{!-- info --}}
+        <div class="rentalsList">
+            <div>
+                    <form action="/admin/rentals/search">
+                        <input type="text" class="search-input" id="search" name="tentruyen">
+                        <button class="search-submit"  type="submit">Tìm</button>
+                    </form>
+                </div>
+            <div>
+                <a href="/admin/manga/" class="btn-back">
+                    <button class="btn btn-primary" >Quay lại</button>
+                </a>
+                
+            </div>
+            
+            <div class="rentalsListData">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Tên truyện</td>
+                            <td>Mô tả</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {{#each mangas}}
+                            <tr>
+                                <th>{{sum @index 1}}</td>
+                                <td><a href="/admin/rentals/{{this.slug}}">{{this.tentruyen}}</a></td>   
+                                <td>{{this.mota}}</td> 
+                                <div class="control">
+                                    <td>
+                                        <a href="/admin/rentals/{{this.slug}}/addbook">Thêm chap</a>
+                                    </td>
+                                </div>                 
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                    
+                </table>
+                    
+            </div>
+        </div>
+    </div>
+

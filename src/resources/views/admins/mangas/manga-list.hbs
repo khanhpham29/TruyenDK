@@ -1,0 +1,103 @@
+   <div class="content">
+        <div class="menu">
+            <ul>
+                <a href="/admin/manga/">
+                    <li>
+                        Quản lý truyện
+                    </li>
+                </a>
+                <a href="/admin/categorys/">
+                    <li>
+                        Quản lý thể loại truyện
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Quản lý nhân viên
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Tạo phiếu mượn
+                    </li>
+                </a>
+                <a href="">
+                    <li>
+                        Thống kê
+                    </li>
+                </a>
+            </ul>
+        </div>
+        {{!-- info --}}
+        <div class="manga">
+            <div class="top">
+                <form action="/admin/manga/rentals/search">
+                    <input type="text" class="search-input" id="search" name="tentruyen">
+                    <button class="search-submit"  type="submit">Tìm</button>
+                </form>
+                <div class="button">
+                    <a href="/admin/manga/add" class="btn-add-manga">
+                        <button class="btn btn-primary" >Add new manga</button>
+                    </a>
+
+                    <a href="/admin/manga/rentals" class="btn-rentals-manga">
+                        <button class="btn btn-primary" >Manga rentals</button>
+                    </a>
+                </div>
+                
+            </div>
+            
+            <div class="mangaList">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Tên truyện</td>
+                            <td>Thể loại</td>
+                            <td>Mô tả</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each mangas}}
+                            <tr>
+                                <th>{{sum @index 1}}</td>
+                                <td>{{this.tentruyen}}</td> 
+                                <td class="theloai">
+                                    {{#each this.theloai}}                              
+                                        {{this}},  
+                                    {{/each}}  
+                                </td>                           
+                                <td>{{this.mota}}</td>
+
+                                <div class="control">
+                                    <td>
+                                        <a href="/admin/manga/{{this.tentruyen}}/addchap">Thêm chap</a>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/manga/{{this.tentruyen}}/edit">Sửa</a>
+                                    </td>
+                                    {{!-- <td>
+                                        <a href="">Xóa</a>
+                                    </td> --}}
+
+                                </div>
+                                
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                    
+                </table>
+                    
+            </div>
+        </div>
+    </div>
+
+<script>  
+    var a = document.getElementsByClassName('theloai').length
+    for(var i = 0; i< a ;i++){
+        q = document.getElementsByClassName('theloai')[i].innerText
+        b = q.lastIndexOf(',')
+        c = q.slice(0,b)
+        d = document.getElementsByClassName('theloai')[i].innerText = c
+    }
+</script>
