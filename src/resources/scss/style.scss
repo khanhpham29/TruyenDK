@@ -1,12 +1,16 @@
 @import 'variables';
-$red-color: green;
-$width-menu-admin: 20%;
 
 @mixin reset-list {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
+
+@mixin reset-the-a {
+	text-decoration:none;
+	color: #333
+}
+
 .align-items-center{
 	.checkbox-select-all-options{
 		width: 120px;
@@ -297,3 +301,92 @@ body{
 	}
 }
 
+// ------------Header-------------
+.header{
+	width: 100%;
+	height: $height-header;
+	display: flex;
+	.logo{
+		float: left;
+		height: 100%;
+		width: $height-header * 2;
+		img{
+			width: 100%;
+			height: 100%;
+			margin-left: 5px;
+		}
+	}
+
+	.content-header{
+		width: 100%;
+		height: 100%;
+		display: flex;
+		margin-left: 30px;
+		justify-content: space-between;
+		.menu{
+			float: left;
+			ul{
+				@include reset-list;
+				display: flex;
+				li{
+					margin-right: 15px;
+					font-weight: 500;
+					a{
+						@include reset-the-a
+					}
+					a:hover{
+						font-weight: 400;
+					}
+				}
+				
+			}
+		}
+		.search{
+			float: right;
+			position: relative;
+			height: 100%;
+			width: 200px;
+			.search-input{
+				border-radius: 30px;
+				height: calc(100% - 10px);
+				width: 100%;
+				padding-left: 20px;
+				padding-right: 40px;
+				margin: 5px 8px 0 0;
+			}
+			.search-submit{
+				position: absolute;
+				right: 0;
+				top: 4px;
+				border: none;
+				background-color: transparent;
+				height: 30px;
+				width: 40px;
+				text-align: center;
+			}
+		}
+	}
+
+	.user{
+		float: right;
+		position: relative;
+		display: flex;
+		height: 100%;
+		width: 200px;
+		margin-left: 30px;
+		.follow-icon, .noti-icon{
+			height: 40px;
+			width: 40px;
+			margin-top: calc((40px - 20px)/2);
+			i{
+				font-size: 20px;	
+			}
+		}
+		.user-icon{
+			height: 40px;
+			width: 40px;
+			border-radius: 10px;
+		}
+
+	}
+}
