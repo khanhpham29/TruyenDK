@@ -44,10 +44,6 @@ class AuthController{
     // [POST] /signup
     async registerPost(req , res , next){
         const { email, password, name , phone } = req.body
-        if(isNaN(phone)){
-            throw new Error('Phone must be a number')
-            next()
-        }
         try{
             const user =  await User.create({ email, password, name , phone })
             // tạo token

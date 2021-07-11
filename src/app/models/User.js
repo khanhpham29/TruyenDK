@@ -23,10 +23,9 @@ const userSchema =  new Schema({
         maxLength: [25, 'Tên quá dài vui lòng nhập lại']
     },
     phone:{ 
-        type: Number,
+        type: String,
         required: [true, 'Vui lòng nhập Số điện thoại'],
         minLength:[10, 'Số điện thoại ít nhất phải có 10 số'],
-        
     },
     role:{ 
         type: String,
