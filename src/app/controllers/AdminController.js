@@ -255,10 +255,11 @@ class AdminController{
     createChapterManga(req,res,next){
         Manga.findOne({ slug: req.params.slug })
         .then(truyen => {
+            console.log(truyen)
             res.render('admins/mangas/create-chapter-manga', 
             {
                 truyen: mongooseToOject(truyen), 
-                layout: 'admin.hbs'
+                layout: 'admin'
             })
         })
         .catch(next)

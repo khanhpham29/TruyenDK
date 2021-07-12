@@ -32,7 +32,7 @@ router.get('/manga/:slug/addChap',adminController.createChapterManga)
 //Add new chapter of manga: name
 router.post('/manga/:slug/addChap',upload.array('imgOfManga', 10), adminController.createChapter)
 //Read chapter manga
-router.get('/manga/:tentruyen/:chapter', adminController.readChap)
+router.get('/manga/:slug/:chapter', adminController.readChap)
 //Infomation of manga :name
 router.get('/manga/:slug', adminController.infoManga)
 //Infomation all manga from database

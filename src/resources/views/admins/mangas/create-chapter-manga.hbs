@@ -1,36 +1,7 @@
-<div class="content">
-    <div class="menu">
-        <ul>
-            <a href="/admin/manga/">
-                <li>
-                    Quản lý truyện
-                </li>
-            </a>
-            <a href="/admin/categorys/">
-                <li>
-                    Quản lý thể loại truyện
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Quản lý nhân viên
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Tạo phiếu mượn
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Thống kê
-                </li>
-            </a>
-        </ul>
-    </div>
+<div class="container">
     {{!-- Nội dung Trang --}}
     <div class="create-chapter-manga">
-        <form action="/admin/manga/{{truyen.tentruyen}}/addChap" method="POST" enctype="multipart/form-data">
+        <form action="/admin/manga/{{truyen.slug}}/addChap" method="POST" enctype="multipart/form-data">
             <div class="nameManga">
                 Tên truyện: {{truyen.tentruyen}}
             </div>
