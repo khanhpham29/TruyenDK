@@ -1,38 +1,9 @@
 
 <div class="content">
-    <div class="menu">
-        <ul>
-            <a href="/admin/manga/">
-                <li>
-                    Quản lý truyện
-                </li>
-            </a>
-            <a href="/admin/categorys/">
-                <li>
-                    Quản lý thể loại truyện
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Quản lý nhân viên
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Tạo phiếu mượn
-                </li>
-            </a>
-            <a href="">
-                <li>
-                    Thống kê
-                </li>
-            </a>
-        </ul>
-    </div>
     {{!-- Nội dung trang  --}}
     <div class="info">
         <div class="create-manga">
-            <form action="/admin/add" method="POST" enctype="multipart/form-data">
+            <form action="/admin/manga/add" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nameManga">Tên truyện</label>
                     <input type="text" id="nameManga" name="nameManga" class="txtInput">

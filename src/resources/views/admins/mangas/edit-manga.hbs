@@ -2,7 +2,7 @@
 <div class="container">
     {{!-- Nội dung trang  --}}
     <div class="edit-manga">
-        <form action="/admin/manga/{{mangas.tentruyen}}?_method=PUT" method="POST" enctype="multipart/form-data">
+        <form action="/admin/manga/{{mangas.slug}}?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nameManga">Tên truyện:</label>
                     <input type="text" id="nameManga" value="{{mangas.tentruyen}}" name="nameManga" class="txtInput">
@@ -38,7 +38,7 @@
                     <div>
                         <div class="valueRentalData" hidden>{{mangas.chothue}}</div>
                         <label for="cbRental">Cho thuê:</label>
-                        <input type="checkbox" id="cbRental" name="cbRental" value="true">
+                        <input type="checkbox" id="cbRental" name="cbRental">
                     </div> 
                 </div>
                 
