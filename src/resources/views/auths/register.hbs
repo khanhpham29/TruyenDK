@@ -105,23 +105,3 @@
         })
     })
 </script>
-
-            {{!-- try{
-                const res = await fetch('/register',{
-                    method: 'POST',
-                    body: JSON.stringify({ email, password}),
-                    headers: { "Content-Type": "application/json" }
-                })
-                const data = await res.json()
-                if(data.errors){
-                    emailError.text(data.errors.email)
-                    passwordError.text(data.errors.password)
-                }
-                if(data.user){
-                    location.assign('/login')   
-                }
-            }
-            catch(err){
-                console.log(err)
-            } --}}
-

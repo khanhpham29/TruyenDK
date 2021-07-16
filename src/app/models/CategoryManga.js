@@ -12,10 +12,9 @@ const categorySchema = new Schema({
 	},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
-	
 },{
 	_id: false,
-	collection: 'categories'
+	collection: 'categorys'
 }
 );
 // Custom query helpers

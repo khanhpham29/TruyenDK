@@ -1,0 +1,69 @@
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Welcome User!</h3>
+
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Content -->
+<div class="container ">
+    <div class="latest">
+        <div class="caption">
+            <a href="#">
+                <span><i class="fas fa-star"></i></span>
+                "Truyện cho thuê"
+            </a>
+        </div>
+        {{#each rentals}}
+        <ul class="list-manga grid-6">
+            {{#each this.books}}
+                <li>
+                    <div class="manga-item">
+                        <a href="/manga/{{this.slug}}"> <img src="/img/{{this.anhbia}}" alt="#"></a>
+                        <h4 class="title-book">
+                            <p href="#">Tên Truyện: {{this.tentruyen}}</p>
+                            
+                        </h4>
+                        <p href="#">Tập số: {{this.tapso}}, Giá thuê {{this.giathue}}</p>
+                        <div class="chapter-book">
+                            <button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>
+                        </div>
+                        <div class="more-info"></div>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+        {{/each}}
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        var btnAddToCarts = document.querySelectorAll(".btn-add-to-cart")
+        var cartItem = document.querySelector('.cart-item')
+        btnAddToCarts.forEach(btn => {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                var idBook = this.getAttribute("data-id")
+                axios.post('/addToCart/'+ idBook)
+                .then((res)=>{
+                    const totalItem = res.data.user.cart.totalItem
+                    if(res.data){
+                        alert(res.data.message)
+                    }
+                    cartItem.innerText = totalItem
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            }
+        })
+    })
+</script>

@@ -1,37 +1,9 @@
 
 <div class="content">
-        <div class="menu">
-            <ul>
-                <a href="/admin/manga/">
-                    <li>
-                        Quản lý truyện
-                    </li>
-                </a>
-                <a href="/admin/categorys/">
-                    <li>
-                        Quản lý thể loại truyện
-                    </li>
-                </a>
-                <a href="">
-                    <li>
-                        Quản lý nhân viên
-                    </li>
-                </a>
-                <a href="">
-                    <li>
-                        Tạo phiếu mượn
-                    </li>
-                </a>
-                <a href="">
-                    <li>
-                        Thống kê
-                    </li>
-                </a>
-            </ul>
-        </div>
+        
     {{!-- Nội dung trang  --}}
     <div class="edit-manga">
-        <form action="/admin/manga/{{mangas.tentruyen}}?_method=PUT" method="POST" enctype="multipart/form-data">
+        <form action="/admin/manga/{{mangas.slug}}?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nameManga">Tên truyện:</label>
                     <input type="text" id="nameManga" value="{{mangas.tentruyen}}" name="nameManga" class="txtInput">
@@ -46,7 +18,6 @@
                 <div class="form-group">
                     <label for="category">Thể loại: </label>
                     <div class="category">
-                         
                         <div name="dataCategories[]" hidden value="{{mangas.theloai}}">{{mangas.theloai}}</div>
                         {{#each categories}}
                             <label >{{this.tenloai}}</label>

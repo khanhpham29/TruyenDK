@@ -8,14 +8,16 @@ const upload = require('../app/middlewares/multer')
 
 //--------------------MANGA------------------//
 
+
+//Form create vol books
+router.get('/manga/rentals/:slug/addbook', adminController.retailsAddBooks)
+//Create vol books
+router.post('/manga/rentals/:slug/addbook',upload.single('avatarNumberVol'), adminController.retailsAdd)
 //Search bar manga
 router.get('/manga/rentals/search', adminController.search)
 //List rentals for manga
 router.get('/manga/rentals', adminController.mangaRentals)
-//Form create vol books
-router.get('/manga/rentals/:slug/addbook', adminController.retailsCreateBooks)
-//Create vol books
-router.post('/manga/rentals/:slug/createbook',upload.single('avatarNumberVol'), adminController.retailsCreate)
+
 //Details rentals manga
 router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
 //Form add new manga

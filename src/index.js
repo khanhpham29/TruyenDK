@@ -40,8 +40,10 @@ app.engine('hbs',
         extname: '.hbs',
         defaultLayout: 'user.hbs',
         helpers: require('./app/helpres/handblebars'),
-        allowProtoPropertiesByDefault: true,
-        allowProtoMethodsByDefault: true,
+        runtimeOptions: {
+            allowProtoPropertiesByDefault: true,
+            allowProtoMethodsByDefault: true,
+            },
     })
 )
 app.set('view engine', '.hbs')

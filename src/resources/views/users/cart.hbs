@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="row">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên truyện</th>
+                <th>Tập số</th>
+                <th>Giá Thuê</th>
+                <th>Số lượng</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cart.items}}
+                <tr class="row-delete" data-id="{{this.bookId._id}}">
+                    <th>{{sum @index 1}}</th>
+                    <th>{{this.bookId.tentruyen}}</th>
+                    <th>{{this.bookId.tapso}}</th>
+                    <th>{{this.bookId.giathue}}₫</th>
+                    <th>{{this.amount}}</th>
+                    <th>
+                        <button class="btn btn-danger btn-delete-item" data-id="{{this.bookId._id}}">Xóa</button>
+                    </th>
+                </tr>
+            {{/each}}
+                <tr>
+                    <td colspan="4" style="text-align: right;">Tổng tiền:</td>
+                    <td >
+                        <div class="tong-tien">
+                            {{cart.totalPrice}}₫
+                        </div>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var btnDeleteItem = document.querySelectorAll('.btn-delete-item')
+        var rowDelete = document.querySelectorAll('.row-delete')
+        var cartItem = document.querySelector('.cart-item')
+        console.log(cartItem)
+        var tongtienEl = document.querySelector('.tong-tien')
+        btnDeleteItem.forEach(btn =>{
+            btn.onclick = function (){
+                tongtienEl.innerText = ""
+                cartItem.innerText = ""
+                var idItem = this.getAttribute("data-id")
+                this.parentElement.parentElement.remove()
+                axios.post('/deleteItem/' + idItem)
+                .then((res)=>{
+                    const totalPrice = res.data.cart.totalPrice
+                    const totalItem = res.data.cart.totalItem
+                    tongtienEl.innerText = totalPrice + "₫"
+                    cartItem.innerText = totalItem
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            }
+        })
+    })
+</script>

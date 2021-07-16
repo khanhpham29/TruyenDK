@@ -4,7 +4,7 @@ const moment = require('moment')
 module.exports = {
     sum: (a, b) => a + b,
     dateFormat: (date,options)=>{
-        const formatToUse = (arguments[1] && arguments[1].hash && arguments[1].hash.format) || "dd MM/DD/YYYY HH:mm:ss"
+        const formatToUse = (options && options.hash && options.hash.format) || "dd MM/DD/YYYY HH:mm:ss"
         return moment(date).format(formatToUse);
     },
     sortTable: (field, sort) =>{
@@ -28,5 +28,8 @@ module.exports = {
                     </a>`
         return new  Handlebars.SafeString(output)
     },
+    isdefined: function (value) {
+        return value !== 0;
+    }
 
 }
