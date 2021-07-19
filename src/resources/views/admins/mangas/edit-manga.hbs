@@ -1,5 +1,6 @@
 
-<div class="container">
+<div class="content">
+        
     {{!-- Nội dung trang  --}}
     <div class="edit-manga">
         <form action="/admin/manga/{{mangas.slug}}?_method=PUT" method="POST" enctype="multipart/form-data">
@@ -17,7 +18,6 @@
                 <div class="form-group">
                     <label for="category">Thể loại: </label>
                     <div class="category">
-                         
                         <div name="dataCategories[]" hidden value="{{mangas.theloai}}">{{mangas.theloai}}</div>
                         {{#each categories}}
                             <label >{{this.tenloai}}</label>
@@ -38,7 +38,7 @@
                     <div>
                         <div class="valueRentalData" hidden>{{mangas.chothue}}</div>
                         <label for="cbRental">Cho thuê:</label>
-                        <input type="checkbox" id="cbRental" name="cbRental">
+                        <input type="checkbox" id="cbRental" name="cbRental" value="true">
                     </div> 
                 </div>
                 

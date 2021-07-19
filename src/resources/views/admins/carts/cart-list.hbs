@@ -1,0 +1,34 @@
+<div class="row">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Phone</th>
+                <th>Trạng thái</th>
+                <th>Lý do</th>
+                <th>Giá Thuê</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {{#each cart}}
+                <tr>
+                    <th>{{sum @index 1}}</th>
+                    <th>{{this.phone}}</th>
+                    <th id="{{this._id}}">{{this.status}}</th>
+                    <th></th>
+                    <th>{{this.totalPrice}}</th>
+                </tr>
+            {{/each}}
+            
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var status = document.getElementById("data-id")
+        console.log(status)
+    }
+</script>

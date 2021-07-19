@@ -30,6 +30,7 @@ const checkUser = (req, res, next) =>{
             }else{
                 let user = await User.findById(decodedToken.id)
                 req.data = user
+                req.user = user
                 res.locals.user = user.toObject()
                 next()
             }

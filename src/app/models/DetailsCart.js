@@ -2,14 +2,21 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const detailsCartSchema =  new Schema({
-    _id: Schema.Types.ObjectId,
-    idRentalBooks: [{
+
+    idCart: {
         type: Schema.Types.ObjectId,
+        ref: 'Cart'
+    },
+    listRentalBooks: [{
+        tentruyen: {type: String},
+        tapso: {type: String},
+        amount: {type: Number},
+        giathue: {type: Number}
     }],
-    status: {
-        type: String,
-        default: 'Chưa xác thực'
-    }
+    songaythue: {
+        type: Number,
+    },
+    createAt:{ type: Date, default: Date.now},
 
 },{
     collection: 'detailscarts'

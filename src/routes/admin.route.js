@@ -8,20 +8,21 @@ const upload = require('../app/middlewares/multer')
 
 //--------------------MANGA------------------//
 
+
+//Form create vol books
+router.get('/manga/rentals/:slug/addbook', adminController.retailsAddBooks)
+//Create vol books
+router.post('/manga/rentals/:slug/addbook',upload.single('avatarNumberVol'), adminController.retailsAdd)
 //Search bar manga
 router.get('/manga/rentals/search', adminController.search)
 //List rentals for manga
 router.get('/manga/rentals', adminController.mangaRentals)
-//Form create vol books
-router.get('/manga/rentals/:slug/addbook', adminController.retailsCreateBooks)
-//Create vol books
-router.post('/manga/rentals/:slug/createbook',upload.single('avatarNumberVol'), adminController.retailsCreate)
+
 //Details rentals manga
 router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-
 router.post('/manga/add',upload.fields([{name: 'avatarManga'},{name: 'avatarNumberVol'}]), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
@@ -32,7 +33,7 @@ router.get('/manga/:slug/addChap',adminController.createChapterManga)
 //Add new chapter of manga: name
 router.post('/manga/:slug/addChap',upload.array('imgOfManga', 10), adminController.createChapter)
 //Read chapter manga
-router.get('/manga/:slug/:chapter', adminController.readChap)
+router.get('/manga/:tentruyen/:chapter', adminController.readChap)
 //Infomation of manga :name
 router.get('/manga/:slug', adminController.infoManga)
 //Infomation all manga from database
@@ -64,8 +65,8 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
-
-
+router.post('/rentals', adminController.userRentals)
+router.get('/rentals/list', adminController.userRentalsList)
 
 
 //-----------------------USERS--------------------//

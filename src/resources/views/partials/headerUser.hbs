@@ -1,54 +1,51 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<div class="container">
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-			<a class="navbar-brand" href="#">Hidden brand</a>
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="#">Truyện cho thuê</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Thể loại</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Xem nhiều</a>
-				</li>
-			</ul>
-			<div class="search">
-				<form action="/search/">
-					<input class="search-input" type="text" placeholder="Nhập nội dung" name="keywords" id="keywords">
-					<button class="search-submit" type="submit" value="Tìm kiếm">
-						<i class="fas fa-search"></i>
-					</button>
-				</form>
-			</div>
-			<div class="d-flex user">
-				{{#if user}}
-					<div class="follow-icon">
-						<span>
-							<i class="fas fa-heart"></i>
-						</span>
-					</div>
-					<div class="noti-icon">
-						<span>
-							<i class="fas fa-bell"></i>
-						</span>
-					</div>
-					<div class="user-icon">
 
-					</div>
-					<div class="">welcome, {{user.email}}</div>
-					<a class="" style="text-decoration:none"  href="/logout">Đăng Xuất</a>
-				{{else}}
-					<a class="" style="text-decoration:none"  href="/login">Đăng nhập/</a>
-					<a class="" style="text-decoration:none" href="/register">Đăng ký</a>
-				{{/if}}
-			</div>	
+<div class="top-bar">
+	<div class="container">
+		<div class="level">
+			<div class="level-left">
+				<span class="logo">
+					<a href="">TruyenDK</a>
+				</span>
+				<div class="top-search">
+					<input type="text" class="text-search" placeholder="Nhập gì đó...">
+					<button class="btn_search btn-submit"></button>
+				</div>
+			</div>
+			<div class="level-right">
+				<ul class="top-links">
+					<li>
+						<a href="/rental">Truyện cho thuê</a>
+					</li>
+					<li>
+						<a href="/category">Thể loại</a>
+					</li>
+					<li>
+						<a href="/cart">
+							<span>
+								<i class="fas fa-shopping-cart cart-item">
+									{{#if (isdefined user.cart.totalItem)}}
+										{{user.cart.totalItem}}
+									{{/if}}
+								</i>
+							</span>
+						</a>
+					</li>
+				</ul>
+				<div class="top-buttons has-login">
+					{{#if user}}
+						<a class="" style="text-decoration:none"  href="/logout">Đăng Xuất</a>
+					{{else}}
+						<button class="login-btn" >
+							<a  style="text-decoration:none; color: white !important;" href="/login">Đăng nhập</a>
+						</button>
+						<button class="register-btn" >
+							<a  style="text-decoration:none; color: white !important;" href="/register">Đăng ký</a>
+						</button>
+					{{/if }}
+				</div>
+			</div>
 		</div>
 	</div>
-</nav>
-
+</div>
 
 

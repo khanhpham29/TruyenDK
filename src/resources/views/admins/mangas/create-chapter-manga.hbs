@@ -1,11 +1,10 @@
-<div class="container">
+<div class="content">
     {{!-- Nội dung Trang --}}
     <div class="create-chapter-manga">
         <form action="/admin/manga/{{truyen.slug}}/addChap" method="POST" enctype="multipart/form-data">
             <div class="nameManga">
                 Tên truyện: {{truyen.tentruyen}}
             </div>
-            
             <div class="nameChapter">
                 <label for="chapter">Tên chap: </label>
                 <input type="text" placeholder="Vd: chap01" name="chapter" >    

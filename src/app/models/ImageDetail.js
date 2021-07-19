@@ -5,11 +5,16 @@ mongoose.plugin(slug);
 const Schema = mongoose.Schema;
 
 const ImgForChapterSchema = new Schema({
-	_id: Schema.Types.ObjectId,
+	idDetail: {	
+		type: Schema.Types.ObjectId,
+		ref:'DetailManga'
+	},
 	imgManga: { type: Object, default: '', unique: true},
 	chapter:{ 
 		type: String, 
-	}
+	},
+	tentruyen:{type:String},
+	slug:{ type: String, slug: 'tentruyen'},
     },{
         collection: 'imgdetails'
     })

@@ -10,7 +10,7 @@ const methodOverride = require('method-override')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 
 const http = require('http')
 const server = http.createServer(app)
@@ -40,8 +40,10 @@ app.engine('hbs',
         extname: '.hbs',
         defaultLayout: 'user.hbs',
         helpers: require('./app/helpres/handblebars'),
-        allowProtoPropertiesByDefault: true,
-        allowProtoMethodsByDefault: true,
+        runtimeOptions: {
+            allowProtoPropertiesByDefault: true,
+            allowProtoMethodsByDefault: true,
+            },
     })
 )
 app.set('view engine', '.hbs')

@@ -1,0 +1,82 @@
+<div class="container has-background-white story-detail">
+    <div class="block01">
+        <div class="left">
+            <img src="/img/{{truyen.hinh}}" alt="{{truyen.text}}">
+        </div>
+        <div class="center">
+            <h1>{{truyen.tentruyen}}</h1>
+            <div class="txt">
+                <span class="info-item">Tên khác: {{truyen.tenkhac}}</span>
+                <p class="info-item">Tình trạng: {{truyen.trangthai}}</p>
+                <div>
+                    <span>Thống kê</span>
+                    <span class="sp01">
+                        <i class="fas fa-thumbs-up"></i> <span class="sp02 number-like">99</span>
+                    </span>
+                    <span class="sp01">
+                        <i class="fas fa-heart"></i> <span class="sp02">99</span>
+                    </span>
+                    <span class="sp01">
+                        <i class="fas fa-eye"></i> <span class="sp02">99</span>
+                    </span>
+                </div>
+            </div>
+            <ul class="list01">
+                {{#each truyen.theloai}}
+                    <li class="li03">
+                        <a href="#">{{this}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+            <ul class="story-detail-menu">
+                <li class="li01">
+                    <a href="#" class="button is-danger is-rounded">
+                        <span class="btn-read"></span>Đọc từ đầu
+                    </a>
+                </li>
+                <li class="li02"><a href="#" class="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id="11004"><span class="fas fa-heart"></span>Theo dõi</a></li>
+                <li class="li03"><a href="#" class="button is-danger is-rounded btn-like" data-id="11004"><span class="fas fa-thumbs-up"></span>Thích</a></li>
+            </ul>
+            <div class="txt txt01 story-detail-info readmore-js-section readmore-js-collapsed" itemprop="description" style="height: 60px;">
+                <p>{{truyen.mota}}</p>
+            </div>
+            <p class="readmore readmore-js-toggle" ><a href="#">Xem Thêm</a></p>
+        </div>
+    </div>
+    <div class="block02">
+        <div class="title">
+            <h2 class="story-detail-title">Danh sách chương</h2>
+        </div>
+        <div class="box">
+            <div class="works-chapter-list">
+                {{#with detail}}
+                    {{#each ImgDetails}}
+                    <div class="works-chapter-item row">
+                        <div class="col-md-10 col-sm-10 col-xs-8">
+                            <a target="_blank" href="/manga/{{this._id}}-{{this.chapter}}">Chương {{this.chapter}}</a>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-4 text-right">
+                            {{dateFormat this.createAt format='DD/MM/YYYY'}}
+                        </div>
+                    </div>
+                    {{/each}}
+                {{/with}}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        var description = $('.readmore-js-collapsed')
+        var btnReadmore = $('.readmore')
+        btnReadmore.on('click',()=>{
+            if(description.hasClass("readmore-js-collapsed")){
+                description.removeClass("readmore-js-collapsed")
+                description.addClass("readmore-js-expanded")
+            }else{
+                description.removeClass("readmore-js-expanded")
+                description.addClass("readmore-js-collapsed")
+            }
+        })
+    })
+</script>

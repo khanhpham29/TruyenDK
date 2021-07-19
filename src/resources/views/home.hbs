@@ -1,18 +1,41 @@
-<!-- Page Wrapper -->
-    <div class="page-wrapper">
-        <!-- Page Content -->
-        <div class="content container-fluid">
-            <!-- Page Header -->
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3 class="page-title">Welcome User!</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ul>
-                    </div>
-                </div>
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Welcome User!</h3>
+
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ul>
             </div>
         </div>
     </div>
-<!-- /Page Wrapper -->
+</div>
+<!-- Page Content -->
+<div class="container ">
+    <div class="latest">
+        <div class="caption">
+            <a href="#">
+                <span><i class="fas fa-star"></i></span>
+                "Caption Something"
+            </a>
+        </div>
+        <ul class="list-manga grid-6">
+            {{#each mangas}}
+                <li>
+                    <div class="manga-item">
+                        <a href="/manga/{{this.slug}}"> <img src="/img/{{this.hinh}}" alt="#"> </a>
+                        <h3 class="title-book">
+                            <a href="#">{{this.tentruyen}}</a>
+                        </h3>
+                        <div class="chapter-book">
+                            <a href="#">Chapter </a>
+                        </div>
+                        <div class="more-info"></div>
+                    </div>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>

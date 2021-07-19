@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { isEmail} = require('validator')
 const bcrypt = require('bcrypt')
-
+const book_model = require('../models/book')
 
 const Schema = mongoose.Schema
 const userSchema =  new Schema({
@@ -30,10 +30,29 @@ const userSchema =  new Schema({
     role:{ 
         type: String,
         default: 'member',
+    },
+    cart:{
+        items:[{
+            bookId:{
+                type: Schema.Types.ObjectId,
+                ref: 'book',
+                required: true,
+            },
+            amount:{ 
+                type: Number,
+                required: true,
+            }
+        }],
+        totalPrice: {
+            type: Number,
+        },
+        totalItem: {
+            type: Number,
+            default: 0,
+        }
     }
 },{
     collection: 'users'
-
 })
 
 // kích hoạt một chức năng trước khi dữ liệu được lưu vào db
@@ -54,5 +73,48 @@ userSchema.statics.login = async function(email, password){
     }
     throw Error('Sai tài khoản hoặc mật khẩu')
 }
+userSchema.methods.addToCart = async function (bookId){
+    const book = await book_model.findById(bookId)
+    if (book) {
+        var cart = this.cart
+        if(cart.items.length == 0 ){
+            cart.items.push({bookId: book._id, amount: 1})
+            cart.totalPrice = book.giathue
+            cart.totalItem += 1
+        }else{
+            const isExisting = cart.items.findIndex(objInItems => {
+                return new String(objInItems.bookId).trim() == String(book._id).trim()
+            }) 
+            if( isExisting >= 0 ){
+                cart.items[isExisting].amount += 1
+            }else{
+                cart.items.push({bookId: book._id, amount: 1})
+                
+            }
+            if(!cart.totalPrice){
+                cart.totalPrice = 0
+            }
+            cart.totalPrice += book.giathue
+            cart.totalItem += 1
+        }
+        // console.log('User in schema ', this.cart)   
+        return this.save()
+    }
+    
+}
+userSchema.methods.removeInCart = async function (itemId){
+    const cart = this.cart   
+    const isExisting = cart.items.findIndex(objInItems => {
+        return new String(objInItems.bookId).trim() == String(itemId).trim()
+    })
+    const book = await book_model.findById(cart.items[isExisting].bookId)
+    if(isExisting >= 0 ){
+        cart.totalPrice -= book.giathue * cart.items[isExisting].amount
+        cart.totalItem -= cart.items[isExisting].amount
+        cart.items.splice(isExisting, 1)
+        return this.save()
+    }
+}
+
 
 module.exports = mongoose.model('user', userSchema)

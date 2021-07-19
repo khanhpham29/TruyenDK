@@ -10,6 +10,10 @@ const cartSchema =  new Schema({
         type: Schema.Types.ObjectId,
         ref: 'DetailsCart'
     },
+    status:{
+        type: String,
+        default: "Chưa xác thực"
+    },
     totalPrice: {
         type: Number,
         default: 0
