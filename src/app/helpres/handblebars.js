@@ -4,7 +4,7 @@ const moment = require('moment')
 module.exports = {
     sum: (a, b) => a + b,
     dateFormat: (date,options)=>{
-        const formatToUse = (options && options.hash && options.hash.format) || "dd MM/DD/YYYY HH:mm:ss"
+        const formatToUse = (options && options.hash && options.hash.format) || "HH:mm:ss MM/DD/YYYY "
         return moment(date).format(formatToUse);
     },
     sortTable: (field, sort) =>{

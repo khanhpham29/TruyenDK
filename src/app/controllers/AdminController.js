@@ -16,6 +16,9 @@ const { mongooseToOject } = require('../../util/mongoose')
 const mongoose = require('mongoose')
 const { PromiseProvider } = require('mongoose')
 const { listeners } = require('../models/Manga')
+
+
+
 const handleErrors = (err) => {
     let errors = { tenloai: ''}
     // duplicate error code-point
@@ -78,7 +81,8 @@ class AdminController{
                             else{
                                 const truyenChoThue = new RentalForManga({
                                     slug: manga.slug,
-                                    books: [{  
+                                    books: [{
+                                        mangaId: manga.id,
                                         tentruyen: manga.tentruyen,
                                         tapso: req.body.numberVol,
                                         anhbia: req.files.avatarNumberVol[0].filename, 
@@ -340,12 +344,16 @@ class AdminController{
         }
     }
     mangaRentals(req, res, next){
-        Manga.find({chothue: true})
+        Manga.find({chothue: true}).populate({
+            path:'mangas.truyenchothue',
+            models: book_model
+        })
         .then((mangas) => {
-            res.render('admins/mangas/rentals-list', {
-                mangas: multipleMongooseToOject(mangas),
-                layout: 'admin.hbs'
-            })
+            res.json(mangas)
+            // res.render('admins/mangas/rentals-list', {
+            //     mangas: multipleMongooseToOject(mangas),
+            //     layout: 'admin.hbs'
+            // })
         })
     }
 
@@ -389,7 +397,8 @@ class AdminController{
     async retailsAdd(req, res, next){
         Promise.all([Manga.findOne({slug: req.params.slug}), RentalForManga({})])
         .then(([mangas , rentals])=>{
-            let booksNew =  {  
+            let booksNew =  {
+                mangaId: mangas.id,
                 tentruyen: mangas.tentruyen,
                 tapso: req.body.numberVol,
                 anhbia: req.file.filename, 
@@ -439,8 +448,8 @@ class AdminController{
         const value = req.query.tentruyen
         await Manga.find({
             $or:[
-                {tentruyen: {$regex: new RegExp(value), $option: 'i'}},
-                {tenkhac: {$regex: new RegExp(value), $option: 'i'}}
+                {tentruyen: {$regex: new RegExp(value , "i")}},
+                {tenkhac: {$regex: new RegExp(value , "i")}}
             ]
         }
         )
