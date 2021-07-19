@@ -6,10 +6,11 @@ const cartSchema =  new Schema({
         type: String,
         require: true,
     },
-    idDetailsCart: {
+    idDetailCart: [{
         type: Schema.Types.ObjectId,
-        ref: 'DetailsCart'
-    },
+        ref:'DetailCart',
+        required: true,
+    }],
     status:{
         type: String,
         default: "Chưa xác thực"

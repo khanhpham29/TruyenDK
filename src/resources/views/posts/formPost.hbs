@@ -37,7 +37,7 @@
         formData.append("content", contentElement)
         formData.append("imgPost", postImgElement[0])
         console.log(formData)
-        axios.post("/postPost",formData,{
+        axios.post("../admin/postPost",formData,{
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data'

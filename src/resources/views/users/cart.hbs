@@ -36,7 +36,7 @@
                     </td>
                 </tr>
             <form action="/admin/rentals" method="POST">
-                 {{#each cart.items}}
+                {{#each cart.items}}
                     <div>
                         <input type="hidden" name="tentruyen" value="{{this.bookId.tentruyen}}">
                         <input type="hidden" name="tapso" value="{{this.bookId.tapso}}">
@@ -54,7 +54,6 @@
                     <label for="">Số ngày thuê: </label>
                     <input type="text" name="songaythue">
                 </div>
-               
                 <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
                 <button type="submit">Xác nhận</button>
             </form>

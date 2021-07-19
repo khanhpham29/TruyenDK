@@ -5,7 +5,7 @@ const Category = require('../models/CategoryManga')
 const RentalForManga = require('../models/RentalForManga')
 const User_Model = require('../models/User')
 const Cart_Model = require('../models/Cart')
-const DetailsCart_Model = require('../models/DetailsCart')
+const DetailsCart_Model = require('../models/DetailCart')
 const post_model = require('../models/post')
 const comment_model = require('../models/comment')
 const book_model = require('../models/book')
@@ -451,58 +451,31 @@ class AdminController{
         .catch(next)
     }
     //---------------------------RENTALS----------------------------------------//
-    userRentals(req, res, next){   
-
+    userRentals(req, res, next){
         const cart = new Cart_Model({
             phone: req.user.phone,
             totalPrice: req.user.cart.totalPrice
         })
-        .save()
+        cart.save()
         .then((cart) =>{
-            const amountBooks = req.user.cart.totalItem
+            const cartUser = req.user.cart.items
             const detailCart = new DetailsCart_Model({
-                songaythue: req.body.songaythue
+                songaythue: req.body.songaythue,
+                idCart: cart._id,
+                totalItem: req.user.cart.totalItem,
+                totalPrice: req.user.cart.totalPrice,
             })
-            .save()
-            .then((detailCart) =>{
-                for(var i = 0;i< amountBooks.length;i++){
-                    const rentalBooks = {
-                        tentruyen: req.body.tentruyen[i],
-                        tapso: req.body.tapso[i],
-                        amount: req.body.amount[i],
-                        giathue: req.body.giathue[i]
-                    } 
-                    console.log(rentalBooks)
-                    DetailsCart_Model.findOneAndUpdate(
-                        { 
-                            _id: detailCart._id
-                        }, 
-                        {
-                            $push: { listRentalBooks: rentalBooks} 
-                        },
-                        {
-                            new: true
-                        }
-                    )
-                    .then((detailCart) => {
-                        console.log(detailCart)
-                        Cart_Model.findOneAndUpdate(
-                            { 
-                                _id: detailCart._id
-                            }, 
-                            {
-                                $push: { idDetailsCart: detailCart._id } 
-                            },
-                            {
-                                new: true
-                            }
-                        )
-                        .then(() => res.redirect("/"))
-                    })
-                    .catch(err =>console.log(err))
-                }
+            detailCart.save()
+            .then((detailCart)=>{
+                console.log(cart)
+                cartUser.forEach( item =>{
+                    detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
+                })
+                detailCart.save()
+                cart.idDetailCart.push(detailCart._id)
+                cart.save()
+                res.json("thành công")
             })
-            
         })
         .catch(next)
     }
