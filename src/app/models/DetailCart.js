@@ -32,6 +32,7 @@ const detailsCartSchema =  new Schema({
     },
 
     createAt:{ type: Date, default: Date.now},
+    ngaytra: {type: String}
 
 },{
     collection: 'detailcart'

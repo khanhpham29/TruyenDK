@@ -451,7 +451,7 @@ class AdminController{
         .catch(next)
     }
     //---------------------------RENTALS----------------------------------------//
-    userRentals(req, res, next){
+    async userRentals(req, res, next){
         const cart = new Cart_Model({
             phone: req.user.phone,
             totalPrice: req.user.cart.totalPrice
@@ -467,15 +467,38 @@ class AdminController{
             })
             detailCart.save()
             .then((detailCart)=>{
-                console.log(cart)
                 cartUser.forEach( item =>{
                     detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
                 })
                 detailCart.save()
-                cart.idDetailCart.push(detailCart._id)
-                cart.save()
-                res.json("thành công")
+                Cart_Model.updateOne(
+                    {
+                        _id: cart._id
+                    }, 
+                    {
+                        idDetailCart: detailCart._id,
+                        $push: { 
+                            arrayStatus: 'Chưa xác thực'
+                        }
+                    },
+                )
+                .then(() => console.log("update thành công"))
+                .catch(next)
+                const userCart = User_Model.updateOne({phone: cart.phone},{
+                    cart:{
+                        totalItem: 0,
+                        items: [],
+                        totalPrice: 0,
+                    }
+                })
+                .then(() => {
+                    console.log("thanh cong")
+                })
+                .catch(err => console.log(err))
+                // console.log(cart)
+                res.redirect("/")
             })
+
         })
         .catch(next)
     }
@@ -490,6 +513,68 @@ class AdminController{
             })
             .catch(next)
     }
+
+    controlRentals(req, res, next){
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusRental,
+            $push: { 
+                arrayStatus: req.body.statusRental
+            }
+        })
+        .then(() => {
+            DetailsCart_Model.updateOne({idCart: req.params.id}, {
+                ngaytra: req.body.ngaytra
+            })
+            .then(()=> console.log('trả thành công'))
+        })
+        .catch(next)
+    }
+
+    rejectRentals(req, res, next){
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusRejectRental,
+            reason: req.body.reasonReject,
+            $push: { 
+                arrayStatus: req.body.statusRejectRental
+            }
+        })
+        .then(() => {
+            res.json({
+                resonReject: req.body.reasonReject,
+                message: "Sửa thành công"
+            })
+        })
+        .catch(next)
+    }
+
+    returnRentals(req, res, next){
+        console.log("trong controller:" ,req.body)
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusReturn,
+            $pop: { 
+                arrayStatus: 1 
+            } 
+        })
+        .then(() => {
+            res.json({
+                statusReturn: req.body.statusReturn,
+                message: "Sửa thành công"
+            })
+        })
+        .catch(next)
+    }
+
+    detailRentals(req, res, next){
+        const detailCart = DetailsCart_Model.findOne({idCart: req.params.id})
+        .then((detailCart) => {
+            res.render('admins/carts/cart-detail', {
+                detailCart: mongooseToOject(detailCart),
+                layout:'admin'
+            })
+        })
+    }
+
+
 
     //---------------------------------------------------------------------------//
     //Categorys

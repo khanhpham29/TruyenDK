@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="id-data" hidden>{{detailCart._id}}</div>
+    <div>Truyện cho thuê:</div>
+    {{#each detailCart.listRentalBooks.items}}
+        {{this}}
+    {{/each}}
+    <div>Số ngày thuê: {{detailCart.songaythue}}</div>
+    <div>Giá thuê: {{detailCart.totalPrice}}</div>
+
+</div>
+
+<script>   
+    var btnSuccess = document.getElementById('btn-success')
+    var idData = document.querySelectorAll('.id-data')
+    var idValue = idData[0].innerText
+    btnSuccess.onclick =function(){
+        const ngaytra = prompt('Ngày trả sách: ')
+        var trangthai = 'Đã hoàn thành'
+        if(ngaytra){
+            axios.post('/admin/rentals/' + idValue +'/success',{
+                ngaytra: ngaytra,
+                trangthai: trangthai
+            })
+            .then((res)=>{      
+                console.log(res.data.resonReject)
+                
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
+
+    }
+    
+    
+</script>

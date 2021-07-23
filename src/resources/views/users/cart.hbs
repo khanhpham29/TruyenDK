@@ -35,15 +35,10 @@
                         </div>
                     </td>
                 </tr>
-            <form action="/admin/rentals" method="POST">
+                {{!-- action="/admin/rentals" --}}
+            <form name="form-rentals"  method="POST">
                 {{#each cart.items}}
                     <div>
-                        <input type="hidden" name="tentruyen" value="{{this.bookId.tentruyen}}">
-                        <input type="hidden" name="tapso" value="{{this.bookId.tapso}}">
-                        <input type="hidden" name="giathue" value="{{this.bookId.giathue}}">
-                        <input type="hidden" name="amount" value="{{this.amount}}">
-                    </div>
-                    <div >
                         <input type="hidden" name="tentruyen" value="{{this.bookId.tentruyen}}">
                         <input type="hidden" name="tapso" value="{{this.bookId.tapso}}">
                         <input type="hidden" name="giathue" value="{{this.bookId.giathue}}">
@@ -55,7 +50,7 @@
                     <input type="text" name="songaythue">
                 </div>
                 <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
-                <button type="submit">Xác nhận</button>
+                <button type="submit" id="submitForm">Xác nhận</button>
             </form>
         </tbody>
     </table>
@@ -66,8 +61,10 @@
         var btnDeleteItem = document.querySelectorAll('.btn-delete-item')
         var rowDelete = document.querySelectorAll('.row-delete')
         var cartItem = document.querySelector('.cart-item')
-        console.log(cartItem)
+        var form = document.forms['form-rentals']
+        var submitForm = document.querySelector('#submitForm')
         var tongtienEl = document.querySelector('.tong-tien')
+
         btnDeleteItem.forEach(btn =>{
             btn.onclick = function (){
                 tongtienEl.innerText = ""
@@ -76,6 +73,7 @@
                 this.parentElement.parentElement.remove()
                 axios.post('/deleteItem/' + idItem)
                 .then((res)=>{
+                    console.log(res.data)
                     const totalPrice = res.data.cart.totalPrice
                     const totalItem = res.data.cart.totalItem
                     tongtienEl.innerText = totalPrice + "₫"
@@ -86,5 +84,22 @@
                 })
             }
         })
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            var tentruyen = form.tentruyen.value
+            var songaythue = form.songaythue.value
+
+            axios.post("../admin/rentals",{
+                tentruyen: tentruyen,
+                songaythue: songaythue,
+            })
+            .then((res)=>{
+                console.log(res.data)
+            })
+            .catch((err)=>{
+                console.log(err.response.data)
+            })
+        })
+        
     })
 </script>

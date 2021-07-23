@@ -66,6 +66,11 @@ router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
 router.post('/rentals', adminController.userRentals)
+
+router.post('/rentals/:id/reject', adminController.rejectRentals)
+router.post('/rentals/:id/return', adminController.returnRentals)
+router.get('/rentals/:id/detail', adminController.detailRentals)
+router.post('/rentals/:id', adminController.controlRentals)
 router.get('/rentals/list', adminController.userRentalsList)
 
 
