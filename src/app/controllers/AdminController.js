@@ -466,11 +466,23 @@ class AdminController{
                 totalPrice: req.user.cart.totalPrice,
             })
             detailCart.save()
-            .then((detailCart)=>{
-                cartUser.forEach( item =>{
+            .then((detailCart)=>{  
+                cartUser.forEach((item, i) =>{
                     detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
+                    const soluongthue =  detailCart.listRentalBooks.items[i].amount
+                    console.log("sl: ",soluongthue) 
+                    book_model.findOne({_id: detailCart.listRentalBooks.items[i].bookId})
+                        .then((books) => {
+                            book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
+                                soluong: (books.soluong - soluongthue)
+                            })
+                        })
+                        .catch(err => console.log(err))
                 })
                 detailCart.save()
+                
+                
+        
                 Cart_Model.updateOne(
                     {
                         _id: cart._id
@@ -494,6 +506,8 @@ class AdminController{
                 .then(() => {
                     console.log("thanh cong")
                 })
+
+                
                 .catch(err => console.log(err))
                 // console.log(cart)
                 res.redirect("/")
