@@ -1,3 +1,4 @@
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-sm-8 offset-2">
@@ -25,6 +26,7 @@
                 </form>
             </div>
         </div>
+
     </div>
 </div>
 <script>
@@ -46,6 +48,7 @@
             Array.from(img).forEach((img)=>{
                 formData.append("imgOfManga", img)
             })
+
             axios.post("../../../admin/manga/"+slug+"/addChap",formData,{
                 headers: {
                     'Accept': 'application/json',
@@ -70,6 +73,7 @@
                 {
                     imageErr[0].innerText = data.messageFile
                 }
+
             })
         })
     })

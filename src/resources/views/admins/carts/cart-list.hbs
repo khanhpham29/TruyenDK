@@ -1,0 +1,185 @@
+<div class="container">
+    <div class="row">
+        <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Phone</th>
+                <th>Trạng thái</th>
+                <th>Lý do</th>
+                <th>Giá Thuê</th>
+                <th colspan="3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {{#each cart}}
+                <tr>
+                    <th>{{sum @index 1}}</th>
+                    <th>{{this.phone}}</th>
+                    <th class="id-status" data-id="{{this._id}}" id="{{this._id}}">{{this.status}} </th>
+                    <th class="valueArrayStatus" hidden>{{this.arrayStatus}}</th>
+                    <th class="reason-reject" >{{this.reason}}</th>
+                    <th>{{this.totalPrice}}</th>
+                    <th class="detail">
+                        <a href="/admin/rentals/{{this._id}}/detail" class="btn btn-info  btn-detail" data-id="{{this._id}}">Chi tiết</a>
+                    </th>
+                    <th class="reject">
+                        <button class="btn btn-danger  btn-reject" data-id="{{this._id}}">Hủy</button>
+                    </th>
+                    <th class="return">
+                        <button class="btn btn-secondary btn-return" data-id="{{this._id}}">Hoàn tác</button>
+                    </th>
+                </tr>
+            {{/each}}
+            
+        </tbody>
+    </table>
+    </div>
+</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var status = document.querySelectorAll('.id-status')
+        var reject = document.querySelectorAll('.btn-reject')
+        var returnStatus = document.querySelectorAll('.btn-return')
+        var valueArrayStatus = document.querySelectorAll('.valueArrayStatus')
+        var co = 1;
+        
+
+
+        status.forEach((btn, i)=>{
+            btn.onclick = function (){
+                var idItem = this.getAttribute("data-id")
+                var value = document.getElementById(idItem)
+                var co = 1;
+                if(value.innerText == 'Chưa xác thực'){
+                    var varConfirm = confirm('Bạn đã xác nhận yêu cầu?')
+                    if(varConfirm){
+                        value.innerText = 'Đã xác nhận'
+                        returnStatus[i].classList.remove('d-none')
+                    }                        
+                }
+                else if(value.innerText == 'Đã xác nhận'){
+                    var varConfirm = confirm('Khách hàng đã đến nhận truyện?')
+                    if(varConfirm){
+                        value.innerText = 'Đã nhận'
+                        reject[i].classList.add('d-none')
+                        returnStatus[i].classList.remove('d-none')
+                    }
+                }
+                else if(value.innerText == 'Đã nhận'){
+                    co = 0;
+                }
+                console.log("co: ", co)
+                const valueData = value.innerText
+                if(co == 1){
+                    axios.post('/admin/rentals/' + idItem,{
+                        statusRental: valueData,
+                    })
+                    .then((res)=>{      
+                        const statusRental = res.data
+                        console.log(statusRental)
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+                                              
+            }    
+        })
+
+        reject.forEach((rej, i, rejArr) =>{
+            rej.onclick = function (){
+                var idItem = this.getAttribute("data-id")
+                var value = document.getElementById(idItem)
+                var reason = prompt("Nhập lý do hủy yêu cầu!")
+                var reasonReject = this.parentElement.parentElement.querySelectorAll('.reason-reject')
+                value.innerText = 'Hủy'
+                if (reason != null) {
+                    const valueData = value.innerText
+                    axios.post('/admin/rentals/' + idItem +'/reject',{
+                        statusRejectRental: valueData,
+                        reasonReject: reason
+                    })
+                    .then((res)=>{      
+                        console.log(res.data.resonReject)
+                        var data = res.data
+                        reasonReject[0].innerText = data.resonReject
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+  
+            }    
+        })    
+    
+        returnStatus.forEach((re, i) => {
+            re.onclick = function (){
+                var idItem = this.getAttribute("data-id")
+                var value = document.getElementById(idItem)
+                var confirmn = confirm("Bạn muốn hoàn tác?");
+                if(confirmn){
+                    var convertArr= valueArrayStatus[i].innerText.split(',')
+                    var valueDataUpdate = convertArr[convertArr.length -1]
+                    if(convertArr.length == 1){
+                        valueDataUpdate = convertArr[0]
+                        console.log(valueDataUpdate)
+                    }
+                    axios.post('/admin/rentals/' + idItem +'/return',{
+                        statusReturn: valueDataUpdate
+                    })
+                    .then((res)=>{      
+                        console.log(res.data.statusReturn)
+                        var data = res.data
+                        value.innerText = data.statusReturn
+                        if(value.innerText == 'Đã xác nhận'){
+                            reject[i].classList.remove('d-none')
+                        }
+                        else if(value.innerText == 'Chưa xác thực'){
+                            reject[i].classList.remove('d-none')
+                            returnStatus[i].classList.add('d-none')
+                        }
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+                else{
+                    console.log("no")
+                }
+                
+  
+            }
+        })
+        status.forEach((el, i) => {
+            var arrValueStatus = el.parentElement.querySelectorAll('.valueArrayStatus')[0].innerText.split(',')
+            var lastArrValueStatus = arrValueStatus[arrValueStatus.length - 1]
+            if(lastArrValueStatus == 'Chưa xác thực'){
+                returnStatus[i].classList.add('d-none')
+            }
+        })
+
+        reject.forEach((el) => {
+            var arrValueStatus = el.parentElement.parentElement.querySelectorAll('.valueArrayStatus')[0].innerText.split(',')
+            
+            var lastArrValueStatus = arrValueStatus[arrValueStatus.length - 1]
+            
+            if(lastArrValueStatus != 'Đã xác nhận' && lastArrValueStatus != 'Chưa xác thực' || lastArrValueStatus == 'Hủy'){
+                el.classList.add('d-none')
+            }
+        })
+
+        returnStatus.forEach((el) => {
+            var arrValueStatus = el.parentElement.parentElement.querySelectorAll('.valueArrayStatus')[0].innerText.split(',')
+            
+            var lastArrValueStatus = arrValueStatus[arrValueStatus.length - 1]
+            
+            if( lastArrValueStatus == 'Chưa xác thực'){
+                el.classList.add('d-none')
+            }
+        })
+    })
+</script>

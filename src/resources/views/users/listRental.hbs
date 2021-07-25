@@ -27,12 +27,12 @@
                 {{#each this.books}}
                     <li>
                         <div class="manga-item">
-                            <a href="/manga/{{this.slug}}"> <img src="/img/{{this.anhbia}}" alt="#"></a>
+                            <a href="/manga/{{this.slug}}"> <img src="/img/{{this.image}}" alt="#"></a>
                             <h4 class="title-book">
-                                <p href="#">Tên Truyện: {{this.tentruyen}}</p>
+                                <p href="#">Tên Truyện: {{this.nameManga}}</p>
                                 
                             </h4>
-                            <p href="#">Tập số: {{this.tapso}}, Giá thuê {{this.giathue}}</p>
+                            <p href="#">Tập số: {{this.episode}}, Giá thuê {{this.rentCost}}</p>
                             <div class="chapter-book">
                                 <button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>
                             </div>

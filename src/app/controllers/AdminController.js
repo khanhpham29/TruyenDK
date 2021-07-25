@@ -5,19 +5,19 @@ const Category = require('../models/CategoryManga')
 const MangaRental_model = require('../models/MangaRental')
 const User_Model = require('../models/User')
 const Cart_Model = require('../models/Cart')
-const DetailsCart_Model = require('../models/DetailsCart')
+const DetailsCart_Model = require('../models/DetailCart')
 const post_model = require('../models/post')
 const comment_model = require('../models/comment')
 const book_model = require('../models/book')
+
 const multer = require('multer')
 const path = require('path')
+
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 const mongoose = require('mongoose')
 const { PromiseProvider } = require('mongoose')
 const { listeners } = require('../models/Manga')
-const MangaRental = require('../models/MangaRental')
-
 
 
 const handleErrors = (err) => {
@@ -61,8 +61,8 @@ class AdminController{
     formMangaCreate(req, res, next){
         Category.find({})
             .then(categories => {
-                res.render('admins/mangas/mangaCreate', { 
-                        categories:  multipleMongooseToOject(categories),
+                res.render('admins/mangas/mangaCreate', 
+                    { categories:  multipleMongooseToOject(categories),
                         layout: 'admin.hbs'
                     }
                 )
@@ -121,6 +121,20 @@ class AdminController{
             message: "Sửa thành công"
         }))
         .catch(next) 
+    }
+
+    // [GET] /manga
+    // Hiển thị tất cả manga trong db
+    manga(req, res, next){
+        // console.log('User: ',req.user)
+        Manga.find({})
+            .then(mangas => {
+                    res.render('admins/mangas/mangaList', {
+                        mangas: multipleMongooseToOject(mangas),
+                        layout: 'admin.hbs'
+                    })    
+            })
+            .catch(next)   
     }
     
     // [GET] /manga/:slug
@@ -270,8 +284,254 @@ class AdminController{
             mangas: multipleMongooseToOject(mangas),
             layout: 'admin'
         }))
+    }
+
+    //MangaRental
+    async mangaRentals(req, res, next){
+        const Rental = await MangaRental_model.find({})
+        .then((Rental) => {
+            res.render('admins/mangas/rentalList', {
+                rentals: multipleMongooseToOject(Rental),
+                layout: 'admin.hbs'
+            })
+        })
+    }
+    async listMangaRentals(req, res, next){
+        const list = await book_model.find({tentruyen: req.params.tentruyen})
+        .then((list)=>{
+            res.render("admins/mangas/mangaRentalList",{
+                list: multipleMongooseToOject(list),
+                layout: 'admin.hbs'
+            })
+        })
+        .catch((err) => {
+            res.status(400).json({err})
+        })
+    }
+    // form MangaRental
+    formCreateMangaRental(req, res, next){
+        Manga.find({}).populate('theloai')
+        .then((mangas) => {
+            res.render('admins/mangas/rentalCreate', { 
+                mangas:  multipleMongooseToOject(mangas),
+                layout: 'admin.hbs'
+            })
+        })
+        .catch(err => res.json(err))
+    }
+    async createMangaRental(req, res, next){
+        const formdata = req.body
+        Promise.all([
+            Manga.findOne({_id: formdata.id}), 
+            MangaRental_model.findOne({_id: formdata.id}),
+        ])
+        .then(async ([mangas , rentals])=>{
+            if(rentals == null){
+                const Rental =  new MangaRental_model({
+                    nameManga: mangas.nameManga
+                })
+                rentals = Rental
+            }
+            const episodeExists = await book_model.findOne({
+                nameManga: mangas.nameManga,
+                episode: formdata.episode,
+            })
+            .then(async (episodeExists)=>{
+                console.log(episodeExists)
+                if(episodeExists != null)
+                {
+                    res.json({messageError: 'Tập này đã tồn tại'})
+                }
+                else{
+                    let booksNew = {
+                        nameManga: mangas.nameManga,
+                        episode: formdata.episode,
+                        image: req.file.filename,
+                        cost: formdata.giagoc,
+                        rentCost: formdata.giathue,
+                        covercost: formdata.giabia,
+                        amount: formdata.amount,
+                        author: formdata.author, 
+                        publisher: formdata.publisher,
+                    }
+                    const bookNew = new book_model(booksNew)
+                    bookNew.save()
+                    rentals.books.push(bookNew._id)
+                    await rentals.save()
+                    .then((rentals)=>{
+                        res.json({message: "Đã thêm truyện cho thuê thành công"})
+                    })
+                    .catch((err)=>{
+                        const errors = handleErrors(err)
+                        res.status(400).json( { errors })
+                    })
+                }
+            })
+            
+        })
+    }
+
+    
+    
+    
+    //---------------------------RENTALS----------------------------------------//
+    async userRentals(req, res, next){
+        const cart = new Cart_Model({
+            phone: req.user.phone,
+            totalPrice: req.user.cart.totalPrice
+        })
+        cart.save()
+        .then((cart) =>{
+            const cartUser = req.user.cart.items
+            const detailCart = new DetailsCart_Model({
+                songaythue: req.body.songaythue,
+                idCart: cart._id,
+                totalItem: req.user.cart.totalItem,
+                totalPrice: req.user.cart.totalPrice,
+            })
+            detailCart.save()
+            .then((detailCart)=>{  
+                cartUser.forEach((item, i) =>{
+                    detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
+                    const soluongthue =  detailCart.listRentalBooks.items[i].amount
+                    console.log("sl: ",soluongthue) 
+                    book_model.findOne({_id: detailCart.listRentalBooks.items[i].bookId})
+                        .then((books) => {
+                            book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
+                                soluong: (books.soluong - soluongthue)
+                            })
+                        })
+                        .catch(err => console.log(err))
+                })
+                detailCart.save()
+                
+                
+        
+                Cart_Model.updateOne(
+                    {
+                        _id: cart._id
+                    }, 
+                    {
+                        idDetailCart: detailCart._id,
+                        $push: { 
+                            arrayStatus: 'Chưa xác thực'
+                        }
+                    },
+                )
+                .then(() => console.log("update thành công"))
+                .catch(next)
+                const userCart = User_Model.updateOne({phone: cart.phone},{
+                    cart:{
+                        totalItem: 0,
+                        items: [],
+                        totalPrice: 0,
+                    }
+                })
+                .then(() => {
+                    console.log("thanh cong")
+                })
+
+                
+                .catch(err => console.log(err))
+                // console.log(cart)
+                res.redirect("/")
+            })
+
+        })
         .catch(next)
     }
+
+    userRentalsList(req, res, next){
+        Cart_Model.find({})
+            .then((cart) => {
+                res.render('admins/carts/cart-list', {
+                    cart: multipleMongooseToOject(cart),
+                    layout: 'admin'
+                })
+            })
+            .catch(next)
+    }
+
+    controlRentals(req, res, next){
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusRental,
+            $push: { 
+                arrayStatus: req.body.statusRental
+            }
+        })
+        .then(() => {
+            console.log('cập nhật trạng thái thành công')
+        })
+        .catch(next)
+    }
+
+    rejectRentals(req, res, next){
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusRejectRental,
+            reason: req.body.reasonReject,
+            $push: { 
+                arrayStatus: req.body.statusRejectRental
+            }
+        })
+        .then(() => {
+            res.json({
+                resonReject: req.body.reasonReject,
+                message: "Sửa thành công"
+            })
+        })
+        .catch(next)
+    }
+
+    returnRentals(req, res, next){
+        console.log("trong controller:" ,req.body)
+        Cart_Model.updateOne({_id: req.params.id}, {
+            status: req.body.statusReturn,
+            $pop: { 
+                arrayStatus: 1 
+            } 
+        })
+        .then(() => {
+            res.json({
+                statusReturn: req.body.statusReturn,
+                message: "Sửa thành công"
+            })
+        })
+        .catch(next)
+    }
+
+    detailRentals(req, res, next){
+        const detailCart = DetailsCart_Model.findOne({idCart: req.params.id})
+        .then((detailCart) => {
+            res.render('admins/carts/cart-detail', {
+                detailCart: mongooseToOject(detailCart),
+                layout:'admin'
+            })
+        })
+    }
+
+    finallyRentals(req, res, next){
+        Cart_Model.find({status: 'Đã nhận'})
+        .then((cart) => {
+            res.render('admins/carts/cart-final', {
+                cart: multipleMongooseToOject(cart),
+                layout: 'admin'
+            })
+        })
+    }
+
+    searchUserRentals(req, res, next){
+        Cart_Model.findOne({
+            phone: req.body.phone,
+            status: 'Đã nhận'
+        })
+        .then(() => {
+            res.json({
+                phoneUser: req.body.phone,
+                message: "Thông tin đơn hàng!"
+            })
+        })
+    }
+
     //---------------------------------------------------------------------------//
     //MangaRental
     async mangaRentals(req, res, next){

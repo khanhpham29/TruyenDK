@@ -6,10 +6,22 @@ const cartSchema =  new Schema({
         type: String,
         require: true,
     },
-    idDetailsCart: {
+    idDetailCart: {
         type: Schema.Types.ObjectId,
-        ref: 'DetailsCart'
+        ref:'DetailCart',
+        // default: null,
     },
+    status:{
+        type: String,
+        default: 'Chưa xác thực'
+    },
+    reason: {
+        type: String,
+        default: ''
+    },
+    arrayStatus: [{
+        type: String,
+    }],
     totalPrice: {
         type: Number,
         default: 0

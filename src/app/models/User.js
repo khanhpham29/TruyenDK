@@ -89,7 +89,6 @@ userSchema.methods.addToCart = async function (bookId){
                 cart.items[isExisting].amount += 1
             }else{
                 cart.items.push({bookId: book._id, amount: 1})
-                
             }
             if(!cart.totalPrice){
                 cart.totalPrice = 0

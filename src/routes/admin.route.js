@@ -9,8 +9,6 @@ const upload = require('../app/middlewares/multer')
 //--------------------MANGA------------------//
 
 
-
-
 //Search bar manga
 // router.get('/manga/rentals/search', adminController.search)
 //Form add new manga
@@ -69,8 +67,14 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
-
-
+router.post('/rentals', adminController.userRentals)
+router.post('/rentals/:id/reject', adminController.rejectRentals)
+router.post('/rentals/:id/return', adminController.returnRentals)
+router.get('/rentals/:id/detail', adminController.detailRentals)
+router.post('/rentals/:id', adminController.controlRentals)
+router.get('/rentals/list', adminController.userRentalsList)
+router.get('/rentals/list/finally', adminController.finallyRentals)
+router.post('/rentals/list/search', adminController.searchUserRentals)
 
 
 //-----------------------USERS--------------------//

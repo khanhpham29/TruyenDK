@@ -1,0 +1,46 @@
+<div class="container">
+    <form id="form-search">
+        <input type="text" id="phone-search" name="phone-search">
+        <button type="submit" id="phone-search-submit">Tìm</button>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Số điện thoại</th>
+                <th>Giá tiền</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cart}}
+            <tr>
+                <td>{{sum @index 1}}</td>
+                <td>{{this.phone}}</td>
+                <td>{{this.totalPrice}}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var form = document.getElementById('form-search')
+    console.log(form)
+    document.getElementById("form-search").addEventListener("submit", function (event) {
+        event.preventDefault()
+        var phoneSearch = document.querySelector('input[name="phone-search"]').value
+        console.log(phoneSearch)
+        axios.post("/admin/rentals/list/search",{
+            phone: phoneSearch
+        })
+        .then((res) => {
+            const phone = res.data
+            console.log(phone)
+        })
+        .catch(err => console.log(err))
+    })
+</script>

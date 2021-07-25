@@ -31,11 +31,11 @@
                     {{#each rentals}}
                         <tr>
                             <th>{{sum @index 1}}</td>
-                            <td>{{this.tentruyen}}</td>    
+                            <td>{{this.nameManga}}</td>    
                             <td>{{this.books.length}}</td>    
                             <td>{{dateFormat this.createdAt "DD/MM/YYYY"}}</td>
                             <td>
-                                <a href="/admin/rentals/{{this.tentruyen}}/listRental" class="btn btn-info">Xem danh sách truyện thuê</a>
+                                <a href="/admin/rentals/{{this.slug}}/listRental" class="btn btn-info">Xem danh sách truyện thuê</a>
                             </td>
                         </tr>
                     {{/each}}
@@ -48,6 +48,12 @@
 
 
 <script>  
-
+    var a = document.getElementsByClassName('theloai').length
+    for(var i = 0; i< a ;i++){
+        q = document.getElementsByClassName('theloai')[i].innerText
+        b = q.lastIndexOf(',')
+        c = q.slice(0,b)
+        d = document.getElementsByClassName('theloai')[i].innerText = c
+    }
 </script>
 

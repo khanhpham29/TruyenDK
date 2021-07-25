@@ -28,12 +28,10 @@ class UsersController{
             })
         ])
             .then(([truyen, detailManga]) => {
-                // res.json(truyen)
                 if(truyen == null){
                     return res.render('null')                   
                 }
                 else{
-                    // res.json({truyen})
                     res.render('users/detailManga', {
                         truyen: mongooseToOject(truyen),
                         detail: mongooseToOject(detailManga),
@@ -54,6 +52,7 @@ class UsersController{
     }
     async rentalOfManga(req, res, next){
         const rentals = await rental_model.find({}).populate('books')
+
         .then((rentals)=>{
             res.render("users/listRental",{
                 rentals: multipleMongooseToOject(rentals)
