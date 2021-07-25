@@ -8,22 +8,15 @@ const upload = require('../app/middlewares/multer')
 
 //--------------------MANGA------------------//
 
-
-//Form create vol books
-router.get('/manga/rentals/:slug/addbook', adminController.retailsAddBooks)
-//Create vol books
-router.post('/manga/rentals/:slug/addbook',upload.single('avatarNumberVol'), adminController.retailsAdd)
+router.get('/test', adminController.test)
+router.post('/test',upload.single('testimg') ,adminController.testmulter)
 //Search bar manga
-router.get('/manga/rentals/search', adminController.search)
-//List rentals for manga
-router.get('/manga/rentals', adminController.mangaRentals)
-
-//Details rentals manga
-router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
+// router.get('/manga/rentals/search', adminController.search)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-router.post('/manga/add',upload.fields([{name: 'avatarManga'},{name: 'avatarNumberVol'}]), adminController.mangaCreate)
+
+router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
 //Edit manga
@@ -66,12 +59,13 @@ router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
 router.post('/rentals', adminController.userRentals)
-
 router.post('/rentals/:id/reject', adminController.rejectRentals)
 router.post('/rentals/:id/return', adminController.returnRentals)
 router.get('/rentals/:id/detail', adminController.detailRentals)
 router.post('/rentals/:id', adminController.controlRentals)
 router.get('/rentals/list', adminController.userRentalsList)
+router.get('/rentals/list/finally', adminController.finallyRentals)
+router.post('/rentals/list/search', adminController.searchUserRentals)
 
 
 //-----------------------USERS--------------------//

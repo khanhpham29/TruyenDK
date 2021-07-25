@@ -2,7 +2,7 @@
     <div class="id-data" hidden>{{detailCart._id}}</div>
     <div>Truyện cho thuê:</div>
     {{#each detailCart.listRentalBooks.items}}
-        {{this}}
+        {{this._id}}
     {{/each}}
     <div>Số ngày thuê: {{detailCart.songaythue}}</div>
     <div>Giá thuê: {{detailCart.totalPrice}}</div>

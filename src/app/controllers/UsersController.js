@@ -1,7 +1,7 @@
 const manga_model = require('../models/Manga')
 const detailManga_model = require('../models/DetailManga')
 const imageDetail_model = require('../models/ImageDetail')
-const rental_model = require('../models/RentalForManga')
+const rental_model = require('../models/MangaRental')
 const category_model = require('../models/CategoryManga')
 const book_model = require('../models/book')
 const { multipleMongooseToOject } = require('../../util/mongoose')

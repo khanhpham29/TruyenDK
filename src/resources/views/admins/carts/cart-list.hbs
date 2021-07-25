@@ -53,32 +53,30 @@
             btn.onclick = function (){
                 var idItem = this.getAttribute("data-id")
                 var value = document.getElementById(idItem)
-                var co = 1
+                var co = 1;
                 if(value.innerText == 'Chưa xác thực'){
-                    value.innerText = 'Đã xác nhận'
-                    returnStatus[i].classList.remove('d-none')
-                    ngaytra =''                          
+                    var varConfirm = confirm('Bạn đã xác nhận yêu cầu?')
+                    if(varConfirm){
+                        value.innerText = 'Đã xác nhận'
+                        returnStatus[i].classList.remove('d-none')
+                    }                        
                 }
                 else if(value.innerText == 'Đã xác nhận'){
-                    value.innerText = 'Đã nhận'
-                    reject[i].classList.add('d-none')
-                    returnStatus[i].classList.remove('d-none')
-                    ngaytra =''
+                    var varConfirm = confirm('Khách hàng đã đến nhận truyện?')
+                    if(varConfirm){
+                        value.innerText = 'Đã nhận'
+                        reject[i].classList.add('d-none')
+                        returnStatus[i].classList.remove('d-none')
+                    }
                 }
                 else if(value.innerText == 'Đã nhận'){
-                    ngaytra = prompt('ngày trả truyện')
-                    value.innerText = 'Đã hoàn thành'
-                    returnStatus[i].classList.remove('d-none')
+                    co = 0;
                 }
-                else if(value.innerText == 'Đã hoàn thành'){
-                    var co = 0;
-                }
-                console.log("co:",co)
+                console.log("co: ", co)
+                const valueData = value.innerText
                 if(co == 1){
-                    const valueData = value.innerText
                     axios.post('/admin/rentals/' + idItem,{
                         statusRental: valueData,
-                        ngaytra: ngaytra
                     })
                     .then((res)=>{      
                         const statusRental = res.data
@@ -86,9 +84,9 @@
                     })
                     .catch((err)=>{
                         console.log(err)
-                    })  
+                    })
                 }
-                  
+                                              
             }    
         })
 
