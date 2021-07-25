@@ -23,18 +23,6 @@ const postSchema = new Schema({
     timestamps: true
 })
 
-// Custom query helpers
-postSchema.query.sorttable =  function(req){
-	if (req.query.hasOwnProperty('_sort')){
-		const isValiedtype = ['asc', 'desc'].includes(req.query.type)
-		return this.sort({
-			[req.query.column]: isValiedtype ? req.query.type : 'desc'
-		})
-	}
-	return this
-}
-
-
 
 postSchema.plugin(mongodbErrors)
 module.exports = mongoose.model('Post', postSchema);

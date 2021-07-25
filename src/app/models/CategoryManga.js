@@ -5,15 +5,14 @@ const AutoIncrement = require('mongoose-sequence')(mongoose)
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
-	_id :{ type: Number},
-	tenloai:{   type: String, 
-				required: [true, 'Vui lòng nhập thể loại'],
-				unique: true,
+	tenloai:{   
+		type: String, 
+		required: [true, 'Vui lòng nhập thể loại'],
+		unique: true,
 	},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 },{
-	_id: false,
 	collection: 'categorys'
 }
 );
@@ -30,7 +29,6 @@ categorySchema.query.sorttable =  function(req){
 //add  plugin
 mongoose.plugin(slug)
 
-categorySchema.plugin(AutoIncrement)
 categorySchema.plugin(mongoosedelete, { 
 		overrideMethods: true,
 		deleteAt: {type:Date, trim: true, default: Date.now()},

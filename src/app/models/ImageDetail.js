@@ -9,12 +9,22 @@ const ImgForChapterSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref:'DetailManga'
 	},
-	imgManga: { type: Object, default: '', unique: true},
+	imgManga: { 
+		type: Object, 
+		default: '', 
+		unique: true
+	},
 	chapter:{ 
 		type: String, 
 	},
-	tentruyen:{type:String},
-	slug:{ type: String, slug: 'tentruyen'},
+	nameManga:{
+		type:String
+	},
+	new:{
+		type: String,
+		default: "true", 
+	},
+	slug:{ type: String, slug: 'nameManga'},
     },{
         collection: 'imgdetails'
     })

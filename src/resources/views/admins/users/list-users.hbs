@@ -1,54 +1,26 @@
 
-    <div class="content">
-        <div class="menu">
-            <ul>
-                <a href="/admin/manga/">
-                    <li>
-                        Quản lý truyện
-                    </li>
-                </a>
-                <a href="/admin/categorys/">
-                    <li>
-                        Quản lý thể loại truyện
-                    </li>
-                </a>
-                <a href="/admin/users/">
-                    <li>
-                        Quản lý thành viên
-                    </li>
-                </a>
-                <a href="">
-                    <li>
-                        Tạo phiếu mượn
-                    </li>
-                </a>
-                <a href="">
-                    <li>
-                        Thống kê
-                    </li>
-                </a>
-            </ul>
+<div class="container mt-4">
+    {{!-- Nội dung Trang --}}
+    <div class="row manga">
+        <div class="list-users mt-4">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Danh sách người dùng</h4>
         </div>
-        {{!-- Nội dung Trang --}}
-        <div class="list-users">
-            <div class="top">
-                <form action="/admin/users/search">
-                    <input type="text" class="search-input" id="search" name="member" placeholder="Nhập số điện thoại 10 số">
-                    <button class="search-submit"  type="submit">Tìm</button>
-                </form>
-                <div class="button">
-                    <a href="/admin/users/add" class="btn-add-user">
-                        <button class="btn btn-primary" >Add new user</button>
-                    </a>
-                </div>
-                
-            </div>
-            <table class="table">
+        <div class="top mb-4">
+            <form action="/admin/users/search" class="form-horizontal" >
+                <input type="text" class="search-input " id="search" name="member" placeholder="Nhập số điện thoại 10 số">
+                <button class="search-submit btn btn-success"  type="submit">Tìm</button>
+            </form>
+        </div>
+        <div class="userlist">
+            <table class="datatable table table-striped mb-4">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <td>Name</td>
-                        <td>Phone</td>
+                        <td>Tên</td>
+                        <td>Email</td>
+                        <td>Số điện thoại</td>
+                        <td>Hành động</td>
                     </tr>                    
                 </thead>
                 <tbody>
@@ -56,15 +28,16 @@
                         <tr>
                             <th>{{sum @index 1}}</th>
                             <td>{{this.name}}</td>
+                            <td>{{this.email}}</td>
                             <td>{{this.phone}}</td>
                             <td>
-                                <a href="/admin/rentals/list/{{this._id}}">Tạo phiếu thuê</a>
+                                <a href="#" class="btn btn-purple">Xem phiếu thuê</a>
                             </td>
                         </tr> 
                     {{/each}} 
                 </tbody>
             </table>
-
         </div>
     </div>
-    
+    </div>
+</div>

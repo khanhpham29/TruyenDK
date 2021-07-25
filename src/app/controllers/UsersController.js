@@ -1,7 +1,7 @@
 const manga_model = require('../models/Manga')
 const detailManga_model = require('../models/DetailManga')
 const imageDetail_model = require('../models/ImageDetail')
-const rental_model = require('../models/RentalForManga')
+const rental_model = require('../models/MangaRental')
 const category_model = require('../models/CategoryManga')
 const book_model = require('../models/book')
 const { multipleMongooseToOject } = require('../../util/mongoose')
@@ -21,19 +21,19 @@ class UsersController{
     async detailManga(req, res, next){
         const detailManga =  await detailManga_model.findOne({ slug: req.params.slug })
         Promise.all([
-            manga_model.findOne({ slug: req.params.slug }),
+            manga_model.findOne({ slug: req.params.slug }).populate('theloai'),
             detailManga_model.findById({ _id: detailManga._id }).populate({
                 path:"ImgDetails",
                 options: { sort: { createdAt: -1 } }
             })
         ])
             .then(([truyen, detailManga]) => {
-                //res.json(chap)
+                // res.json(truyen)
                 if(truyen == null){
                     return res.render('null')                   
                 }
                 else{
-                    // res.json({detailManga})
+                    // res.json({truyen})
                     res.render('users/detailManga', {
                         truyen: mongooseToOject(truyen),
                         detail: mongooseToOject(detailManga),
@@ -53,7 +53,7 @@ class UsersController{
         .catch(next)
     }
     async rentalOfManga(req, res, next){
-        const rentals = await rental_model.find({})
+        const rentals = await rental_model.find({}).populate('books')
         .then((rentals)=>{
             res.render("users/listRental",{
                 rentals: multipleMongooseToOject(rentals)

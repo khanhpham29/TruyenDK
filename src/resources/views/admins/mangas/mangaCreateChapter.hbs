@@ -1,0 +1,76 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-sm-8 offset-2">
+            {{!-- Nội dung Trang --}}
+            {{!-- action="/admin/manga/{{manga.slug}}/addChap" --}}
+            <div class="create-chapter-manga">
+                <form  method="POST" enctype="multipart/form-data" name="form-add-new-chapter">
+                    <div >
+                        <h2>Tên truyện: {{manga.nameManga}}</h2>
+                        <input type="hidden" value="{{manga.slug}}" name="slug">
+                    </div>
+                    
+                    <div class="nameChapter">
+                        <label for="chapter">Chương số: </label>
+                        <input type="text" class="form-control" placeholder="Vd: chap1" name="chapter">    
+                        <div class="chapter error mt-2" style="color:red"></div>
+                    </div>
+                    <div class="linkImg">
+                        <label for="imgOfManga">Hình ảnh trong chapter: </label>
+                        </br>
+                        <input type="file" class="form-control" name="imgOfManga" id="imgOfManga" multiple>
+                        <div class="image error mt-2" style="color:red"></div>
+                    </div>
+                    <input type="submit" class="btn btn-outline-primary btn-create-chapter-manga float-right mt-2" value="Thêm Chap mới">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        var form = document.forms['form-add-new-chapter']
+        console.log(form)
+        var chapterErr = $('.error.chapter')
+        var imageErr = $('.error.image')
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            console.log(chapterErr[0])
+            chapterErr[0].innerText = ""
+            slug = form.slug.value
+            chapter = form.chapter.value
+            img = document.getElementById("imgOfManga").files
+            console.log(img)
+            let formData = new FormData()
+            formData.append("chapter", chapter)
+            Array.from(img).forEach((img)=>{
+                formData.append("imgOfManga", img)
+            })
+            axios.post("../../../admin/manga/"+slug+"/addChap",formData,{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then( (res)=> {
+                var data = res.data
+                if(data.message == "Thêm thành công"){
+                    alert(data.message)
+                    location.assign('../')
+                }
+            })
+            .catch((err) => {
+                console.log(err.response.data)
+                var data = err.response.data
+                if(data.messageChapter === "Chương này đã tồn tại")
+                {
+                    chapterErr[0].innerText = data.messageChapter
+                }
+                if( data.messageFile === "Vui lòng chọn file")
+                {
+                    imageErr[0].innerText = data.messageFile
+                }
+            })
+        })
+    })
+</script>

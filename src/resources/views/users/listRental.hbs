@@ -23,24 +23,24 @@
             </a>
         </div>
         {{#each rentals}}
-        <ul class="list-manga grid-6">
-            {{#each this.books}}
-                <li>
-                    <div class="manga-item">
-                        <a href="/manga/{{this.slug}}"> <img src="/img/{{this.anhbia}}" alt="#"></a>
-                        <h4 class="title-book">
-                            <p href="#">Tên Truyện: {{this.tentruyen}}</p>
-                            
-                        </h4>
-                        <p href="#">Tập số: {{this.tapso}}, Giá thuê {{this.giathue}}</p>
-                        <div class="chapter-book">
-                            <button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>
+            <ul class="list-manga grid-6">
+                {{#each this.books}}
+                    <li>
+                        <div class="manga-item">
+                            <a href="/manga/{{this.slug}}"> <img src="/img/{{this.anhbia}}" alt="#"></a>
+                            <h4 class="title-book">
+                                <p href="#">Tên Truyện: {{this.tentruyen}}</p>
+                                
+                            </h4>
+                            <p href="#">Tập số: {{this.tapso}}, Giá thuê {{this.giathue}}</p>
+                            <div class="chapter-book">
+                                <button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>
+                            </div>
+                            <div class="more-info"></div>
                         </div>
-                        <div class="more-info"></div>
-                    </div>
-                </li>
-            {{/each}}
-        </ul>
+                    </li>
+                {{/each}}
+            </ul>
         {{/each}}
     </div>
 </div>

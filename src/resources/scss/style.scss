@@ -336,6 +336,14 @@ a:active,a:focus,a:visited {
 	}
 }
 
+.edit-manga{
+	.form-group{
+		img{
+			width: 170px;
+			height: 247px;
+		}
+	}
+}
 
 	
 .manga{
@@ -348,9 +356,12 @@ a:active,a:focus,a:visited {
 	.top{
 		display: flex;
 		width: 100%;
-		.search-submit, .search-input{
+		.search-submit {
 			margin-top: 10px;
 			margin-right: 10px;
+		}
+		.search-input{
+			margin-top: 10px;
 		}
 		.button{
 			position: relative;

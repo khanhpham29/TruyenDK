@@ -7,7 +7,7 @@
             <h1>{{truyen.tentruyen}}</h1>
             <div class="txt">
                 <span class="info-item">Tên khác: {{truyen.tenkhac}}</span>
-                <p class="info-item">Tình trạng: {{truyen.trangthai}}</p>
+                <p class="info-item">Tình trạng: {{truyen.tinhtrang}}</p>
                 <div>
                     <span>Thống kê</span>
                     <span class="sp01">
@@ -24,7 +24,7 @@
             <ul class="list01">
                 {{#each truyen.theloai}}
                     <li class="li03">
-                        <a href="#">{{this}}</a>
+                        <a href="#">{{this.tenloai}}</a>
                     </li>
                 {{/each}}
             </ul>

@@ -6,16 +6,23 @@ const Schema = mongoose.Schema;
 
 
 const MangaDetailsSchema = new Schema({
-	_id: Schema.Types.ObjectId,
-	tentruyen:{ type: String, default: ''},
-	ImgDetails: [{type: Schema.Types.ObjectId, ref: 'ImgDetail'}],
-	//imgManga: { type: Object, default: '', unique: true},
-	slug: { type: String, slug: 'tentruyen'},
+	nameManga:{ 
+		type:String,
+	},
+	imgDetails: [{
+		type: Schema.Types.ObjectId, 
+		ref: 'ImgDetail'
+	}],
+	description:{ 
+		type: String, 
+		default: '',
+	},
+	slug:{ type: String, slug: 'nameManga', unique: true},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 },{
 	collection: 'details'
 });
 
-module.exports = mongoose.model('Detail', MangaDetailsSchema)
+module.exports = mongoose.model('detail', MangaDetailsSchema)
 

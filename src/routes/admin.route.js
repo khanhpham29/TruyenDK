@@ -9,22 +9,15 @@ const upload = require('../app/middlewares/multer')
 //--------------------MANGA------------------//
 
 
-//Form create vol books
-router.get('/manga/rentals/:slug/addbook', adminController.retailsAddBooks)
-//Create vol books
-router.post('/manga/rentals/:slug/addbook',upload.single('avatarNumberVol'), adminController.retailsAdd)
-//Search bar manga
-router.get('/manga/rentals/search', adminController.search)
-//List rentals for manga
-router.get('/manga/rentals', adminController.mangaRentals)
 
-//Details rentals manga
-router.get('/manga/rentals/:slug', adminController.detailsRentalManga)
+
+//Search bar manga
+// router.get('/manga/rentals/search', adminController.search)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
 
-router.post('/manga/add',upload.fields([{name: 'avatarManga'},{name: 'avatarNumberVol'}]), adminController.mangaCreate)
+router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
 //Edit manga
@@ -42,6 +35,16 @@ router.get('/manga', adminController.manga)
 //Index admin
 // router.get('/', adminController.index)
 
+
+//-------------------------MANGA-RENTAL------------------------//
+//Form create manga rental
+router.get('/rental/createMangaRental', adminController.formCreateMangaRental)
+// create manga rental
+router.post('/rental/:slug/',upload.single('avatarMangaRental'), adminController.createMangaRental)
+// Detail list manga rental
+router.get('/rentals/:tentruyen/listRental', adminController.listMangaRentals)
+//List rentals for manga
+router.get('/rentals', adminController.mangaRentals)
 
 //----------------------CATEGORY---------------------------//
 // Form add new category
@@ -73,8 +76,8 @@ router.get('/categorys', adminController.categorys)
 //-----------------------USERS--------------------//
 router.get('/users', adminController.listUsers)
 router.get('/users/search', adminController.searchUsers)
-//Posts
 
+//Posts
 router.get('/formPosts', adminController.formPostsPost)
 router.post('/postPost',upload.single('imgPost'), adminController.postsPost)
 router.get('/post/:postId', adminController.postsGetById)

@@ -259,6 +259,10 @@ a:active, a:focus, a:visited {
   .create-chapter-manga .btn-create-chapter-manga {
     margin-top: 5px; }
 
+.edit-manga .form-group img {
+  width: 170px;
+  height: 247px; }
+
 .manga {
   background: #fff;
   width: calc(100% - $width-menu-admin);
@@ -268,9 +272,11 @@ a:active, a:focus, a:visited {
   .manga .top {
     display: flex;
     width: 100%; }
-    .manga .top .search-submit, .manga .top .search-input {
+    .manga .top .search-submit {
       margin-top: 10px;
       margin-right: 10px; }
+    .manga .top .search-input {
+      margin-top: 10px; }
     .manga .top .button {
       position: relative;
       right: 0;
