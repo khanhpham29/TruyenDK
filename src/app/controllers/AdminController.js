@@ -378,7 +378,7 @@ class AdminController{
     
 
     async userRentals(req, res, next){
-        console.log(req.user)
+        console.log(req.body)
         const cart = new Cart_Model({
             phone: req.user.phone,
             totalPrice: req.body.totalPrice
@@ -387,7 +387,7 @@ class AdminController{
         .then((cart) =>{
             const cartUser = req.user.cart.items
             const detailCart = new DetailsCart_Model({
-                songaythue: req.body.songaythue,
+                numberRental: req.body.numberRental,
                 idCart: cart._id,
                 totalItem: req.user.cart.totalItem,
                 totalPrice: req.user.cart.totalPrice,
@@ -397,19 +397,15 @@ class AdminController{
                 cartUser.forEach((item, i) =>{
                     detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
                     const soluongthue =  detailCart.listRentalBooks.items[i].amount
-                    console.log("sl: ",soluongthue) 
                     book_model.findOne({_id: detailCart.listRentalBooks.items[i].bookId})
                         .then((books) => {
                             book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
-                                soluong: (books.soluong - soluongthue)
+                                amount: (books.amount - soluongthue)
                             })
                         })
                         .catch(err => console.log(err))
                 })
                 detailCart.save()
-                
-                
-        
                 Cart_Model.updateOne(
                     {
                         _id: cart._id
@@ -421,8 +417,6 @@ class AdminController{
                         }
                     },
                 )
-                .then(() => console.log("update thành công"))
-                .catch(next)
                 const userCart = User_Model.updateOne({phone: cart.phone},{
                     cart:{
                         totalItem: 0,
@@ -431,15 +425,10 @@ class AdminController{
                     }
                 })
                 .then(() => {
-                    console.log("thanh cong")
+                    res.status(200).json({message:"Đặt hàng thành công"})
                 })
-
-                
                 .catch(err => console.log(err))
-                // console.log(cart)
-                res.redirect("/")
             })
-
         })
         .catch(next)
     }
@@ -516,6 +505,7 @@ class AdminController{
             }
         })
             .then((cart) => { 
+                // res.json(cart)
                 res.render('admins/carts/detailCart', {
                     cart: mongooseToOject(cart),
                     layout: 'admin'
