@@ -79,7 +79,7 @@ userSchema.methods.addToCart = async function (bookId){
         var cart = this.cart
         if(cart.items.length == 0 ){
             cart.items.push({bookId: book._id, amount: 1})
-            cart.totalPrice = book.giathue
+            cart.totalPrice = book.rentCost
             cart.totalItem += 1
         }else{
             const isExisting = cart.items.findIndex(objInItems => {
@@ -93,7 +93,7 @@ userSchema.methods.addToCart = async function (bookId){
             if(!cart.totalPrice){
                 cart.totalPrice = 0
             }
-            cart.totalPrice += book.giathue
+            cart.totalPrice += book.rentCost
             cart.totalItem += 1
         }
         // console.log('User in schema ', this.cart)   
@@ -108,7 +108,7 @@ userSchema.methods.removeInCart = async function (itemId){
     })
     const book = await book_model.findById(cart.items[isExisting].bookId)
     if(isExisting >= 0 ){
-        cart.totalPrice -= book.giathue * cart.items[isExisting].amount
+        cart.totalPrice -= book.rentCost * cart.items[isExisting].amount
         cart.totalItem -= cart.items[isExisting].amount
         cart.items.splice(isExisting, 1)
         return this.save()

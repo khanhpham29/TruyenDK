@@ -25,6 +25,8 @@ const ImgForChapterSchema = new Schema({
 		default: "true", 
 	},
 	slug:{ type: String, slug: 'nameManga'},
+	createAt:{ type: Date, default: Date.now},
+	updateAt:{ type: Date, default: Date.now},
     },{
         collection: 'imgdetails'
     })

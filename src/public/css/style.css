@@ -272,6 +272,58 @@ a:active, a:focus, a:visited {
   .manga .top {
     display: flex;
     width: 100%; }
+    .manga .top .wrapper {
+      max-width: 450px;
+      margin-right: 10px;
+      position: relative; }
+      .manga .top .wrapper .search-input {
+        position: relative;
+        background: #fff;
+        width: 100%;
+        border-radius: 5px;
+        box-shadow: 0px 1px 5px 3px rgba(0, 0, 0, 0.12); }
+        .manga .top .wrapper .search-input input {
+          color: #007bff;
+          height: 55px;
+          width: 100%;
+          outline: none;
+          border: none;
+          border-radius: 5px;
+          padding: 0 60px 0 20px;
+          font-size: 18px;
+          box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); }
+        .manga .top .wrapper .search-input.active ~ .search-result {
+          opacity: 1;
+          visibility: unset; }
+      .manga .top .wrapper .search-result {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0px 1px 5px 3px rgba(0, 0, 0, 0.12);
+        max-height: calc(38px * 3);
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transition: linear 0.25s; }
+        .manga .top .wrapper .search-result .autocom-box {
+          list-style: none;
+          border-radius: 3px;
+          padding: 0;
+          margin: 0; }
+          .manga .top .wrapper .search-result .autocom-box li {
+            padding: 8px 12px;
+            width: 100%;
+            cursor: pointer; }
+          .manga .top .wrapper .search-result .autocom-box li:hover {
+            background: #efefef; }
+    .manga .top .btn-search {
+      margin-top: 15px;
+      margin-left: 10px;
+      margin-right: 10px;
+      height: 38px;
+      box-sizing: border-box; }
     .manga .top .search-submit {
       margin-top: 10px;
       margin-right: 10px; }
@@ -670,3 +722,6 @@ span {
         width: 225px; }
       .story-see .story-see-main .block .story-detail .mess-input {
         margin-bottom: 0; }
+
+.edit-manga .form-group .cbb-status {
+  width: 300px; }

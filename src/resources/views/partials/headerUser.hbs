@@ -4,7 +4,7 @@
 		<div class="level">
 			<div class="level-left">
 				<span class="logo">
-					<a href="">TruyenDK</a>
+					<a href="/">TruyenDK</a>
 				</span>
 				<div class="top-search">
 					<input type="text" class="text-search" placeholder="Nhập gì đó...">
@@ -25,7 +25,10 @@
 								<i class="fas fa-shopping-cart cart-item">
 									{{#if (isdefined user.cart.totalItem)}}
 										{{user.cart.totalItem}}
+									{{else}}
+										Giỏ hàng
 									{{/if}}
+
 								</i>
 							</span>
 						</a>

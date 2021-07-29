@@ -1,0 +1,64 @@
+<div class="container has-background-white story-detail mt-4">
+    <div class="row">
+        <div class="block01 mt-2">
+            <div class="left">
+                <img src="/img/{{manga.image}}" alt="{{manga.text}}">
+            </div>
+            <div class="center">
+                <h1>{{manga.nameManga}}</h1>
+                <div class="txt">
+                    <span class="info-item">Tên khác: {{manga.otherName}}</span>
+                    <p class="info-item">Tình trạng: {{manga.status}}</p>
+                </div>
+                <ul class="list01">
+                    {{#each manga.category}}
+                        <li class="li03">
+                            <a href="#">{{this.tenloai}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+                <div class="txt txt01 story-detail-info readmore-js-section readmore-js-collapsed" itemprop="description" style="height: 60px;">
+                    <p>{{detail.description}}</p>
+                </div>
+                <p class="readmore readmore-js-toggle" ><a href="#">Xem Thêm</a></p>
+            </div>
+        </div>
+        <div class="block02">
+            <div class="title mt-2 mb-2">
+                <h2  >Danh sách chương</h2>
+                <a href="../../admin/manga/{{manga.slug}}/addchap" class="btn btn-success float-right">Thêm Chương </a>
+            </div>
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <td>Chương số</td>
+                        <td>Thời gian tạo</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#chapters}}
+                        <tr>
+                            <td>Chương {{chapter}}</td>
+                            <td>{{dateFormat createAt format='DD/MM/YYYY'}}</td>
+                        </tr>
+                    {{/chapters}}
+                </tbody>
+            </table>
+        </div>  
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        var description = $('.readmore-js-collapsed')
+        var btnReadmore = $('.readmore')
+        btnReadmore.on('click',()=>{
+            if(description.hasClass("readmore-js-collapsed")){
+                description.removeClass("readmore-js-collapsed")
+                description.addClass("readmore-js-expanded")
+            }else{
+                description.removeClass("readmore-js-expanded")
+                description.addClass("readmore-js-collapsed")
+            }
+        })
+    })
+</script>

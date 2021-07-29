@@ -10,7 +10,16 @@ class UsersController{
     // [GET] /news
     index(req,res,next){
         manga_model.find({})
-            .then(mangas => {
+        .populate({
+            path:'idDetailManga',
+            populate:{ 
+                path:'imgDetails',
+                model:'ImgDetail',
+                match: {new: true}
+            }
+        })
+            .then((mangas) => {
+                // res.json(mangas)
                 res.render('home', {
                     mangas: multipleMongooseToOject(mangas),
                     layout: 'user.hbs'
@@ -19,21 +28,20 @@ class UsersController{
             .catch(next)
     }
     async detailManga(req, res, next){
-        const detailManga =  await detailManga_model.findOne({ slug: req.params.slug })
         Promise.all([
-            manga_model.findOne({ slug: req.params.slug }).populate('theloai'),
-            detailManga_model.findById({ _id: detailManga._id }).populate({
-                path:"ImgDetails",
-                options: { sort: { createdAt: -1 } }
+            manga_model.findOne({ slug: req.params.slug }).populate('category'),
+            detailManga_model.findOne({ slug: req.params.slug }).populate({
+                path:"imgDetails",
+                options: { sort: { createAt: -1 } }
             })
         ])
-            .then(([truyen, detailManga]) => {
-                if(truyen == null){
+            .then(([manga, detailManga]) => {
+                if(manga == null){
                     return res.render('null')                   
                 }
                 else{
                     res.render('users/detailManga', {
-                        truyen: mongooseToOject(truyen),
+                        manga: mongooseToOject(manga),
                         detail: mongooseToOject(detailManga),
                         layout: 'user.hbs'
                     })
@@ -42,7 +50,7 @@ class UsersController{
             .catch(next)
     }
     async readManga(req, res, next){
-        const chapter = await imageDetail_model.findById({ _id: req.params.id})
+        const chapter = await imageDetail_model.findOne({ slug: req.params.slug})
         .then((chapter)=>{
             res.render('users/chapter',{
                 chapter: mongooseToOject(chapter)
@@ -86,7 +94,7 @@ class UsersController{
             .then(user =>{
                 // res.json(user)
                 const cart = user.cart
-                // res.json(cartArr)
+                // res.json(cart)
                 res.render("users/cart",{
                     cart: cart
                 })

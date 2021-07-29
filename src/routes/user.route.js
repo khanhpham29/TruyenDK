@@ -4,7 +4,7 @@ const router = express.Router()
 const { requireAuth } = require('../app/middlewares/authMiddleware')
 const usersController = require('../app/controllers/UsersController')
 
-router.get('/manga/:id-:chap', usersController.readManga)
+router.get('/manga/:slug-:chap', usersController.readManga)
 router.get('/manga/:slug', usersController.detailManga)
 router.post('/addToCart/:id', usersController.addToCart)
 router.post('/deleteItem/:id',usersController.deleteItemInCart)

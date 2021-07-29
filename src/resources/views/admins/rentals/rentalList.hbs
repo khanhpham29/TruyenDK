@@ -1,0 +1,51 @@
+
+<div class="container mt-4">
+    <!-- /Page Header -->
+    <div class="row manga">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Danh sách truyện cho thuê</h4>
+        </div>
+        <div class="top">
+            <form id="form-search">
+                <input type="text" class="search-input" id="searchName" >
+                <button class="btn btn-success search-submit"  type="submit">Tìm</button>
+            </form>
+            <div class="button mb-2">
+                <a href="../../admin/rentals/createMangaRental" class="btn-rentals-manga">
+                    <button class="btn btn-purple" >Thêm truyện cho thuê mới</button>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="datatable table table-striped mb-0 justify text-center mb-4">
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>Tên truyện</td>
+                        <td>Tổng số cuốn</td>
+                        <td>Thời gian tạo</td>
+                        <td>Hành động</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each rentals}}
+                        <tr>
+                            <th>{{sum @index 1}}</td>
+                            <td>{{this.nameManga}}</td>    
+                            <td>{{this.books.length}}</td>    
+                            <td>{{dateFormat this.createAt format='DD/MM/YYYY'}}</td>
+                            <td>
+                                <a href="/admin/rentals/{{this.slug}}/listRental" class="btn btn-info">Xem danh sách truyện thuê</a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>			
+<script>
+</script>
+
+
+

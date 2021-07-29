@@ -12,18 +12,18 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each cart.items}}
-                    <tr class="row-delete" data-id="{{this.bookId._id}}">
+                {{#cart.items}}
+                    <tr class="row-delete" data-id="{{bookId._id}}">
                         <th>{{sum @index 1}}</th>
-                        <th class="nameManga">{{this.bookId.nameManga}}</th>
-                        <th>{{this.bookId.episode}}</th>
-                        <th>{{this.bookId.rentCost}}₫</th>
-                        <th>{{this.amount}}</th>
+                        <th class="nameManga">{{bookId.nameManga}}</th>
+                        <th>{{bookId.episode}}</th>
+                        <th>{{bookId.rentCost}}₫</th>
+                        <th>{{amount}}</th>
                         <th>
-                            <button class="btn btn-danger btn-delete-item" data-id="{{this.bookId._id}}">Xóa</button>
+                            <button class="btn btn-danger btn-delete-item" data-id="{{bookId._id}}">Xóa</button>
                         </th>
                     </tr>
-                {{/each}}
+                {{/cart.items}}
                     <tr>
                         <td colspan="4" style="text-align: right;">Tổng tiền:</td>
                         <td >
@@ -86,10 +86,6 @@
                 var tentruyen = form.tentruyen.value
                 var songaythue = form.songaythue.value
                 var abc = this.parentElement.querySelector('.table')
-                console.log(abc)
-
-
-               
             })
         })
     })

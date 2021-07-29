@@ -22,20 +22,22 @@
             </a>
         </div>
         <ul class="list-manga grid-6">
-            {{#each mangas}}
+            {{#mangas}}
                 <li>
                     <div class="manga-item">
-                        <a href="/manga/{{this.slug}}"> <img src="/img/{{this.image}}" alt="#"> </a>
+                        <a href="/manga/{{slug}}"> <img src="/img/{{image}}" alt="#"> </a>
                         <h3 class="title-book">
-                            <a href="#">{{this.nameManga}}</a>
+                            <a href="/manga/{{slug}}">{{nameManga}}</a>
                         </h3>
                         <div class="chapter-book">
-                            <a href="#">Chương </a>
+                            {{#idDetailManga.imgDetails}}
+                                <a href="/manga/{{slug}}-{{chapter}}">Chương {{this.chapter}}</a>
+                            {{/idDetailManga.imgDetails}}
                         </div>
                         <div class="more-info"></div>
                     </div>
                 </li>
-            {{/each}}
+            {{/mangas}}
         </ul>
     </div>
 </div>
