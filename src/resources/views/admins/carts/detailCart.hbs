@@ -1,0 +1,116 @@
+<div class="container">
+    <form name="form-pay" >
+        <table class="table">
+            <thead>
+                <th>Truyện cho thuê</th>
+                <th>Tập số</th>
+                <th>Số lượng</th>
+                <th>Giá thuê/ngày</th>
+                <th>Trạng thái truyện</th>
+            </thead>
+                <tbody>
+                    <td id="idCart" hidden>{{cart._id}}</td>
+                    {{#each cart.idDetailCart.listRentalBooks.items}}
+                    <tr class="row-data">
+                        <td class="nameManga"> {{this.bookId.nameManga}}</td>
+                        <td class="episode">{{this.bookId.episode}}</td>
+                        <td class="amount">{{this.amount}}</td>
+                        <td class="rentCost">{{this.bookId.rentCost}}</td>
+                        <td class="cost">{{this.bookId.cost}}</td>
+                        <td>
+                            <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
+                                <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
+                                <option value="Hư hại" data-id="2">Hư hại</option>
+                                <option value="Mất" data-id="3">Mất</option>
+                            </select>
+                        </td>
+                    </tr>         
+                    {{/each}}
+            </tbody>
+        </table>
+        <div>Số ngày thuê: <span id="numberRental">{{cart.idDetailCart.numberRental}}</span></div>
+        <div>Ngày thuê: <span id="dateRental">{{dateFormat cart.idDetailCart.createAt}}</span></div>
+        <div>Ngày trả:<span id="date"></span> </div>
+        <div>Số ngày trễ: <span id="dateDelay"></span></div>
+        <div>Tiền thuê: <span></span></div>
+        <div>Tổng tiền đã nhận: <span id="totalPrice">{{cart.totalPrice}}</span></div>
+        <div>Số tiền phạt: <span id="fine"></span>đ</div>
+        <div>Số tiền trả lại: <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
+        <button type="submit" class="btn btn-success btn-submit" id="btn-submit">xác nhận</button>
+    </form>
+
+    
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var today = new Date();
+        var dateRentalReal = new Date();
+        var btnSubmit = document.querySelector('.btn-submit')
+        var numberRental = document.getElementById('numberRental')//số ngày thuê
+        var valueDateDelay = document.getElementById('dateDelay')//số ngày trễ
+        var totalPrice = document.getElementById('totalPrice')//tổng tiền đã nhận
+        var valueFine = document.getElementById('fine')//tiền phạt       
+        var totalPricePay = document.getElementById('totalPricePay')//Số tiền trả lại
+        var form = document.forms['form-pay']
+        var valueDateRental = document.getElementById('dateRental').innerText
+        var dateRental = new Date(valueDateRental)
+
+        
+        var date = (today.getMonth()+1) +'/'+ today.getDate()+'/'+today.getFullYear();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var datenow = document.querySelector('#date').innerText = date
+
+        dateRentalReal= dateRentalReal.setDate(today.getDate() - dateRental.getDate())
+        var valueDateDiff = new Date(dateRentalReal)
+        var dateDiff = valueDateDiff.getDate()  
+        var dateDelay = dateDiff - numberRental.innerText
+
+        if(dateDelay <= 0){
+            console.log("abc")
+            valueDateDelay.innerText = 0
+            valueFine.innerText = 0
+        }
+        else if(dateDelay > 0){
+            var dateNumber = dateDiff - numberRental.innerText
+            valueDateDelay.innerText = dateNumber
+            var fine = 1000 * dateNumber
+            valueFine.innerText = fine
+            totalPricePay.innerText = (totalPrice.innerText - fine)
+
+        }
+
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            var rowData = document.querySelectorAll('.row-data')
+
+            rowData.forEach((row) =>{
+                var nameManga = row.querySelector('.nameManga').innerText
+                var episode = row.querySelector('.episode').innerText
+                var amount = row.querySelector('.amount').innerText
+                var rentCost = row.querySelector('.rentCost').innerText
+                var statusPayBooks = row.querySelector('.cbb-status-book')
+                var id = statusPayBooks.options[statusPayBooks.selectedIndex].getAttribute('data-id')
+                var datePay = document.getElementById('date').innerText
+                var idCart = document.getElementById('idCart').innerText
+                console.log(idCart)
+                datePay = new Date(datePay + ' ' + time)
+                axios.post('/admin/rentals/pay/'+idCart+'/book/',{
+                    datePay: datePay,
+                    nameManga: nameManga,
+                    episode: episode,
+                    amount: amount,
+                    statusPayBooks: id,
+                })
+                    .then((res)=>{
+                        console.log(res)
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+            })
+        })
+
+
+    })
+</script>

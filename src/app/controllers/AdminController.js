@@ -375,10 +375,13 @@ class AdminController{
     
     
     //---------------------------RENTALS----------------------------------------//
+    
+
     async userRentals(req, res, next){
+        console.log(req.user)
         const cart = new Cart_Model({
             phone: req.user.phone,
-            totalPrice: req.user.cart.totalPrice
+            totalPrice: req.body.totalPrice
         })
         cart.save()
         .then((cart) =>{
@@ -441,6 +444,102 @@ class AdminController{
         .catch(next)
     }
 
+    newRentals(req, res, next){
+        Cart_Model.find({status: 'Chưa xác thực'})
+        .populate({
+            path: 'idDetailCart',
+            populate:{
+                path: 'listRentalBooks.items.bookId'
+            }
+        })
+            .then((cart) => {
+                res.render('admins/carts/newCart', {
+                    cart: multipleMongooseToOject(cart),
+                    layout: 'admin'
+                })
+            })
+            .catch(next)
+    }
+
+    confirmNewRentals(req, res, next){
+        Cart_Model.updateOne(
+            {_id: req.params.id}, 
+            {
+                status: 'Đã xác nhận'
+            })
+        .then(cart => console.log(cart))
+    }
+
+
+    confirmRentals(req, res, next){
+        Cart_Model.find({status: 'Đã xác nhận'})
+            .then((cart) => {
+                res.render('admins/carts/confirmCart', {
+                    cart: multipleMongooseToOject(cart),
+                    layout: 'admin'
+                })
+            })
+            .catch(next)
+    }
+
+    confirmToRentals(req, res, next){
+        Cart_Model.updateOne(
+            {
+                _id: req.params.id
+            },
+            {
+                status: 'Đã nhận'
+            })
+            .then((cart) => {
+                console.log(cart)
+            })
+            .catch(next)
+    }
+
+    payRentals(req, res, next){
+        Cart_Model.find({status: 'Đã nhận'})
+            .then((cart) => {
+                res.render('admins/carts/payCart', {
+                    cart: multipleMongooseToOject(cart),
+                    layout: 'admin'
+                })
+            })
+            .catch(next)
+    }
+
+    detailPayRentals(req, res, next){
+        Cart_Model.findOne({_id: req.params.id})
+        .populate({
+            path: 'idDetailCart',
+            populate:{
+                path: 'listRentalBooks.items.bookId'
+            }
+        })
+            .then((cart) => { 
+                res.render('admins/carts/detailCart', {
+                    cart: mongooseToOject(cart),
+                    layout: 'admin'
+                })
+            })
+            .catch(next)
+    }
+
+    PayBookRentals(req, res, next){
+        DetailsCart_Model.updateOne({
+            idCart: req.params.id
+        },{
+            datePay: req.body.datePay
+        })
+        
+        Cart_Model.updateOne({_id: req.params.id },{ status: 'Đã hoàn thành' })
+        .then((cartUp) => console.log(cartUp))
+        Cart_Model.findOne({_id: req.params.id })
+        .then((cart) => console.log(cart))
+        
+        .catch(err => console.log("loi"))
+        
+    }
+
     userRentalsList(req, res, next){
         Cart_Model.find({})
             .then((cart) => {
@@ -467,7 +566,7 @@ class AdminController{
 
     rejectRentals(req, res, next){
         Cart_Model.updateOne({_id: req.params.id}, {
-            status: req.body.statusRejectRental,
+            status: 'Hủy',
             reason: req.body.reasonReject,
             $push: { 
                 arrayStatus: req.body.statusRejectRental
@@ -519,18 +618,7 @@ class AdminController{
         })
     }
 
-    searchUserRentals(req, res, next){
-        Cart_Model.findOne({
-            phone: req.body.phone,
-            status: 'Đã nhận'
-        })
-        .then(() => {
-            res.json({
-                phoneUser: req.body.phone,
-                message: "Thông tin đơn hàng!"
-            })
-        })
-    }
+    
 
     //---------------------------------------------------------------------------//
     //MangaRental

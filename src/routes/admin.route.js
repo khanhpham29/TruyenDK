@@ -68,13 +68,21 @@ router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
 router.post('/rentals', adminController.userRentals)
+router.get('/rentals/new', adminController.newRentals)
+router.post('/rentals/new/:id', adminController.confirmNewRentals)
+router.get('/rentals/confirm', adminController.confirmRentals)
+router.post('/rentals/confirm/:id', adminController.confirmToRentals)
+router.get('/rentals/pay', adminController.payRentals)
+router.get('/rentals/pay/:id/detail', adminController.detailPayRentals)
+router.post('/rentals/pay/:id/book', adminController.PayBookRentals)
+
 router.post('/rentals/:id/reject', adminController.rejectRentals)
 router.post('/rentals/:id/return', adminController.returnRentals)
 router.get('/rentals/:id/detail', adminController.detailRentals)
 router.post('/rentals/:id', adminController.controlRentals)
 router.get('/rentals/list', adminController.userRentalsList)
 router.get('/rentals/list/finally', adminController.finallyRentals)
-router.post('/rentals/list/search', adminController.searchUserRentals)
+
 
 
 //-----------------------USERS--------------------//
