@@ -4,6 +4,9 @@ const imageDetail_model = require('../models/ImageDetail')
 const rental_model = require('../models/MangaRental')
 const category_model = require('../models/CategoryManga')
 const book_model = require('../models/book')
+const User_Model = require('../models/User')
+const Cart_Model = require('../models/Cart')
+const DetailsCart_Model = require('../models/DetailCart')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 class UsersController{
@@ -108,6 +111,70 @@ class UsersController{
                 // res.redirect('/cart')
             })
             .catch( err => console.error(err))
+    }
+
+
+    async userRentals(req, res, next){
+        console.log(req.user)
+        const cart = new Cart_Model({
+            phone: req.user.phone,
+            totalPrice: req.body.totalPrice
+        })
+        cart.save()
+        .then((cart) =>{
+            const cartUser = req.user.cart.items
+            const detailCart = new DetailsCart_Model({
+                numberRental: req.body.numberRental,
+                idCart: cart._id,
+                totalItem: req.user.cart.totalItem,
+                totalPrice: req.user.cart.totalPrice,
+            })
+            detailCart.save()
+            .then((detailCart)=>{  
+                cartUser.forEach((item, i) =>{
+                    detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
+                    const soluongthue =  detailCart.listRentalBooks.items[i].amount
+                    book_model.findOne({_id: detailCart.listRentalBooks.items[i].bookId})
+                        .then((books) => {
+                            book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
+                                amount: (books.amount - soluongthue)
+                            })
+                        })
+                        .catch(err => console.log(err))
+                })
+                detailCart.save()
+                Cart_Model.updateOne(
+                    {
+                        _id: cart._id
+                    }, 
+                    {
+                        idDetailCart: detailCart._id,
+                        $push: { 
+                            arrayStatus: 'Chưa xác thực'
+                        }
+                    },
+                )
+                .then(() => console.log("update thành công"))
+                .catch(next)
+                const userCart = User_Model.updateOne({phone: cart.phone},{
+                    cart:{
+                        totalItem: 0,
+                        items: [],
+                        totalPrice: 0,
+                    }
+                })
+                .then(() => {
+                    console.log("thanh cong")
+                })
+
+                
+                .catch(err => console.log(err))
+                // console.log(cart)
+                res.redirect("/")
+            })
+
+        })
+        .catch(next)
     }
 }
 

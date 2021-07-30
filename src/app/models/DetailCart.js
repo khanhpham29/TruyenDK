@@ -24,15 +24,19 @@ const detailsCartSchema =  new Schema({
     totalItem:{
         type:Number,
     },
+    totalRentCost: {
+        type: Number,
+    },
+
     totalPrice:{ 
         type: Number
     },
-    songaythue: {
+    numberRental: {
         type: Number,
     },
 
     createAt:{ type: Date, default: Date.now},
-    ngaytra: {type: String}
+    datePay: {type: Date}
 
 },{
     collection: 'detailcart'
