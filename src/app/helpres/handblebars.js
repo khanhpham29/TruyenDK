@@ -4,7 +4,7 @@ const moment = require('moment')
 module.exports = {
     sum: (a, b) => a + b,
     dateFormat: (date,options)=>{
-        const formatToUse = (options && options.hash && options.hash.format) || "HH:mm:ss MM/DD/YYYY "
+        const formatToUse = (options && options.hash && options.hash.format) || "HH:mm:ss MM/DD/YYYY"
         return moment(date).format(formatToUse);
     },
     sortTable: (field, sort) =>{
@@ -30,6 +30,14 @@ module.exports = {
     },
     isdefined: function (value) {
         return value !== 0;
+    },
+    if_eq: function (a) {
+        if(a > 0){
+            return '<button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>'
+        }          
+        else{
+            return '<button class="btn btn-danger btn-add-to-cart" data-id="{{this._id}}">Hết hàng</button>'
+        }
     }
 
 }

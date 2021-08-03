@@ -1,51 +1,51 @@
 <div class="container">
-    {{!-- Nội dung trang  --}}
-    <div class="edit-manga">
-        <form action="/admin/manga/{{mangas.slug}}?_method=PUT" name="form-edit-manga" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="nameManga">Tên truyện:</label>
-                    <input type="text" id="nameManga" value="{{mangas.nameManga}}" name="nameManga" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="avatarManga">Hình:</label>
-                    <img src="../../../img/{{mangas.image}}" alt="Ảnh bìa manga!!!" width="100">
-                    <input type="file" class="form-control-file"  id="avatarManga" name="avatarManga">
-                    <input type="text" name="avatarManga" value="{{mangas.image}}" hidden>
-                </div>
-                <div class="form-group">
-                    <label for="category">Thể loại: </label>
-                    {{#each categories}}
-                        <input class="form-check-input" type="checkbox"  name="categoryIds[]" value="{{this._id}}">
-                        <label class="form-check-label" for="flexCheckChecked">
-                            {{this.tenloai}}
-                        </label>
-                    {{/each}}
-                </div>
-                <div class="form-group">
-                    <input type="hidden" class="slug-manga" value="{{mangas.slug}}"> 
-                    {{#each mangas.category}}
-                        <input type="hidden" name="category-checked" value="{{this._id}}">
-                    {{/each}}
-                </div>
-                <div class="form-group">
-                    <div>
-                        <label>Trạng thái: </label>
-                        <div id="cbbStatusData" hidden>{{mangas.status}}</div>
-                        <select class="cbb-status" name="cbbStatus" id="cbbStatus">
-                            <option value="Đang tiến hành">Đang tiến hành</option>
-                            <option value="Đã hoàn thành">Đã hoàn thành</option>
-                            <option value="Ngưng">Ngưng</option>  
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="description">Mô tả:</label>
-                    <textarea name="description" class="form-control" id="description" >{{mangas.mota}}</textarea>
-                </div>
-            {{!-- btn Submit form --}}
-            <button type="submit" class="btn btn-outline-success btn-edit-manga">Sửa</button>
-            <a href="../" class="btn btn-outline-success btn-edit-manga">Trở về</a>
-        </form>
+    <div class="row">
+        <div class="col-sm-8 offset-2">
+            {{!-- Nội dung trang  --}}
+            <div class="edit-manga">
+                <form action="/admin/manga/{{mangas.slug}}?_method=PUT" name="form-edit-manga" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="nameManga">Tên truyện:</label>
+                            <input type="text" id="nameManga" value="{{mangas.nameManga}}" name="nameManga" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="avatarManga">Hình:</label>
+                            <img src="../../../img/{{mangas.image}}" alt="Ảnh bìa manga!!!" width="100">
+                            <input type="file" class="form-control-file"  id="avatarManga" name="avatarManga">
+                            <input type="text" name="avatarManga" value="{{mangas.image}}" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Thể loại: </label>
+                            {{#each categories}}
+                                <input class="form-check-input" type="checkbox"  name="categoryIds[]" value="{{this._id}}">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    {{this.tenloai}}
+                                </label>
+                            {{/each}}
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="slug-manga" value="{{mangas.slug}}"> 
+                            {{#each mangas.category}}
+                                <input type="hidden" name="category-checked" value="{{this._id}}">
+                            {{/each}}
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <label>Trạng thái: </label>
+                                <div id="cbbStatusData" hidden>{{mangas.status}}</div>
+                                <select class="cbb-status form-select" name="cbbStatus" id="cbbStatus">
+                                    <option value="Đang tiến hành">Đang tiến hành</option>
+                                    <option value="Đã hoàn thành">Đã hoàn thành</option>
+                                    <option value="Ngưng">Ngưng</option>  
+                                </select>
+                            </div>
+                        </div>
+                    {{!-- btn Submit form --}}
+                    <button type="submit" class="btn btn-outline-success btn-edit-manga">Sửa</button>
+                    <a href="../" class="btn btn-outline-success btn-edit-manga">Trở về</a>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
     
@@ -55,7 +55,6 @@
         var form = document.forms['form-edit-manga']
         var checkboxAll = $('input[name="categoryIds[]"]')
         var slug = $('.slug-manga').val()
-        console.log(slug)
         var categoryChecked = $('input[name="category-checked"]')
         categoryChecked.each((index, el) =>{
             console.log(el.value)
@@ -74,7 +73,6 @@
             console.log(document.getElementById("avatarManga").files)
             var checkboxAll = $('input[name="categoryIds[]"]:checked')
             var status = option.value
-            var description = form.description.value
             let formData = new FormData()
             formData.append("nameManga",nameManga)
             formData.append("avatarManga",avatarManga[0])
@@ -83,7 +81,6 @@
             checkboxAll.each((index, el) =>{
                 formData.append("category[" + index + "]", el.value)
             })
-            formData.append("description",description)
             axios.post("../"+ slug +"?_method=PUT",formData,{
                 headers: {
                     'Accept': 'application/json',

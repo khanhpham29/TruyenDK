@@ -10,6 +10,10 @@ const mangaSchema = new Schema({
 		type: String, 
 		required: [true, "Vui lòng nhập tên truyện"]
 	},
+	idDetailManga:{ 
+		type:Schema.Types.ObjectId,
+		ref:'detail'
+	},
 	otherName:{
 		type: String, 
 		default:''

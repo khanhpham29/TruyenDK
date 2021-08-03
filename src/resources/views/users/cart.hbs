@@ -18,7 +18,7 @@
                             <th>{{sum @index 1}}</th>
                             <th name="nameManga" class="nameManga">{{this.bookId.nameManga}}</th>
                             <th name="episode" class="episode">{{this.bookId.episode}}</th>
-                            <th name="rentCost" class="rentCost">{{this.bookId.rentCost}}₫</th>
+                            <th name="rentCost" class="rentCost">{{this.bookId.rentCost}}</th>
                             <th name="amount" class="amount">{{this.amount}}</th>
                             <th>
                                 <button class="btn btn-danger btn-delete-item" data-id="{{this.bookId._id}}">Xóa</button>
@@ -29,7 +29,7 @@
                             <td colspan="4" style="text-align: right;">Tổng tiền:</td>
                             <td >
                                 <div class="tong-tien">
-                                    {{cart.totalPrice}}₫
+                                    {{cart.totalPrice}}
                                 </div>
                             </td>
                         </tr>
@@ -39,7 +39,7 @@
         <form name="form-rentals"  method="POST">
             <div>
                 <label for="">Số ngày thuê: </label>
-                <input type="text" name="numberRental">
+                <input type="text" name="numberRental" id="numberRental">
             </div>
             <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
             <button type="submit" class="btn btn-success" id="submitForm">Xác nhận</button>
@@ -55,7 +55,6 @@
         var form = document.forms['form-rentals']
         var submitForm = document.querySelector('#submitForm')
         var tongtienEl = document.querySelector('.tong-tien')
-
         btnDeleteItem.forEach(btn =>{
             btn.onclick = function (){
                 tongtienEl.innerText = ""
@@ -65,7 +64,6 @@
                 axios.post('/deleteItem/' + idItem)
                 .then((res)=>{
                     console.log(res.data)
-
                     const totalPrice = res.data.cart.totalPrice
                     const totalItem = res.data.cart.totalItem
                     tongtienEl.innerText = totalPrice + "₫"
@@ -75,37 +73,42 @@
                     console.log(err)
                 })
             }
-
-            
         })
-
-        form.addEventListener("submit", function(e){
-                e.preventDefault()
-                var numberRental = form.numberRental.value
-                var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-delete')
-                console.log(rowData)
+        form.addEventListener("submit", async function(e){
+            e.preventDefault()
+            const items = []
+            var numberRental = form.numberRental.value
+            var totalPrice = tongtienEl.innerText
+            
+            var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-delete')
+            rowData.forEach((row, i) => {
+                var nameManga = row.querySelector('.nameManga').innerText
+                var episode = row.querySelector('.episode').innerText
+                var rentCost = row.querySelector('.rentCost').innerText
+                var amount = row.querySelector('.amount').innerText
                 
-                rowData.forEach((row, i) => {
-                    var nameManga = row.querySelector('.nameManga').innerText
-                    var episode = row.querySelector('.episode').innerText
-                    var rentCost = row.querySelector('.rentCost').innerText
-                    var amount = row.querySelector('.amount').innerText
-                    var totalPrice = tongtienEl.innerText
-                    axios.post('/admin/rentals',{
-                        nameManga: nameManga,
-                        episode: episode,
-                        rentCost: rentCost,
-                        amount: amount,
-                        totalPrice: totalPrice,
-                        numberRental: numberRental,
-                    })
-                    .then((res)=>{
-                        console.log(res)
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                    })
+
+                items.push({
+                    nameMang: nameManga,
+                    episode: episode,
+                    rentCost: rentCost,
+                    amount: amount,
+                    
                 })
             })
+            
+            axios.post('/rentals',{
+                items: items,
+                totalPrice: totalPrice,
+                numberRental: numberRental,
+            })
+                .then(async (res)=>{
+                    console.log(res.data)
+                    var success  = await res.data.message
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+        })
     })
 </script>

@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 
 
 const MangaDetailsSchema = new Schema({
+	idManga:{ 
+		type:Schema.Types.ObjectId,
+		ref:'mangas'
+	},
 	nameManga:{ 
 		type:String,
 	},

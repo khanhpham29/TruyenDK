@@ -345,17 +345,78 @@ a:active,a:focus,a:visited {
 	}
 }
 
-	
 .manga{
 	background: #fff;
 	width: calc(100% - $width-menu-admin);
 	height: 100%;
 	border: 1px solid #333;
 	margin-left: 2px;
-	
 	.top{
 		display: flex;
 		width: 100%;
+		.wrapper{
+			max-width: 450px;
+			margin-right: 10px;
+			position: relative;
+			.search-input{
+				position: relative;
+				background: #fff;
+				width: 100%;
+				border-radius: 5px;
+				box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+				input{
+					color:#007bff;
+					height: 55px;
+					width: 100%;
+					outline: none;
+					border: none;
+					border-radius: 5px;
+					padding: 0 60px 0 20px;
+					font-size: 18px;
+					box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+				}
+				&.active {
+					& ~ .search-result {
+						opacity: 1;
+						visibility: unset;
+					}
+				}
+			}
+			.search-result{
+				position: absolute;
+				top: 100%;
+				left: 0;
+				width: 100%;
+				background-color: #fff;
+				box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+				max-height: calc(38px * 3);
+				overflow-y: auto;
+				opacity: 0;
+				visibility: hidden;
+				transition: linear 0.25s;
+				.autocom-box{
+					list-style: none;
+					border-radius: 3px;
+					padding: 0;
+					margin: 0;
+					li{
+						padding: 8px 12px;
+						width: 100%;
+						cursor: pointer;
+					}
+					li:hover{
+						background: #efefef;
+					}
+				}
+			}
+		}
+		.btn-search{
+			margin-top: 15px; 
+			margin-left: 10px;
+			margin-right: 10px;
+			height: 38px;
+			box-sizing: border-box;
+		}
 		.search-submit {
 			margin-top: 10px;
 			margin-right: 10px;
@@ -367,7 +428,6 @@ a:active,a:focus,a:visited {
 			position: relative;
 			right: 0;
 			top: 0;
-
 			.btn-add-manga, .btn-rentals-manga{
 				button{
 					float: right;
@@ -983,6 +1043,13 @@ span {
 					margin-bottom: 0;
 				}
 			}
+		}
+	}
+}
+.edit-manga{
+	.form-group{
+		.cbb-status{
+			width: 300px;
 		}
 	}
 }

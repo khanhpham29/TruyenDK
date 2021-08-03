@@ -5,16 +5,20 @@
             <h4 class="card-title mb-0">Danh sách truyện đọc</h4>
         </div>
         <div class="top">
-            <form action="/admin/manga/rentals/search">
-                <input type="text" class="search-input" id="search" name="tentruyen">
-                <button class="btn btn-success search-submit"  type="submit">Tìm</button>
+            <form action="">
+                <div class="wrapper">
+                    <div class="search-input"> 
+                        <input  placeholder="Type to search..."  type="text" id="search" autocomplete="off">      
+                    </div>
+                    <div class="search-result">
+                        <ul id="match-list" class="autocom-box">
+                        </ul>
+                    </div>
+                </div>
             </form>
-            <div class="button">
-                <a href="/admin/manga/add" class="btn-add-manga">
-                    <button class="btn btn-purple">Thêm truyện mới</button>
-                </a>
-            </div>
-            
+            <a href="/admin/manga/add" class="btn-add-manga mt-4">
+                <button class="btn btn-purple">Thêm truyện mới</button>
+            </a>
         </div>
         
         <div class="mangaList mt-4">
@@ -36,24 +40,64 @@
                             <td>{{this.nameManga}}</td> 
                             <td class="theloai">
                                 {{#each this.category}}                              
-                                    {{this.tenloai}},  
+                                    {{this.tenloai}},
                                 {{/each}}  
                             </td>
                             <td>{{this.status}}</td>
-                            <td>{{dateFormat this.createdAt "DD/MM/YYYY"}}</td>                           
+                            <td>{{dateFormat this.createAt format='DD/MM/YYYY'}}</td>                           
                             <td>
-                                <a href="/admin/manga/{{this.slug}}/addchap" class="btn btn-purple">Thêm Chương </a>
+                                
+                                <a href="/admin/manga/{{this.slug}}" class="btn btn-purple">Xem chi tiết</a>
                                 <a href="/admin/manga/{{this.slug}}/edit" class="btn btn-primary">Sửa</a>
                             </td>
                         </tr>
                     {{/each}}
                 </tbody>
-                
-            </table>
+            </table>    
                 
         </div>
     </div>
 </div>
 
-<script>  
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var searchWrapper = document.querySelector('.search-input')
+        var search = document.getElementById('search')
+        var matchList = document.getElementById('match-list')
+        //tìm truyện và lọc nó
+        var searchMangas =  searchText =>{
+            if(searchText.length === 0){
+                matches = [];
+                searchWrapper.classList.remove("active")
+                matchList.innerHTML = ''
+                return false;
+            }
+            axios.get("/admin/manga/searchManga")
+            .then((res)=>{
+                const mangas = res.data.mangas
+                // khớp với kiểu nhập văn bản hiện tại
+                let matches = mangas.filter(manga =>{
+                    const regex = new RegExp(`${searchText}`, 'giu')
+                    return manga.nameManga.replace(/\s/gis, "").match(regex) || manga.otherName.replace(/\s/gis, "").match(regex)
+                })
+                if(matches.length === 0){
+                    searchWrapper.classList.remove("active")
+                    matchList.innerHTML = ''
+                }
+
+                outputHtml(matches)
+            })
+        }
+        const outputHtml = matches =>{
+            if(matches.length >0){
+                const html = matches.map(match =>`
+                    <a href="/admin/manga/${match.slug}" target="_blank"><li>${match.nameManga}</li></a>
+                `)
+                .join('');
+                searchWrapper.classList.add("active")
+                matchList.innerHTML = html
+            }
+        }
+        search.addEventListener('input', ()=> searchMangas(search.value.replace(/\s/gis, "").toLowerCase()))
+    })
 </script>

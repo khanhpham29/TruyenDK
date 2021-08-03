@@ -9,7 +9,9 @@ const bookSchema =  new Schema({
     episode: { 
         type: String,
     },
-    image: { type: String}, 
+    image: { 
+        type: String,
+    }, 
     cost: { type: Number},
     rentCost: { type: Number},
     coverCost: { type: Number, default:''},
@@ -19,7 +21,6 @@ const bookSchema =  new Schema({
     slug:{ 
         type: String, 
         slug: 'nameManga', 
-        unique: true
     },
 },{
     timestamps : true,

@@ -1,0 +1,69 @@
+<div class="container has-background-white story-detail mt-4">
+    <div class="row">
+        <div class="block01 mt-2">
+            <div class="left">
+                <img src="/img/{{manga.image}}" alt="{{manga.text}}">
+            </div>
+            <div class="center">
+                <h1>{{manga.nameManga}}</h1>
+                <div class="txt">
+                    <span class="info-item">Tên khác: {{manga.otherName}}</span>
+                    <p class="info-item">Tình trạng: {{manga.status}}</p>
+                </div>
+                <ul class="list01">
+                    {{#each manga.category}}
+                        <li class="li03">
+                            <a href="#">{{this.tenloai}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+                <div class="txt txt01 story-detail-info readmore-js-section readmore-js-collapsed" itemprop="description" style="height: 60px;">
+                    <p>{{detail.description}}</p>
+                </div>
+                <p class="readmore readmore-js-toggle" ><a href="#">Xem Thêm</a></p>
+            </div>
+        </div>
+        <div class="latest">
+            <div class="caption">
+                <a href="#">
+                    "Chi tiết danh sách truyện cho thuê"
+                </a>
+                
+            </div>
+            <ul class="list-manga grid-6">
+                {{#list}}
+                    <li>
+                        <div class="manga-item">
+                            <a href="#"> <img src="../../../img/{{image}}" alt="#"></a>
+                            <h4 class="title-book">
+                                <p href="#">Tên Truyện: {{nameManga}}</p>
+                            </h4>
+                            <p href="#">Tập số: {{episode}}, Giá thuê {{rentCost}}</p>
+                            <div class="chapter-book">
+                                <a class="btn btn-info" href="{{slug}}/../edit/{{episode}}">Sửa thông tin truyện</a>
+                            </div>
+                            <div class="more-info">
+                            </div>
+                        </div>
+                    </li>
+                {{/list}}
+            </ul>
+            <a href="../../rentals" class="btn btn-danger float-right">Trở về </a>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        var description = $('.readmore-js-collapsed')
+        var btnReadmore = $('.readmore')
+        btnReadmore.on('click',()=>{
+            if(description.hasClass("readmore-js-collapsed")){
+                description.removeClass("readmore-js-collapsed")
+                description.addClass("readmore-js-expanded")
+            }else{
+                description.removeClass("readmore-js-expanded")
+                description.addClass("readmore-js-collapsed")
+            }
+        })
+    })
+</script>   

@@ -17,6 +17,16 @@ const detailsCartSchema =  new Schema({
             amount:{ 
                 type: Number,
                 required: true,
+            },
+            status:{
+                type: String,
+            },
+            statusBook: {
+                type: String,
+            },
+            amountPaid:{
+                type: Number,
+                default: 0,
             }
         }],
         

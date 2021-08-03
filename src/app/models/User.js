@@ -50,7 +50,11 @@ const userSchema =  new Schema({
             type: Number,
             default: 0,
         }
-    }
+    },
+    idCart: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Cart',
+    }]
 },{
     collection: 'users'
 })

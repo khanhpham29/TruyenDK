@@ -57,9 +57,9 @@
             })
             .then( (res)=> {
                 var data = res.data
-                if(data.message == "Thêm thành công"){
+                if(data.message == "Thêm chương thành công"){
                     alert(data.message)
-                    location.assign('../')
+                    location.assign('../'+ slug +'')
                 }
             })
             .catch((err) => {

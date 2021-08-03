@@ -10,11 +10,10 @@ const upload = require('../app/middlewares/multer')
 
 
 //Search bar manga
-// router.get('/manga/rentals/search', adminController.search)
+router.get('/manga/searchManga', adminController.searchManga)
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
-
 router.post('/manga/add',upload.single('avatarManga'), adminController.mangaCreate)
 //Edit form manga
 router.get('/manga/:slug/edit', adminController.formMangaEdit)
@@ -36,11 +35,16 @@ router.get('/manga', adminController.manga)
 
 //-------------------------MANGA-RENTAL------------------------//
 //Form create manga rental
-router.get('/rental/createMangaRental', adminController.formCreateMangaRental)
+router.get('/rentals/createMangaRental', adminController.formCreateMangaRental)
 // create manga rental
-router.post('/rental/:slug/',upload.single('avatarMangaRental'), adminController.createMangaRental)
+router.post('/rentals/:slug/',upload.single('avatarMangaRental'), adminController.createMangaRental)
+// form edit manga rental
+router.get('/rentals/:slug/edit/:episode', adminController.formUpdateMangaRental)
+// edit manga rental
+router.post('/rentals/:slug/edit/:episode',upload.single('avatarMangaRental'), adminController.EditMangaRental)
 // Detail list manga rental
-router.get('/rentals/:tentruyen/listRental', adminController.listMangaRentals)
+router.get('/rentals/:slug/listRental', adminController.listMangaRentals)
+
 //List rentals for manga
 router.get('/rentals', adminController.mangaRentals)
 
@@ -67,14 +71,17 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
-router.post('/rentals', adminController.userRentals)
+
 router.get('/rentals/new', adminController.newRentals)
 router.post('/rentals/new/:id', adminController.confirmNewRentals)
 router.get('/rentals/confirm', adminController.confirmRentals)
 router.post('/rentals/confirm/:id', adminController.confirmToRentals)
 router.get('/rentals/pay', adminController.payRentals)
 router.get('/rentals/pay/:id/detail', adminController.detailPayRentals)
-router.post('/rentals/pay/:id/book', adminController.PayBookRentals)
+router.post('/rentals/pay/:id/', adminController.paidOneBook)
+router.post('/rentals/pay/:id/book', adminController.payBookRentals)
+
+
 
 router.post('/rentals/:id/reject', adminController.rejectRentals)
 router.post('/rentals/:id/return', adminController.returnRentals)
