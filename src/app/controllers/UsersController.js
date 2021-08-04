@@ -41,7 +41,7 @@ class UsersController{
     async detailManga(req, res, next){
         
         Promise.all([
-            manga_model.findOne({ slug: req.params.slug }).populate('category'),
+            manga_model.findOne({ slug: req.params.slug }).populate('category').populate('idDetailManga'),
             detailManga_model.findOne({ slug: req.params.slug }).populate({
                 path:"imgDetails",
                 options: { sort: { createAt: -1 } }

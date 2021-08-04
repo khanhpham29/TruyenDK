@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-group">
                             <input type="hidden" class="slug-manga" value="{{mangas.slug}}"> 
-                            {{#each mangas.category}}
+                            {{#each mangas.categories}}
                                 <input type="hidden" name="category-checked" value="{{this._id}}">
                             {{/each}}
                         </div>
@@ -56,6 +56,7 @@
         var checkboxAll = $('input[name="categoryIds[]"]')
         var slug = $('.slug-manga').val()
         var categoryChecked = $('input[name="category-checked"]')
+        console.log(categoryChecked)
         categoryChecked.each((index, el) =>{
             console.log(el.value)
             var idChecked = el.value

@@ -42,7 +42,9 @@ class AdminController{
     // [GET] /manga
     // Hiển thị tất cả manga trong db
     async manga(req, res, next){
-        const mangas = await Manga.find({}).populate('categories')
+        const mangas = await Manga.find({})
+        .populate('categories')
+        .populate('idDetailManga')
             .then((mangas) => {
                 res.render('admins/mangas/mangaList', {
                     mangas: multipleMongooseToOject(mangas),
@@ -118,6 +120,9 @@ class AdminController{
                 status: req.body.tinhtrang,
                 categories: req.body.category,
             })
+            detailmanga_model.updateOne({slug: req.params.slug},{
+                status: req.body.tinhtrang,
+            })
             .then(() => res.json({
                 message: "Sửa thành công"
             }))
@@ -126,9 +131,11 @@ class AdminController{
         else{
             Manga.updateOne({ slug: req.params.slug }, {
                 nameManga: req.body.nameManga,
-                status: req.body.tinhtrang,
                 categories: req.body.category,
                 image: req.file.filename,
+            })
+            detailmanga_model.updateOne({slug: req.params.slug},{
+                status: req.body.tinhtrang,
             })
             .then(() => res.json({
                 message: "Sửa thành công"
@@ -520,7 +527,9 @@ class AdminController{
     }
     async listMangaRentals(req, res, next){
         Promise.all([
-            Manga.findOne({ slug: req.params.slug }).populate('categories'),
+            Manga.findOne({ slug: req.params.slug })
+            .populate('categories')
+            .populate('idDetailManga'),
             detailmanga_model.findOne({ slug: req.params.slug }),
             book_model.find({ slug: req.params.slug}),
         ])

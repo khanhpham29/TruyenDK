@@ -7,7 +7,7 @@
             <h1>{{manga.nameManga}}</h1>
             <div class="txt">
                 <span class="info-item">Tên khác: {{manga.otherName}}</span>
-                <p class="info-item">Tình trạng: {{manga.status}}</p>
+                <p class="info-item">Tình trạng: {{manga.idDetailManga.status}}</p>
                 <div>
                     <span>Thống kê</span>
                     <span class="sp01">
@@ -17,7 +17,7 @@
                         <i class="fas fa-heart"></i> <span class="sp02">99</span>
                     </span>
                     <span class="sp01">
-                        <i class="fas fa-eye"></i> <span class="sp02">99</span>
+                        <i class="fas fa-eye"></i> <span class="sp02">{{manga.idDetailManga.arrIdFollow.length}}</span> 
                     </span>
                 </div>
             </div>

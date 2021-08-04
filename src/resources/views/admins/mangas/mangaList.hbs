@@ -34,24 +34,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each mangas}}
+                    {{#mangas}}
                         <tr>
                             <th>{{sum @index 1}}</td>
-                            <td>{{this.nameManga}}</td> 
+                            <td>{{nameManga}}</td> 
                             <td class="theloai">
-                                {{#each this.categories}}                              
-                                    {{this.nameCategory}},
+                                {{#each categories}}                              
+                                    {{nameCategory}},
                                 {{/each}}  
                             </td>
-                            <td>{{this.status}}</td>
-                            <td>{{dateFormat this.createAt format='DD/MM/YYYY'}}</td>                           
+                            <td>{{idDetailManga.status}}</td>
+                            <td>{{dateFormat createAt format='DD/MM/YYYY'}}</td>                           
                             <td>
                                 
-                                <a href="/admin/manga/{{this.slug}}" class="btn btn-purple">Xem chi tiết</a>
-                                <a href="/admin/manga/{{this.slug}}/edit" class="btn btn-primary">Sửa</a>
+                                <a href="/admin/manga/{{slug}}" class="btn btn-purple">Xem chi tiết</a>
+                                <a href="/admin/manga/{{slug}}/edit" class="btn btn-primary">Sửa</a>
                             </td>
                         </tr>
-                    {{/each}}
+                    {{/mangas}}
                 </tbody>
             </table>    
                 
