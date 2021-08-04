@@ -95,9 +95,8 @@ class UsersController{
             .populate('cart.items.bookId')
             .execPopulate()
             .then(user =>{
-                // res.json(user)
                 const cart = user.cart
-                // res.json(cart)
+                //console.log(cart.items)
                 res.render("users/cart",{
                     cart: cart
                 })
@@ -173,6 +172,15 @@ class UsersController{
 
         })
         .catch(next)
+    }
+
+    increaseProductCarts(req, res, next){
+        req.user.amountPlus(req.params.id)
+            .then((user) =>{
+                const cart = user.cart
+                res.json(cart)
+            })
+            .catch( err => console.error(err))
     }
 }
 

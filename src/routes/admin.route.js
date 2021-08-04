@@ -83,6 +83,8 @@ router.post('/rentals/pay/:id/book', adminController.payBookRentals)
 
 
 
+
+
 router.post('/rentals/:id/reject', adminController.rejectRentals)
 router.post('/rentals/:id/return', adminController.returnRentals)
 router.get('/rentals/:id/detail', adminController.detailRentals)

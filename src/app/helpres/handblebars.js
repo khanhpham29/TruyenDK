@@ -33,10 +33,10 @@ module.exports = {
     },
     if_eq: function (a) {
         if(a > 0){
-            return '<button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>'
+            return '<button class="btn btn-success btn-add-to-cart" >Thêm vào giỏ hàng</button>'
         }          
         else{
-            return '<button class="btn btn-danger btn-add-to-cart" data-id="{{this._id}}">Hết hàng</button>'
+            return '<button class="btn btn-danger btn-add-to-cart disable" >Hết hàng</button>'
         }
     }
 

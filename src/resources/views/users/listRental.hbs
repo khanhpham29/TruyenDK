@@ -33,7 +33,7 @@
                                 
                             </h4>
                             <p href="#">Tập số: {{this.episode}}, Giá thuê {{this.rentCost}},Số lượng <span class="amount">{{this.amount}}</span>  </p>
-                            <div class="chapter-book">
+                            <div class="chapter-book" data-id="{{this._id}}">
                                 {{!-- handlebars helper --}}
                                 {{!-- nếu số lượng = 0 => hết hàng, ngược lại => addToCart --}}
                                 {{#if_eq this.amount}}
@@ -57,21 +57,26 @@
         btnAddToCarts.forEach((btn, i) => {
             btn.onclick = function(e) {
                 e.preventDefault();
-                var idBook = this.getAttribute("data-id")
+                var idBook = this.parentElement.getAttribute("data-id")
+                console.log(idBook)
                 console.log("amount : ",amount[i].innerText)
-             
-
-                axios.post('/addToCart/'+ idBook)
-                .then((res)=>{
-                    const totalItem = res.data.user.cart.totalItem
-                    if(res.data){
-                        alert(res.data.message)
-                    }
-                    cartItem.innerText = totalItem
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
+                if(amount[i].innerText <= 0){
+                    alert("hết hàng")
+                    flag = 0
+                }
+                if(flag == 1){    
+                    axios.post('/addToCart/'+ idBook)
+                    .then((res)=>{
+                        const totalItem = res.data.user.cart.totalItem
+                        if(res.data){
+                            alert(res.data.message)
+                        }
+                        cartItem.innerText = totalItem
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
             }
         })
     })

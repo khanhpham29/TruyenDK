@@ -39,19 +39,26 @@
                     {{/each}}
             </tbody>
         </table>
-        <div>Số ngày thuê: <span id="numberRental">{{cart.idDetailCart.numberRental}}</span></div>
-        <div>Ngày thuê: <span id="dateRental">{{dateFormat cart.idDetailCart.createAt format="MM/DD/YYYY"}}</span></div>
-        <div>Ngày trả:<span id="date"></span> </div>
-        <div>Số ngày trễ: <span id="dateDelay"></span></div>
-        <div>Tiền thuê: <span id="totalRentCost"></span></div>
-        <div>Tiền cọc: <span id="totalCost"></span></div>
-        <div>Tổng tiền đã nhận: <span id="totalPrice">{{cart.totalPrice}}</span></div>
-        <div>Số tiền phạt: <span id="fine"></span>đ</div>
-        <div>Số tiền trả lại: <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
         <button type="submit" class="btn btn-success btn-submit" id="btn-submit">xác nhận</button>
     </form>
 
-    
+    <div class="row">
+        <div class="col-sm-4">
+            Ngày thuê: <span id="dateRental">{{dateFormat cart.idDetailCart.createAt format="MM/DD/YYYY"}}</span>
+        </div>
+        <div class="col-sm-4">Ngày trả:<span id="date"></span></div>
+        <div class="col-sm-4">Số ngày trễ: <span id="dateDelay"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">Tiền thuê: <span id="totalRentCost"></span></div>
+        <div class="col-sm-4">Tiền cọc: <span id="totalCost"></span></div>
+        <div class="col-sm-4">Tổng tiền đã nhận: <span id="totalPrice">{{cart.totalPrice}}</span></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">Số tiền phạt: <span id="fine"></span>đ</div>
+        <div class="col-sm-4">Số tiền trả lại: <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
+        <div class="col-sm-4">Số ngày thuê: <span id="numberRental">{{cart.idDetailCart.numberRental}}</span></div>
+    </div>
 </div>
 
 <script>

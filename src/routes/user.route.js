@@ -7,6 +7,7 @@ const { checkMember } = require('../app/middlewares/authMiddleware')
 const { checkAdmin } = require('../app/middlewares/authMiddleware')
 const usersController = require('../app/controllers/UsersController')
 
+router.post('/test1/:id', usersController.increaseProductCarts)
 
 router.get('/manga/:slug-:chap', usersController.readManga)
 router.get('/manga/:slug', usersController.detailManga)

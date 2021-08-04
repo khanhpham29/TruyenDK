@@ -1,25 +1,38 @@
 <div class="container">
     <div class="row">
-        <table class="table">
+        <table class="table" id="table">
             
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Tên truyện</th>
                     <th>Tập số</th>
-                    <th>Giá Thuê</th>
+                    <th>Giá Thuê/7 ngày</th>
                     <th>Số lượng</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
                     {{#each cart.items}}
-                        <tr class="row-delete" data-id="{{this.bookId._id}}">
+                        <tr class="row-data" data-id="{{this.bookId._id}}">
                             <th>{{sum @index 1}}</th>
                             <th name="nameManga" class="nameManga">{{this.bookId.nameManga}}</th>
                             <th name="episode" class="episode">{{this.bookId.episode}}</th>
                             <th name="rentCost" class="rentCost">{{this.bookId.rentCost}}</th>
-                            <th name="amount" class="amount">{{this.amount}}</th>
+                            <th name="amount" class="amount">
+                               <button class="amountPlus" style="border: none;" data-id="{{this.bookId._id}}">
+                                   <i class="fas fa-plus"></i>
+                               </button>
+
+                               <span class="valueAmount">{{this.amount}}</span>
+                                
+                                <button class="amountMinus" style="border: none" data-id="{{this.bookId._id}}"> 
+                                   <i class="fa fa-minus" aria-hidden="true"></i>
+                               </button> 
+                            </th>
+                            <th name="amountBook" class="amountBook" hidden>{{this.bookId.amount}}</th>
+
+                        
                             <th>
                                 <button class="btn btn-danger btn-delete-item" data-id="{{this.bookId._id}}">Xóa</button>
                             </th>
@@ -38,11 +51,11 @@
         </table>
         <form name="form-rentals"  method="POST">
             <div>
-                <label for="">Số ngày thuê: </label>
-                <input type="text" name="numberRental" id="numberRental">
+                <label for="">Số ngày thuê: 7 ngày/1 lần</label>
+                
             </div>
             <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
-            <button type="submit" class="btn btn-success" id="submitForm">Xác nhận</button>
+            <button type="submit" class="btn btn-success submitForm disabled" id="submitForm">Xác nhận</button>
         </form>
             
     </div>
@@ -50,20 +63,55 @@
 <script>
     document.addEventListener("DOMContentLoaded",function(){
         var btnDeleteItem = document.querySelectorAll('.btn-delete-item')
-        var rowDelete = document.querySelectorAll('.row-delete')
+        var rowData = document.querySelectorAll('.row-data')
         var cartItem = document.querySelector('.cart-item')
         var form = document.forms['form-rentals']
-        var submitForm = document.querySelector('#submitForm')
+        var submitForm = $('.submitForm')
         var tongtienEl = document.querySelector('.tong-tien')
+        var amountPlus = document.querySelectorAll('.amountPlus')
+        var valueAmount = document.getElementsByClassName('valueAmount')
+        var elTable = document.getElementById('table')
+
+        function checkRowData(table){
+            var checkedLength = table.rows.length
+            if (checkedLength > 2){
+                submitForm.removeClass('disabled')
+            }else{
+                submitForm.addClass('disabled')
+            }
+        }
+        checkRowData(elTable)
+
+        amountPlus.forEach((plus, i) => {
+            plus.onclick = function(){
+                tongtienEl.innerText = ''
+                var value = valueAmount[i].innerText//lấy giá trị hiển tại
+                var amountPlus = parseInt(value) +1//tăng lên 1
+                valueAmount[i].innerText = amountPlus
+                var idItem = this.getAttribute("data-id")
+
+                axios.post('/test1/' + idItem)
+                .then((res)=>{
+                    const totalPrice = res.data.totalPrice
+                    tongtienEl.innerText = totalPrice + "₫"
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            }
+        })
+
+
         btnDeleteItem.forEach(btn =>{
             btn.onclick = function (){
                 tongtienEl.innerText = ""
                 cartItem.innerText = ""
                 var idItem = this.getAttribute("data-id")
+                let table = this.parentElement.parentElement.parentElement.parentElement
                 this.parentElement.parentElement.remove()
+                checkRowData(table)
                 axios.post('/deleteItem/' + idItem)
                 .then((res)=>{
-                    console.log(res.data)
                     const totalPrice = res.data.cart.totalPrice
                     const totalItem = res.data.cart.totalItem
                     tongtienEl.innerText = totalPrice + "₫"
@@ -79,25 +127,32 @@
             const items = []
             var numberRental = form.numberRental.value
             var totalPrice = tongtienEl.innerText
-            
-            var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-delete')
+            var flag = 1
+            var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-data')
             rowData.forEach((row, i) => {
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
                 var amount = row.querySelector('.amount').innerText
+                var amountBook = row.querySelector('.amountBook').innerText
                 
-
-                items.push({
+                console.log(amountBook)
+                if(amountBook < amount){
+                    alert('Số lượg không đủ!!')
+                    flag = 0
+                }
+                else{
+                    items.push({
                     nameMang: nameManga,
                     episode: episode,
                     rentCost: rentCost,
                     amount: amount,
                     
                 })
+                }  
             })
-            
-            axios.post('/rentals',{
+            if(flag == 1){
+                axios.post('/rentals',{
                 items: items,
                 totalPrice: totalPrice,
                 numberRental: numberRental,
@@ -109,6 +164,9 @@
                 .catch((err)=>{
                     console.log(err)
                 })
+            }
+            
         })
+
     })
 </script>

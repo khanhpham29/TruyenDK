@@ -118,6 +118,25 @@ userSchema.methods.removeInCart = async function (itemId){
         return this.save()
     }
 }
-
+userSchema.methods.amountPlus = async function (bookId){
+    const book = await book_model.findById(bookId)
+    if (book) {
+        var cart = await this.cart
+        const isExisting =  await cart.items.findIndex(objInItems => {
+            return new String(objInItems.bookId).trim() == String(book._id).trim()
+        }) 
+        if( isExisting >= 0 ){
+            cart.items[isExisting].amount += 1
+        }
+        if(!cart.totalPrice){
+            cart.totalPrice = 0
+        }
+        cart.totalPrice += book.rentCost
+        cart.totalItem += 1
+        // console.log('User in schema ', this.cart)   
+        return this.save()
+    }
+    
+}
 
 module.exports = mongoose.model('user', userSchema)
