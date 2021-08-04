@@ -1,4 +1,4 @@
-<div class="container">
+    <div class="container">
     <!-- Page Header -->
     <div class="page-header">
         <div class="row">
@@ -25,19 +25,43 @@
             {{#mangas}}
                 <li>
                     <div class="manga-item">
-                        <a href="/manga/{{slug}}"> <img src="/img/{{image}}" alt="#"> </a>
+                        <a href="/manga/{{slug}}"> <img class="manga-cover" src="/img/{{image}}" alt="#"> </a>
+                        <div class="top-notice">
+                            <span class="time-ago"> 7 phút trước</span>
+                        </div>
                         <h3 class="title-book">
                             <a href="/manga/{{slug}}">{{nameManga}}</a>
                         </h3>
                         <div class="chapter-book">
                             {{#idDetailManga.imgDetails}}
-                                <a href="/manga/{{slug}}-{{chapter}}">Chương {{this.chapter}}</a>
+                                <a href="/manga/{{slug}}/{{chapter}}">Chương {{this.chapter}}</a>
                             {{/idDetailManga.imgDetails}}
                         </div>
-                        <div class="more-info"></div>
+                        <div class="more-info">
+                            <div class="title-more">{{idDetailManga.nameManga}}</div>
+                            <div class="title-more-other">{{idDetailManga.otherName}}</div>
+                            <p class="info">Tình trạng: {{idDetailManga.status}}</p>
+                            <p class="info">Lượt theo dõi: {{idDetailManga.arrIdFollow.length}}</p>
+                            <div class="list-tags">
+                                {{#categories}}
+                                    <a class="blue" href="">{{nameCategory}}</a>
+                                {{/categories}}
+                            </div>
+                            <div class="excerpt">
+                                {{idDetailManga.description}}
+                            </div>
+                        </div>
                     </div>
                 </li>
             {{/mangas}}
+            
         </ul>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        $('.manga-item').hover(function(){
+            $(this).toggleClass("open");
+        })
+    })
+</script>

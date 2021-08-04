@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 mt-4">
+            <form id="form-test" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div>
+                        <label>Tên Truyện: </label>
+                        <select class="form-select cbb-name-manga" name="cbb-name-manga" id="nameManga">
+                            {{#each mangas}}
+                                <option class="form-option" value="{{this.nameManga}}" data-id="{{this.id}}" data-slug="{{this.slug}}">{{this.nameManga}}</option>
+                            {{/each }}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="">Title</label>
+                    <input type="text" name="title" class="form-control" >
+                </div>
+                <div class="form-group mt-2 mb-2">
+                    <label for="">Upload file</label>
+                    <input type="file" name="post-img" id="post-img">
+                </div>
+                <div class="form-group">
+                    <label for="">Content</label>
+                    <textarea name="content"class="form-control"></textarea>
+                </div>
+                <input type="submit" class="btn btn-info mt-2 mb-2 float-right" value="POST">
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+        $('#post-img').change( function()
+        {   
+            var haha = $(this).val()
+        })
+        document.getElementById("form-test").addEventListener("submit", function (event) {
+            event.preventDefault()
+            var titleElement = this.querySelector('input[name="title"]').value
+            var contentElement = this.querySelector('textarea[name="content"]').value
+            var postImgElement = document.getElementById("post-img").files
+            var select = document.getElementById('nameManga')
+            var id = select.options[select.selectedIndex].getAttribute('data-id')
+            var slug = select.options[select.selectedIndex].getAttribute('data-slug')
+			var option = select.options[select.selectedIndex]
+            var nameManga = option.value
+            let formData = new FormData()
+            formData.append("nameManga",nameManga)
+            formData.append("title", titleElement)
+            formData.append("content", contentElement)
+            formData.append("imgPost", postImgElement[0])
+            axios.post("../admin/postPost",formData,{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(function (res) {
+                const message = res.data.message
+                if (message === "Đăng bài thành công")
+                {
+                    alert(res.data.message)
+                    location.assign('../admin/posts')
+                }
+                // socket
+                var data = res.data
+                var socket = io()
+                socket.emit("new_post", data)
+            })
+            .catch(function (err) {
+                console.log(err.response)
+            })
+        })
+        
+    })
+    
+</script>

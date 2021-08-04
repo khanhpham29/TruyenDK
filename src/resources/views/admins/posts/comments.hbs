@@ -1,0 +1,73 @@
+
+<div class="container">
+    <div class="row">
+        <div class="card my-4">
+            <span>
+                <i class="fa fa-comments">
+                    <h5> Comment: </h5>
+                </i>
+            </span>
+            <div class="card-body">
+                <form onsubmit="" id="form-comment"  method="POST">
+                    <input type="hidden" name="postId" value="{{post._id}}">
+                    <input type="hidden" name="userId" value="{{user._id}}">
+                    
+                    <div class="form-floating mt-2">
+                        <textarea class="form-control" placeholder="Leave a comment here" name="content" style="height: 100px"></textarea >
+                        <label for="floatingTextarea2">Comments</label>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-2">submit</button>
+                </form>
+                <form action="" id="listComments">
+                    {{#with post}}
+                        {{#each comments}}
+                            <div class="media mb-4 mt-4">
+                                <div class="media-body">
+                                    <h5>UserName</h5>
+                                    <p> {{content}} </p>
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{/with}}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+        var postIdElement = $('input[name="postId"]').val()
+        var userIdElement = $('input[name="userId"]').val()
+        var userNameElement = $('input[name="userName"]').val()
+        var hahaha = []
+        document.getElementById('form-comment').addEventListener("submit",(event)=>{
+            event.preventDefault()
+            var contentElement = this.querySelector('textarea[name="content"]').value
+            var formData = new FormData()
+            axios.post("../../admin/post/" + postIdElement + "/comment", {
+                userId: userIdElement,
+                content: contentElement
+            }) 
+            .then(function (res) {
+                var data = res.data.comment
+                var html = " "
+                html+= '<div class="media mb-4 mt-4">'
+                    html+= '<div class="media-body">'
+                        html+= '<h5>UserName</h5>'
+                            html+= '<p>' + data.content + '</p>'
+                    html+= '</div>'
+                html+= '</div>'
+                $('#listComments').prepend(html)
+                var data = res.data
+                var socket = io()
+                socket.emit("new_comment", data)
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+        })
+    })
+    
+</script>

@@ -11,18 +11,24 @@ const postSchema = new Schema({
         type: String,
         required: true,
     },
+    idManga:{ 
+		type:Schema.Types.ObjectId,
+		ref:'mangas'
+	},
     comments: [
         {
             type: Schema.Types.ObjectId,
-            ref:'Comment',
+            ref:'comment',
             required: true,
         }
     ],
-    imgPost: {type: String} ,
+    imgPost: {
+        type: String
+    },
 },{
     timestamps: true
 })
 
 
 postSchema.plugin(mongodbErrors)
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('post', postSchema);

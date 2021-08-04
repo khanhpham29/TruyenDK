@@ -11,6 +11,7 @@ const upload = require('../app/middlewares/multer')
 
 //Search bar manga
 router.get('/manga/searchManga', adminController.searchManga)
+
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
@@ -34,6 +35,8 @@ router.get('/manga', adminController.manga)
 
 
 //-------------------------MANGA-RENTAL------------------------//
+//Search rentals
+router.get('/rentals/searchMangaRental', adminController.searchMangaRental)
 //Form create manga rental
 router.get('/rentals/createMangaRental', adminController.formCreateMangaRental)
 // create manga rental
@@ -50,25 +53,25 @@ router.get('/rentals', adminController.mangaRentals)
 
 //----------------------CATEGORY---------------------------//
 // Form add new category
-router.get('/categorys/formCategoryCreate', adminController.formCategoryCreate)
+router.get('/categories/formCategoryCreate', adminController.formCategoryCreate)
 // Add new  category
-router.post('/categorys/categoryCreate', adminController.categoryCreate)
+router.post('/categories/categoryCreate', adminController.categoryCreate)
 // form edit 
-router.get('/categorys/:id/categoryEdit', adminController.categoryEdit)
+router.get('/categories/:id/categoryEdit', adminController.categoryEdit)
 // Post checkbox delete
-router.post('/categorys/handleFormActions', adminController.handleFormActions)
+router.post('/categories/handleFormActions', adminController.handleFormActions)
 // updated
-router.put('/categorys/:id', adminController.categoryUpdate)
+router.put('/categories/:id', adminController.categoryUpdate)
 // Restore
-router.patch('/categorys/:id/categoryRestore', adminController.categoryRestore)
+router.patch('/categories/:id/categoryRestore', adminController.categoryRestore)
 // Delete soft
-router.delete('/categorys/:id', adminController.categoryDelete)
+router.delete('/categories/:id', adminController.categoryDelete)
 // Delete force
-router.delete('/categorys/:id/categoryForceDelete', adminController.categoryForceDelete)
+router.delete('/categories/:id/categoryForceDelete', adminController.categoryForceDelete)
 // form Trash
-router.get('/categorys/categoryTrash', adminController.categoryTrash)
+router.get('/categories/categoryTrash', adminController.categoryTrash)
 // index
-router.get('/categorys', adminController.categorys)
+router.get('/categories', adminController.categories)
 
 //-------------------------RENTAL------------------------//
 
@@ -80,6 +83,8 @@ router.get('/rentals/pay', adminController.payRentals)
 router.get('/rentals/pay/:id/detail', adminController.detailPayRentals)
 router.post('/rentals/pay/:id/book', adminController.PayBookRentals)
 
+router.get('/rentals/comfirm/:id/detail', adminController.xemChiTiet)
+
 router.post('/rentals/:id/reject', adminController.rejectRentals)
 router.post('/rentals/:id/return', adminController.returnRentals)
 router.get('/rentals/:id/detail', adminController.detailRentals)
@@ -88,18 +93,17 @@ router.get('/rentals/list', adminController.userRentalsList)
 router.get('/rentals/list/finally', adminController.finallyRentals)
 
 
-
 //-----------------------USERS--------------------//
 router.get('/users', adminController.listUsers)
 router.get('/users/search', adminController.searchUsers)
 
-//Posts
+//-----------------------POSTS--------------------//
 router.get('/formPosts', adminController.formPostsPost)
 router.post('/postPost',upload.single('imgPost'), adminController.postsPost)
-router.get('/post/:postId', adminController.postsGetById)
-router.put('/post/:postId', adminController.postsUpdate)
-router.delete('/post/:postId', adminController.postsDelete)
-router.post('/post/:postId/comment', adminController.postsComment)
+router.get('/post/:idPost', adminController.postsGetById)
+router.put('/post/:idPost', adminController.postsUpdate)
+router.delete('/post/:idPost', adminController.postsDelete)
+router.post('/post/:idPost/comment', adminController.postsComment)
 router.get('/posts', adminController.listPosts)
 
 module.exports = router

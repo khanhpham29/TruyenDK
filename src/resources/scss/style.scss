@@ -24,7 +24,6 @@ html {
     -webkit-font-smoothing: antialiased;
     min-width: 300px;
     overflow-x: hidden;
-    overflow-y: scroll;
     text-rendering: optimizeLegibility;
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -71,13 +70,108 @@ a:active,a:focus,a:visited {
 		display: flex;
 		margin-bottom: 0px;
 		margin-right: 30px;
-		li {
+		.items {
 			margin-right: 20px;
 			a {
 				color: #000;
 			}
+			.btn-notify {
+				cursor: pointer;
+				position: relative;
+				i {
+					font-size: 23px;
+				}
+				.notify-number {
+					position: absolute;
+					bottom: calc(100% - 6px);
+					right: -9px;
+					z-index: 1;
+					background-color: #f00;
+					font-size: 11px;
+					font-weight: 700;
+					border-radius: 50%;
+					padding: 2px 6px;
+					color: #fff;
+					user-select:none;
+				}
+				&.active ~ .list-notifies-box {
+					opacity: 1;
+					visibility: visible;
+					.list-notifies {
+						transform: translateX(0);
+					}
+				}
+			}
+			.list-notifies-box {
+				position: fixed;
+				top: 0px;
+				right: 0px;
+				height: 100%;
+				width: 100%;
+				z-index: 10;
+				opacity: 0;
+				visibility: hidden;
+				transition: linear 0.3s;
+				.overlay {
+					position: absolute;
+					cursor: pointer;
+					z-index: -1;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+					background-color: rgba(#000, 0.3);
+				}
+				.list-notifies {
+					float: right;
+					height: 100%;
+					width: 380px;
+					padding: 18px 0;
+					background-color: #fff;
+					overflow-y: auto;
+					transform: translateX(100%);
+					transition: linear 0.3s;
+					li {
+						width: 100%;
+						height: 90px;
+						margin: 4px 0;
+						padding: 0 14px;
+						&:hover {
+							background-color: #dcdcdc;
+						}
+						a {
+							width: 100%;
+							height: 100%;
+							display: flex;
+							img {
+								width: 20%;
+								height: 100%;
+								object-fit: cover;
+								object-position: center;
+							}
+							span {
+								width: 80%;
+								height: 100%;
+								padding: 8px 12px 4px;
+								display: flex;
+								flex-direction: column;
+								justify-content: space-between;
+								.content {
+									width: 100%;
+									height: auto;
+								}
+								.time {
+									width: 100%;
+									font-size: 14px;
+									color: #7c7c7c;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-		li:last-child {
+		.items:last-child {
 			margin-right: 0;
 		}
 	}
@@ -85,9 +179,59 @@ a:active,a:focus,a:visited {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		width: 165px;
-		border-left: 1px solid #bbb;
-		padding-left: 25px;
+		// width: 165px;
+		position: relative;
+		.user-manager {
+			font-size: 21px;
+			cursor: pointer;
+			padding: 12px;
+			border-radius: 50%;
+			transition: linear 0.25s;
+			&:hover {
+				background-color: #bcbcbc;
+			}
+			&:active {
+				background-color: #ccc;
+			}
+			&.active {
+				& ~ .list-user-manager {
+					transform: scale(1);
+					opacity: 1;
+					visibility: unset;
+				}
+			}
+		}
+		.list-user-manager {
+			position: absolute;
+			top: 100%;
+			right: 8px;
+			background-color: #fff;
+			width: max-content;
+			border-radius:10px;
+			padding: 0;
+			margin: 0;
+			z-index: 1;
+			overflow: hidden;
+			transform-origin: top right;
+			transform: scale(0.6);
+			transition: ease 0.25s;
+			opacity: 0;
+			visibility: hidden;
+			box-shadow: 0 3px 3px 2px rgba(#000, 0.2), 0px 2px 8px rgba(#000, 0.4);
+			.items {
+				padding: 10px 40px 10px 24px;
+				display: flex;
+				align-items: center;
+				&:hover {
+					background-color: #bcbcbc;
+				}
+				.content {
+					margin-left: 12px;
+					text-align: right;
+					flex: 1;
+				}
+			}
+		}
 	}
 	.top-buttons{
 		button {
@@ -649,13 +793,60 @@ ul {
 		flex-wrap: wrap;
 		justify-content: flex-start;
 		margin-bottom: 10px;
+		.manga-item:before {
+			content: "";
+			width: 10px;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: -10px;
+		}
+		.manga-item.open .more-info {
+			opacity: 1;
+			visibility: visible;
+			-webkit-transform: translateX(10px);
+			transform: translateX(10px);
+		}
+		.manga-item.open.show-left .more-info {
+			-webkit-transform: translateX(-10px);
+			transform: translateX(-10px);
+		}
+		.manga-item.show-left .more-info {
+			left: initial;
+			right: 100%;
+			-webkit-transform: translateX(-40px);
+			transform: translateX(-40px);
+		}
 		.manga-item{
 			text-align: center;
 			position: relative;
+			.top-notice {
+				position: absolute;
+				top: 9px;
+				left: 8px;
+				font-size: 1;
+				span {
+					font-size: 13px;
+					font-weight: 500;
+					color: #fff;
+					padding: 2px 6px 3px;
+				}
+				.time-ago {
+					border-radius: 5px;
+					background-color: #56ccf2;
+					margin-right: 5px;
+				}
+			}
+			.story-cover {
+				-o-object-fit: cover;
+				object-fit: cover;
+				border-radius: 6px;
+				border: 1px solid #ccc;
+			}
 			a{
 				img{
-					width: 150px;
-					height: 200px;
+					width: 180px;
+					height: 240px;
 				}
 			}
 			.manga-cover{
@@ -684,7 +875,77 @@ ul {
 					color: #000;
 				}
 			}
-
+			.more-info{
+				width: 310px;
+				text-align: left;
+				opacity: 0;
+				visibility: hidden;
+				transition: all .3s;
+				border-radius: 6px;
+				background-color: #fff;
+				box-shadow: 0 0 15px 0 rgba(0,0,0,.25);
+				padding: 10px;
+				position: absolute;
+				top: 0;
+				left: 100%;
+				-webkit-transform: translateX(40px);
+				transform: translateX(40px);
+				z-index: 100;
+				.title-more {
+					font-size: 13px;
+					font-weight: 700;
+					color: #f18121;
+					letter-spacing: normal;
+					margin-top: 0;
+				}
+				.title-more-other {
+					font-weight: 500;
+					letter-spacing: normal;
+					color: #757575;
+					line-height: 1;
+					margin-top: 5px;
+					margin-bottom: 10px;
+				}
+				.info {
+					font-size: 13px;
+					font-weight: 500;
+					line-height: 1.5;
+					color: #000;
+				}
+				.list-tags {
+					margin: 10px 0;
+					font-size: 0;
+					a {
+						display: inline-block;
+						border-radius: 5px;
+						font-size: 12px;
+						font-weight: 500;
+						color: #fff;
+						padding: 3px 7px 2px;
+						margin-right: 2px;
+						margin-bottom: 2px;
+					}
+					a.blue {
+						background-color: #56ccf2;
+					}
+				}
+				.excerpt {
+					font-size: 13px;
+					font-weight: 500;
+					color: #000;
+				}
+			}
+			.more-info:before {
+				position: absolute;
+				top: 25px;
+				left: -9px;
+				content: "";
+				width: 0;
+				height: 0;
+				border-top: 9px solid transparent;
+				border-bottom: 9px solid transparent;
+				border-right: 9px solid #fff;
+			}
 		}	
 		li{
 			margin-bottom: 15px;
@@ -744,6 +1005,61 @@ span {
 		padding: 0;
 		li+li:before {
 			content: "\0003E";
+		}
+	}
+}
+strong {
+    color: #363636;
+    font-weight: 700
+}
+.comment-container{
+	padding-bottom: 40px;
+	.story-detail-title {
+		color: #f18121;
+		font-size: 24px;
+	}
+	.story-detail-title i {
+		margin-right: 10px;
+	}
+	.group01{
+		overflow: hidden;
+		clear: both;
+		margin-top: 20px;
+		.list-comments{
+			clear:both;
+			.info-comment {
+				padding: 10px;
+			}
+			.outline-content-comment{
+				background: #f7f7f7;
+				padding: 10px;
+				border-radius: 10px;
+			}
+			.item-comment{
+				margin-left: 55px;
+				.outline-content-comment{
+					background: #f7f7f7;
+					padding: 10px;
+					border-radius: 10px;
+				}
+			}
+			.content-comment {
+				padding: 10px 0;
+				color: #000;
+			}
+			.action-comment {
+				span {
+					color: #f18121;
+					font-size: 13px;
+					cursor: pointer;
+				}
+				.reply-comment {
+					margin-left: 20px;
+				}
+			}
+			.reply{
+				padding-left: 60px;
+			}
 		}
 	}
 }
@@ -907,8 +1223,22 @@ span {
 		li.li01 a {
 			background: #8bc34a;
 		}
-		li.li02 a {
-			background: #ff2853;
+		li.li02 {
+			form[name="form-follow-manga"] {
+				.btn-subscribe {
+					background: #ff2853;
+					&::after {
+						content: "Theo dõi";
+					}
+				}
+				&.cancel-follow {
+					.btn-subscribe {
+						&::after {
+							content: "Hủy theo dõi";
+						}
+					}
+				}
+			}
 		}
 		li.li03 a {
 			background: #bd10e0;

@@ -4,20 +4,20 @@ const slug = require('mongoose-slug-generator')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
 const Schema = mongoose.Schema;
 
-const categorySchema = new Schema({
-	tenloai:{   
+const categoriesSchema = new Schema({
+	nameCategory:{   
 		type: String, 
-		required: [true, 'Vui lòng nhập thể loại'],
+		required: [true, 'Vui lòng nhập tên thể loại'],
 		unique: true,
 	},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 },{
-	collection: 'categorys'
+	collection: 'categories'
 }
 );
 // Custom query helpers
-categorySchema.query.sorttable =  function(req){
+categoriesSchema.query.sorttable =  function(req){
 	if (req.query.hasOwnProperty('_sort')){
 		const isValiedtype = ['asc', 'desc'].includes(req.query.type)
 		return this.sort({
@@ -29,8 +29,8 @@ categorySchema.query.sorttable =  function(req){
 //add  plugin
 mongoose.plugin(slug)
 
-categorySchema.plugin(mongoosedelete, { 
+categoriesSchema.plugin(mongoosedelete, { 
 		overrideMethods: true,
 		deleteAt: {type:Date, trim: true, default: Date.now()},
 	})
-module.exports = mongoose.model('categorys', categorySchema)
+module.exports = mongoose.model('categories', categoriesSchema)

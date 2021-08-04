@@ -2,18 +2,16 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-sm-8 offset-2">
-            {{!-- Nội dung Trang --}}
-            {{!-- action="/admin/manga/{{manga.slug}}/addChap" --}}
             <div class="create-chapter-manga">
+            <a href="/admin/manga/{{manga.slug}}" class="btn btn-success float-right">Trở về</a>
                 <form  method="POST" enctype="multipart/form-data" name="form-add-new-chapter">
-                    <div >
+                    <div>
                         <h2>Tên truyện: {{manga.nameManga}}</h2>
                         <input type="hidden" value="{{manga.slug}}" name="slug">
                     </div>
-                    
                     <div class="nameChapter">
-                        <label for="chapter">Chương số: </label>
-                        <input type="text" class="form-control" placeholder="Vd: chap1" name="chapter">    
+                        <label for="chapter">Chương số: </label>   
+                        <input type="number" class="form-control"  name="chapter" value="{{chapter.chapter}}" >    
                         <div class="chapter error mt-2" style="color:red"></div>
                     </div>
                     <div class="linkImg">
@@ -22,7 +20,9 @@
                         <input type="file" class="form-control" name="imgOfManga" id="imgOfManga" multiple>
                         <div class="image error mt-2" style="color:red"></div>
                     </div>
-                    <input type="submit" class="btn btn-outline-primary btn-create-chapter-manga float-right mt-2" value="Thêm Chap mới">
+                    <div class="float-right mt-2">
+                        <button class="btn btn-primary btn-create-chapter-manga">Thêm chap mới</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -32,9 +32,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         var form = document.forms['form-add-new-chapter']
-        console.log(form)
         var chapterErr = $('.error.chapter')
         var imageErr = $('.error.image')
+        let socket = io({path: "/socket.io/notify"});
         form.addEventListener("submit", function(e){
             e.preventDefault()
             console.log(chapterErr[0])
@@ -48,7 +48,6 @@
             Array.from(img).forEach((img)=>{
                 formData.append("imgOfManga", img)
             })
-
             axios.post("../../../admin/manga/"+slug+"/addChap",formData,{
                 headers: {
                     'Accept': 'application/json',
@@ -56,8 +55,16 @@
                 }
             })
             .then( (res)=> {
-                var data = res.data
+                var data = res.data;
+                
                 if(data.message == "Thêm chương thành công"){
+                    let dataWS = {
+                        chapter: data.notification.idChapter,
+                        manga: data.notification.idManga,
+                        createdAt: data.notification.createdAt
+                    }
+                    console.log(dataWS);
+                    socket.emit("new_notify", dataWS)
                     alert(data.message)
                     location.assign('../'+ slug +'')
                 }

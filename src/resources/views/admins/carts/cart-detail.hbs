@@ -2,7 +2,8 @@
     <div class="id-data" hidden>{{detailCart._id}}</div>
     <div>Truyện cho thuê:</div>
     {{#each detailCart.listRentalBooks.items}}
-        {{this._id}}
+        {{this.bookId.nameManga}}
+        {{this.bookId.episode}}
     {{/each}}
     <div>Số ngày thuê: {{detailCart.songaythue}}</div>
     <div>Giá thuê: {{detailCart.totalPrice}}</div>
@@ -29,7 +30,6 @@
                 console.log(err)
             })
         }
-
     }
     
     

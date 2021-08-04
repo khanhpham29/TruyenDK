@@ -50,6 +50,10 @@ const userSchema =  new Schema({
             type: Number,
             default: 0,
         }
+    },
+    followId:{ 
+        type: Schema.Types.ObjectId,
+        ref: 'follow',
     }
 },{
     collection: 'users'
@@ -64,7 +68,7 @@ userSchema.pre('save', async function (next){
 // phương thức tĩnh để đăng nhập người dùng
 userSchema.statics.login = async function(email, password){
     const user = await this.findOne({ email })
-    if (user){
+    if(user){
         const auth = await bcrypt.compare(password, user.password)
         if(auth){
             return user
