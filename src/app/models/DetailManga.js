@@ -33,7 +33,7 @@ const MangaDetailsSchema = new Schema({
 		type: String,
 		default: 'Đang tiến hành'
 	},
-	slug:{ type: String, slug: 'nameManga', unique: true},
+	slug:{ type: String, slug: 'nameManga'},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 },{

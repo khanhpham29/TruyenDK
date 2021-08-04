@@ -78,15 +78,15 @@ class AdminController{
         })
         await mangaNew.save()
         
-        const detailmanga_model = new detailmanga_model({
+        const detailManga = new detailmanga_model({
             idManga: mangaNew._id,
             nameManga: mangaNew.nameManga,
             description: data.description,
         })
-        await detailmanga_model.save()
+        await detailManga.save()
         // liên kết vs chi tiết
         Manga.updateOne({_id: mangaNew._id},{
-            idDetailManga: detailmanga_model._id
+            idDetailManga: detailManga._id
         })
         .then(()=>{
             res.status(200).json({message:"Thêm thành công"})
@@ -149,25 +149,19 @@ class AdminController{
     //Thông tin chi tiết của 1 manga
     infoManga(req, res, next){
         const sort = { createAt: -1}
-            
         Promise.all([
-            Manga.findOne({ slug: req.params.slug }).populate('categories'),
+            Manga.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
             detailmanga_model.findOne({ slug: req.params.slug }),
             ImageDetail.find({ slug: req.params.slug}).sort(sort)
         ])
             .then(([manga, detail, chapters]) => {
-                if(manga == null){
-                    return res.render('null')                   
-                }
-                else{
-                    res.render('admins/mangas/mangaDetail', {
-                        manga: mongooseToOject(manga),
-                        detail: mongooseToOject(detail),
-                        chapters: multipleMongooseToOject(chapters),
-                        layout: 'admin.hbs'
-                    })
-                }
-                
+                // res.json(manga)
+                res.render('admins/mangas/mangaDetail', {
+                    manga: mongooseToOject(manga),
+                    detail: mongooseToOject(detail),
+                    chapters: multipleMongooseToOject(chapters),
+                    layout: 'admin.hbs'
+                })
             })
             .catch(next)
     }
@@ -241,7 +235,6 @@ class AdminController{
                 }
                 filesArr.push(file)
             })
-            
             var chapterExist = false
             const detailManga = await detailmanga_model.findOne({
                 slug: req.params.slug

@@ -27,7 +27,10 @@
                     <div class="manga-item">
                         <a href="/manga/{{slug}}"> <img class="manga-cover" src="/img/{{image}}" alt="#"> </a>
                         <div class="top-notice">
-                            <span class="time-ago"> 7 phút trước</span>
+                            {{#idDetailManga.imgDetails}}
+                            <span class="time-ago"></span>
+                            <input type="hidden" class="input-time-ago" value="{{this.createAt}}">
+                            {{/idDetailManga.imgDetails}}
                         </div>
                         <h3 class="title-book">
                             <a href="/manga/{{slug}}">{{nameManga}}</a>
@@ -62,6 +65,32 @@
     document.addEventListener("DOMContentLoaded",function(){
         $('.manga-item').hover(function(){
             $(this).toggleClass("open");
+        })
+        function formatTime(time) {
+			let timeNow = new Date().getTime();
+			let timeCreate = new Date(time);
+			let seconds = Math.floor((timeNow - timeCreate.getTime())/1000);
+			if (seconds > (60*60*24)) {
+				let day = timeCreate.getDate();
+				let month = timeCreate.getMonth() + 1;
+				return `${day} tháng ${month}`;
+			} else {
+				let minutes = Math.floor(seconds/60);
+				let hour = Math.floor(minutes/60);
+				if (seconds == 0)
+					return "Vừa xong";
+				else if (minutes == 0 && hour == 0)
+					return `${seconds} giây trước`;
+				else if (hour > 0) 
+					return `${hour} giờ trước`;
+				else
+					return `${minutes} phút trước`;
+			}
+		}
+        var timeAgoArr = document.querySelectorAll('.input-time-ago')
+        Array.from(timeAgoArr).forEach((el)=>{
+            el.parentElement.querySelector('.time-ago').innerText = formatTime(el.value)
+            console.log(el.parentElement.querySelector('.time-ago').innerText)
         })
     })
 </script>
