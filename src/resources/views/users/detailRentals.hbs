@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="user-detail-rentals">
+
+        <a href="../" class="btn btn-info">Quay lại</a>
+            <table class="table">
+                <thead>
+                    <th>Truyện cho thuê</th>
+                    <th>Tập số</th>
+                    <th>Số lượng</th>
+                    <th>Giá thuê/lần</th>
+                    <th>Giá truyện/cuốn</th>
+                </thead>
+                <tbody>
+                </tbody>
+                    <tbody>
+                        {{#each cart.idDetailCart.listRentalBooks.items}}
+                            <tr class="row-data">
+                                <td class="nameManga"> {{this.bookId.nameManga}}</td>
+                                <td class="episode">{{this.bookId.episode}}</td>
+                                <td class="amount">{{this.amount}}</td>
+                                <td class="rentCost">{{this.bookId.rentCost}}</td>
+                                <td class="cost">{{this.bookId.cost}}</td>
+                                <td class="amountPaid" hidden>{{this.amountPaid}}</td> 
+                            </tr>         
+                        {{/each}}
+                    </tbody>
+            </table>
+        <div><span class="info"> <b>Trạng thái:</b>  </span>   <span>{{cart.status}}</span></div>
+        <div><span class="info"> <b>Ngày thuê:</b> </span> <span>{{dateFormat cart.createAt}}</span></div>
+        <div><span class="info"> <b>Số quyển truyện:</b>   </span><span>{{cart.idDetailCart.totalItem}} </span>cuốn</div>
+        <div><span class="info"> <b>Tổng tiền:</b>  </span><span>{{cart.idDetailCart.totalPrice}}</span>đ</div> 
+    </div>
+</div>
