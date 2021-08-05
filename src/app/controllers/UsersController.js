@@ -11,6 +11,7 @@ const comment_model = require('../models/comment')
 const DetailsCart_Model = require('../models/DetailCart')
 const follow_model = require('../models/FollowManga')
 const notifies_model = require('../models/Notifies')
+const bcrypt = require('bcrypt')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 class UsersController{
@@ -306,20 +307,28 @@ class UsersController{
     formChangePassword(req, res, next){
         res.render('users/formChangePass')
     }
+
     async ChangePassword(req, res, next){
-        console.log(req.body)
+        let flag = 0
         console.log(req.user)
-        req.user.changePassword(req.user.email, req.body.password, req.body.passwordNew, req.body.passwordNewAgain)
-        .then(() => {
-            user_model.findOne({_id: req.user.id})
+        await req.user.changePassword(req.user.email, req.body.password, req.body.passwordNew, req.body.passwordNewAgain)
+        .then((a) => {     
+            console.log('a')  
+            flag = 1
+        })
+        .catch(next)
+        if(flag == 1){
+            const salt = await bcrypt.genSalt()
+            const password  = await bcrypt.hash(req.body.passwordNew, 10)
+            console.log(password)
+            user_model.findByIdAndUpdate({_id: req.user._id}, {password: password}, {new: true})
             .then((a) => {
-                a.password = req.body.passwordNew
-                console.log('user', a)
+                console.log("thành công",a)
                 res.redirect('/')
             })
             .catch(next)
-        })
-        .catch(next)
+        }
+
     }
 
     // comments

@@ -990,8 +990,6 @@ strong {
 
 .edit-manga .form-group .cbb-status {
   width: 300px; }
-<<<<<<< HEAD
-=======
 
 .account {
   width: 100%;
@@ -1005,10 +1003,14 @@ strong {
       height: 100%; }
   .account label {
     width: 50px; }
-<<<<<<< HEAD
->>>>>>> dat2
-=======
 
 .user-detail-rentals .info {
   width: 300px; }
->>>>>>> dat2
+
+.user-manager-avatar {
+  width: 50px;
+  height: 100%;
+  background-color: #fff !important; }
+  .user-manager-avatar img {
+    width: 100%;
+    height: 100%; }

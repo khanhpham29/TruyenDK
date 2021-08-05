@@ -418,7 +418,7 @@ class AdminController{
     }
 
     userRentalsList(req, res, next){
-        Cart_Model.find({})
+        Cart_Model.find({}).sort({ createAt: -1 })
             .then((cart) => {
                 res.render('admins/carts/cart-list', {
                     cart: multipleMongooseToOject(cart),
