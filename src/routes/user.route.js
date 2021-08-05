@@ -17,8 +17,17 @@ router.get('/manga/:slug', usersController.detailManga)
 router.post('/cart/plus/:id', usersController.increaseProductCarts)
 router.post('/cart/minus/:id', usersController.decreaseProductCarts)
 
+//Xem thông tin tài khoản
 router.get('/account', usersController.userAccount)
 router.post('/account/update',upload.single('avatar'), usersController.userAccountUpdate)
+
+//Xem lịch sử mua hàng
+router.get('/account/rentals-history', usersController.viewRentalsHistory)
+//Xem chi tiết
+router.get('/account/rentals-history/:id/detail', usersController.detailRentalsHistory)
+//đỏi pâssword
+router.get('/account/change-password', usersController.formChangePassword)
+router.post('/account/change-password', usersController.ChangePassword)
 
 router.get('/listFollow', usersController.listFollow)
 router.get('/notifies', usersController.getNotifies)

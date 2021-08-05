@@ -38,8 +38,8 @@ class UsersController{
             })
             .catch(next)
     }
-    async detailManga(req, res, next){
-        
+
+    async detailManga(req, res, next){   
         Promise.all([
             manga_model.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
             detailManga_model.findOne({ slug: req.params.slug }).populate({
@@ -272,6 +272,52 @@ class UsersController{
         })
         .then(() => {
             console.log('thanh cong')
+            res.redirect('/')
+        })
+        .catch(next)
+    }
+
+    viewRentalsHistory(req, res, next){
+        user_model.findOne({_id: req.user._id}).populate('idCart')
+        .then((user)=>{
+            res.render('users/rentalsHistory',{
+                user: mongooseToOject(user)
+            })
+        })
+    }
+
+    detailRentalsHistory(req, res, next){
+        cart_model.findOne({_id: req.params.id})
+        .populate({
+            path: 'idDetailCart',
+            populate:{
+                path: 'listRentalBooks.items.bookId'
+            }
+        })
+            .then((cart) => { 
+                //res.json(cart)
+                res.render('users/detailRentals', {
+                    cart: mongooseToOject(cart),
+                })
+            })
+            .catch(next)
+    }
+    
+    formChangePassword(req, res, next){
+        res.render('users/formChangePass')
+    }
+    async ChangePassword(req, res, next){
+        console.log(req.body)
+        console.log(req.user)
+        req.user.changePassword(req.user.email, req.body.password, req.body.passwordNew, req.body.passwordNewAgain)
+        .then(() => {
+            user_model.findOne({_id: req.user.id})
+            .then((a) => {
+                a.password = req.body.passwordNew
+                console.log('user', a)
+                res.redirect('/')
+            })
+            .catch(next)
         })
         .catch(next)
     }

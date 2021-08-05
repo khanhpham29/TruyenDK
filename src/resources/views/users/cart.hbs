@@ -168,10 +168,11 @@
                 var amount = valueAmount[i].innerText
                 var amountBook = row.querySelector('.amountBook').innerText
                 
-                console.log(amountBook)
-                console.log(amount)
-                if(amountBook < amount){
-                    alert('Số lượng không đủ!!')
+                console.log("sl truyện cho thuê", amountBook)
+                console.log("sl truyện thuê",amount)
+                console.log('kho', amountBook ,' < ' , amount)
+                if(parseInt(amountBook) < parseInt(amount)){    
+                    console.log(amountBook ,' < ' , amount)
                     flag = 0
                 }
                 else{
@@ -184,6 +185,9 @@
                 })
                 }  
             })
+            if(flag == 0){
+                alert('Số lượng ko đủ!')
+            }
             if(flag == 1){
                 axios.post('/rentals',{
                 items: items,
@@ -192,7 +196,11 @@
             })
                 .then(async (res)=>{
                     console.log(res.data)
-                    var success  = await res.data.message
+                    var success  = await res.data.messge
+                    alert(success)
+                    if(success == 'Tạo đơn hàng thành công'){
+                        location.assign('/')
+                    }
                 })
                 .catch((err)=>{
                     console.log(err)
