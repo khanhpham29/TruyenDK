@@ -30,6 +30,14 @@ module.exports = {
     },
     isdefined: function (value) {
         return value !== 0;
+    },
+    if_eq: function (a) {
+        if(a > 0){
+            return '<button class="btn btn-success btn-add-to-cart" >Thêm vào giỏ hàng</button>'
+        }          
+        else{
+            return '<button class="btn btn-danger btn-add-to-cart disable" >Hết hàng</button>'
+        }
     }
 
 }

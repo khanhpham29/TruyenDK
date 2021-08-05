@@ -11,7 +11,6 @@ const upload = require('../app/middlewares/multer')
 
 //Search bar manga
 router.get('/manga/searchManga', adminController.searchManga)
-
 //Form add new manga
 router.get('/manga/add', adminController.formMangaCreate)
 //Add new manga
@@ -81,16 +80,19 @@ router.get('/rentals/confirm', adminController.confirmRentals)
 router.post('/rentals/confirm/:id', adminController.confirmToRentals)
 router.get('/rentals/pay', adminController.payRentals)
 router.get('/rentals/pay/:id/detail', adminController.detailPayRentals)
-router.post('/rentals/pay/:id/book', adminController.PayBookRentals)
+router.post('/rentals/pay/:id/', adminController.paidOneBook)
+router.post('/rentals/pay/:id/book', adminController.payBookRentals)
+
+
+
+
 
 router.get('/rentals/comfirm/:id/detail', adminController.xemChiTiet)
 
 router.post('/rentals/:id/reject', adminController.rejectRentals)
-router.post('/rentals/:id/return', adminController.returnRentals)
-router.get('/rentals/:id/detail', adminController.detailRentals)
-router.post('/rentals/:id', adminController.controlRentals)
+router.get('/rentals/list/:id/detail', adminController.detailRentals)
 router.get('/rentals/list', adminController.userRentalsList)
-router.get('/rentals/list/finally', adminController.finallyRentals)
+
 
 
 //-----------------------USERS--------------------//

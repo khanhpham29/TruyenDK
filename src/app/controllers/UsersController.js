@@ -153,9 +153,7 @@ class UsersController{
             .populate('cart.items.bookId')
             .execPopulate()
             .then(user =>{
-                // res.json(user)
                 const cart = user.cart
-                // res.json(cart)
                 res.render("users/cart",{
                     cart: cart
                 })
@@ -171,7 +169,6 @@ class UsersController{
             .catch( err => console.error(err))
     }
 
-
     async userRentals(req, res, next){
         const cart = new cart_model({
             phone: req.user.phone,
@@ -179,9 +176,10 @@ class UsersController{
         })
         cart.save()
         .then((cart) =>{
-            const cartUser = req.user.cart.items
+            let cartUser = req.user.cart.items
+            const items = req.body.items
             const detailCart = new DetailsCart_Model({
-                numberRental: req.body.numberRental,
+                //numberRental: req.body.numberRental,
                 idCart: cart._id,
                 totalItem: req.user.cart.totalItem,
                 totalPrice: req.user.cart.totalPrice,
@@ -192,12 +190,14 @@ class UsersController{
                     detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
                     const soluongthue =  detailCart.listRentalBooks.items[i].amount
                     book_model.findOne({_id: detailCart.listRentalBooks.items[i].bookId})
-                        .then((books) => {
-                            book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
-                                amount: (books.amount - soluongthue)
-                            })
+                    .then((book) => {
+                        book_model.updateOne({_id: detailCart.listRentalBooks.items[i].bookId}, {
+                            amount: (book.amount - soluongthue)
                         })
-                        .catch(err => console.log(err))
+                        .then(() => console.log('update số lượng sách thành công!'))
+                        .catch(next)
+                    })
+                    
                 })
                 detailCart.save()
                 cart_model.updateOne(
@@ -206,31 +206,76 @@ class UsersController{
                     }, 
                     {
                         idDetailCart: detailCart._id,
-                        $push: { 
-                            arrayStatus: 'Chưa xác thực'
-                        }
                     },
                 )
                 .then(() => console.log("update thành công"))
                 .catch(next)
-                const userCart =user_model.updateOne({phone: cart.phone},{
-                    cart:{
+                const findUser = user_model.updateOne({
+                    _id: req.user._id
+                },{
+                    $push: {
+                        idCart: cart._id
+                    },
+                    cart: {
                         totalItem: 0,
                         items: [],
                         totalPrice: 0,
                     }
                 })
-                .then(() => {
-                    console.log("thanh cong")
-                })
-                
-                .catch(err => console.log(err))
-                // console.log(cart)
-                res.redirect("/")
+                .then(() => res.json({messge: 'Tạo đơn hàng thành công'}))
+                .catch(next)
             })
         })
         .catch(next)
     }
+
+    increaseProductCarts(req, res, next){
+        req.user.amountPlus(req.params.id)
+            .then((user) =>{
+                const cart = user.cart
+                res.json(cart)
+            })
+            .catch( err => console.error(err))
+    }
+
+    decreaseProductCarts(req, res, next){
+        req.user.amountMinus(req.params.id)
+            .then((user) =>{
+                const cart = user.cart
+                res.json(cart)
+            })
+            .catch( err => console.error(err))
+    }
+
+    userAccount(req, res, next){
+        user_model.findOne({_id: req.user.id})
+        .then((user) => {
+            res.render('users/account', {
+                user: mongooseToOject(user)
+            })
+        })
+    }
+
+    async userAccountUpdate(req,res,next){
+        const file = req.file
+        if(file){
+            user_model.updateOne({_id: req.user.id}, {
+                avatar: file.filename
+            })
+            .then(() => {
+                console.log('update avatar thành công')
+            })
+        }
+        await user_model.updateOne({_id: req.user.id}, {
+            name: req.body.name,
+            gender: req.body.gender
+        })
+        .then(() => {
+            console.log('thanh cong')
+        })
+        .catch(next)
+    }
+
     // comments
     async postsComment(req, res, next){
         try{
@@ -386,7 +431,6 @@ class UsersController{
                 })
             })
         }
-        
     }
 }
 

@@ -63,7 +63,6 @@ class AuthController{
     // [POST] /login
     async loginPost(req , res , next){
         const { email, password } = req.body
-        
         try{
             const user = await User.login(email, password)
             const token = createToken(user._id)

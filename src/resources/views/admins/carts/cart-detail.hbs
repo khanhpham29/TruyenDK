@@ -1,36 +1,38 @@
 <div class="container">
-    <div class="id-data" hidden>{{detailCart._id}}</div>
-    <div>Truyện cho thuê:</div>
-    {{#each detailCart.listRentalBooks.items}}
-        {{this.bookId.nameManga}}
-        {{this.bookId.episode}}
-    {{/each}}
-    <div>Số ngày thuê: {{detailCart.songaythue}}</div>
-    <div>Giá thuê: {{detailCart.totalPrice}}</div>
-
+    <a href="../" class="btn btn-info">Quay lại</a>
+    <form name="form-pay" >
+        <table class="table">
+            <thead>
+                <th>Truyện cho thuê</th>
+                <th>Tập số</th>
+                <th>Số lượng</th>
+                <th>Giá thuê/lần</th>
+                <th>Giá truyện/cuốn</th>
+            </thead>
+            <tbody>
+            </tbody>
+                <tbody>
+                    {{#each detailCart.listRentalBooks.items}}
+                    <tr class="row-data">
+                        <td class="nameManga"> {{this.bookId.nameManga}}</td>
+                        <td class="episode">{{this.bookId.episode}}</td>
+                        <td class="amount">{{this.amount}}</td>
+                        <td class="rentCost">{{this.bookId.rentCost}}</td>
+                        <td class="cost">{{this.bookId.cost}}</td>
+                        <td class="amountPaid" hidden>{{this.amountPaid}}</td> 
+                    </tr>         
+                    {{/each}}
+                </tbody>
+        </table>
+    </form>
+    <div>Trạng thái {{detailCart.idCart.status}}</div>
+    <div>Ngày thuê: {{dateFormat detailCart.createAt}}</div>
+    <div>Số quyển truyện: {{detailCart.totalItem}}</div>
+    <div>Tổng tiền: {{detailCart.totalPrice}}</div>
+    
 </div>
 
-<script>   
-    var btnSuccess = document.getElementById('btn-success')
-    var idData = document.querySelectorAll('.id-data')
-    var idValue = idData[0].innerText
-    btnSuccess.onclick =function(){
-        const ngaytra = prompt('Ngày trả sách: ')
-        var trangthai = 'Đã hoàn thành'
-        if(ngaytra){
-            axios.post('/admin/rentals/' + idValue +'/success',{
-                ngaytra: ngaytra,
-                trangthai: trangthai
-            })
-            .then((res)=>{      
-                console.log(res.data.resonReject)
-                
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-        }
-    }
-    
-    
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+    })
 </script>

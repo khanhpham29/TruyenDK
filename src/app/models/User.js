@@ -51,9 +51,15 @@ const userSchema =  new Schema({
             default: 0,
         }
     },
-    followId:{ 
+    idCart: [{
         type: Schema.Types.ObjectId,
-        ref: 'follow',
+        ref: 'Cart',
+    }],
+    avatar: {
+        type: String,
+    },
+    gender: {
+        type: String
     }
 },{
     collection: 'users'
@@ -83,7 +89,7 @@ userSchema.methods.addToCart = async function (bookId){
         var cart = this.cart
         if(cart.items.length == 0 ){
             cart.items.push({bookId: book._id, amount: 1})
-            cart.totalPrice = book.rentCost
+            cart.totalPrice = book.rentCost + book.cost
             cart.totalItem += 1
         }else{
             const isExisting = cart.items.findIndex(objInItems => {
@@ -97,7 +103,7 @@ userSchema.methods.addToCart = async function (bookId){
             if(!cart.totalPrice){
                 cart.totalPrice = 0
             }
-            cart.totalPrice += book.rentCost
+            cart.totalPrice += book.rentCost + book.cost
             cart.totalItem += 1
         }
         // console.log('User in schema ', this.cart)   
@@ -112,12 +118,55 @@ userSchema.methods.removeInCart = async function (itemId){
     })
     const book = await book_model.findById(cart.items[isExisting].bookId)
     if(isExisting >= 0 ){
-        cart.totalPrice -= book.rentCost * cart.items[isExisting].amount
+        cart.totalPrice -= (book.rentCost * cart.items[isExisting].amount + book.cost)
+        console.log(cart.totalPrice)
         cart.totalItem -= cart.items[isExisting].amount
         cart.items.splice(isExisting, 1)
         return this.save()
     }
 }
+userSchema.methods.amountPlus = async function (bookId){
+    const book = await book_model.findById(bookId)
+    if (book) {
+        console.log(book)
+        var cart = await this.cart
+        const isExisting =  await cart.items.findIndex(objInItems => {
+            return new String(objInItems.bookId).trim() == String(book._id).trim()
+        }) 
+        if( isExisting >= 0 ){
+            cart.items[isExisting].amount += 1
+        }
+        if(!cart.totalPrice){
+            cart.totalPrice = 0
+        } 
+        cart.totalPrice += book.rentCost + book.cost
+        cart.totalItem += 1
+        // console.log('User in schema ', this.cart)   
+        return this.save()
+    }
+    
+}
 
+userSchema.methods.amountMinus = async function (bookId){
+    const book = await book_model.findById(bookId)
+    if (book) {
+        var cart = await this.cart
+        const isExisting =  await cart.items.findIndex(objInItems => {
+            return new String(objInItems.bookId).trim() == String(book._id).trim()
+        }) 
+        if( isExisting >= 0 ){
+            cart.items[isExisting].amount -= 1
+            console.log(cart.items[isExisting].amount)
+        }
+        if(!cart.totalPrice){
+            cart.totalPrice = 0
+        }
+        cart.totalPrice -= (book.rentCost + book.cost)
+        cart.totalItem -= 1
+        // console.log('User in schema ', this.cart)   
+        return this.save()
+    }
+    
+}
 
 module.exports = mongoose.model('user', userSchema)

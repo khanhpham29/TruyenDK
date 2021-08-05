@@ -1,16 +1,22 @@
 
-<div class="container">
+<div class="container mt-4">
     <div class="row">
         <div class="create-manga">
             <form  name="form-create-manga" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="nameManga">Tên truyện</label>
-                    <input type="text" class="form-control" id="nameManga" name="nameManga" >
-                    <div class="nameManga error mt-2" style="color:red"></div>
-                </div>
-                <div class="form-group">
-                    <label for="nameManga2">Tên khác</label>
-                    <input type="text" class="form-control" id="nameManga2" name="nameManga2" >
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="nameManga">Tên truyện</label>
+                            <input type="text" class="form-control" id="nameManga" name="nameManga" >
+                            <div class="nameManga error mt-2" style="color:red"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="nameManga2">Tên khác</label>
+                            <input type="text" class="form-control" id="nameManga2" name="nameManga2" >
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="avatarManga">Hình</label>
@@ -58,6 +64,7 @@
                 formData.append("category[" + index + "]", el.value)
             })
             formData.append("description",description)
+            console.log(formData)
             axios.post("../manga/add",formData,{
                 headers: {
                     'Accept': 'application/json',
@@ -65,7 +72,6 @@
                 }
             })
             .then((res)=>{
-                console.log(res.data)
                 if(res.data.message="Thêm thành công"){
                     alert(res.data.message)
                     location.assign('/admin/manga')

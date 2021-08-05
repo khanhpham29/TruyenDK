@@ -19,9 +19,7 @@ const cartSchema =  new Schema({
         type: String,
         default: ''
     },
-    arrayStatus: [{
-        type: String,
-    }],
+
     totalPrice: {
         type: Number,
         default: 0

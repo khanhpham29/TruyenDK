@@ -28,6 +28,7 @@ const handleErrors = (err) => {
         errors.category = 'Thể loại này đã tồn tại'
         return errors
     }
+    console.log(err.message)
     // validation erros
     if(err.message.includes('categories validation failed')){
         Object.values(err.errors).forEach(({properties}) =>{
@@ -401,7 +402,7 @@ class AdminController{
             .catch(next)
     }
 
-    PayBookRentals(req, res, next){
+    payBookRentals(req, res, next){
         DetailsCart_Model.updateOne({
             idCart: req.params.id
         },{
@@ -411,8 +412,7 @@ class AdminController{
         Cart_Model.updateOne({_id: req.params.id },{ status: 'Đã hoàn thành' })
         .then((cartUp) => console.log(cartUp))
         Cart_Model.findOne({_id: req.params.id })
-        .then((cart) => console.log(cart))
-        
+        .then((cart) => console.log(cart))  
         .catch(err => console.log("loi"))
         
     }
@@ -428,18 +428,30 @@ class AdminController{
             .catch(next)
     }
 
-    controlRentals(req, res, next){
-        Cart_Model.updateOne({_id: req.params.id}, {
-            status: req.body.statusRental,
-            $push: { 
-                arrayStatus: req.body.statusRental
+    paidOneBook(req, res, next){
+        
+        const idRentalBook = req.params.id
+        DetailsCart_Model.findOne({idCart: req.body.idCart})
+        .then(async (detailCart) => {
+            console.log("id rental: ",idRentalBook)
+            const indexItems = detailCart.listRentalBooks.items.findIndex(objInItems =>{
+                return new String(objInItems.bookId).trim() == String(idRentalBook).trim()
+            })
+            console.log("index item: ",indexItems)
+
+            if( indexItems >= 0 ){
+                detailCart.listRentalBooks.items[indexItems].status = "Đã trả " + req.body.amountPaid + " cuốn"
+                detailCart.listRentalBooks.items[indexItems].amountPaid = req.body.amountPaid
+                if( detailCart.listRentalBooks.items[indexItems].amountPaid == detailCart.listRentalBooks.items[indexItems].amount ){
+                    detailCart.listRentalBooks.items[indexItems].status = "Đã trả hết"
+                }
+                detailCart.save()
+                console.log("amount in detailcart: ", detailCart.listRentalBooks.items[indexItems])
             }
+            
         })
-        .then(() => {
-            console.log('cập nhật trạng thái thành công')
-        })
-        .catch(next)
     }
+
 
     rejectRentals(req, res, next){
         Cart_Model.updateOne({_id: req.params.id}, {
@@ -457,28 +469,13 @@ class AdminController{
         })
         .catch(next)
     }
-
-    returnRentals(req, res, next){
-        console.log("trong controller:" ,req.body)
-        Cart_Model.updateOne({_id: req.params.id}, {
-            status: req.body.statusReturn,
-            $pop: { 
-                arrayStatus: 1 
-            } 
-        })
-        .then(() => {
-            res.json({
-                statusReturn: req.body.statusReturn,
-                message: "Sửa thành công"
-            })
-        })
-        .catch(next)
-    }
-
     detailRentals(req, res, next){
         const detailCart = DetailsCart_Model.findOne({idCart: req.params.id})
         .populate({
             path: 'listRentalBooks.items.bookId',
+        })
+        .populate({
+            path: 'idCart',
         })
         .then((detailCart) => {
             // res.json(detailCart)
@@ -489,14 +486,23 @@ class AdminController{
         })
     }
 
-    finallyRentals(req, res, next){
-        Cart_Model.find({status: 'Đã nhận'})
-        .then((cart) => {
-            res.render('admins/carts/cart-final', {
-                cart: multipleMongooseToOject(cart),
-                layout: 'admin'
-            })
-        })
+    pagnination(req,res, next){
+        let perPage = 16; // số lượng sản phẩm xuất hiện trên 1 page
+        let page = req.params.page || 1; 
+        DetailsCart_Model
+        .find() // find tất cả các data
+        .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
+        .limit(perPage)
+        .exec((err, products) => {
+            DetailsCart_Model.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+            if (err) return next(err);
+                res.render('admins/test', {
+                details, // sản phẩm trên một page
+                current: page, // page hiện tại
+                pages: Math.ceil(count / perPage) // tổng số các page
+              }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
+            });
+        });
     }
     async xemChiTiet(req, res, next){
         const detail = await DetailsCart_Model.findOne({_id: req.params.id})
@@ -650,7 +656,6 @@ class AdminController{
             })
         }
     }
-
     //---------------------------------------------------------------------------//
     //Categorys
     //[GET] /admin/categorys

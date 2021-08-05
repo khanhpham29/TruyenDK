@@ -32,9 +32,12 @@
                                 <p href="#">Tên Truyện: {{this.nameManga}}</p>
                                 
                             </h4>
-                            <p href="#">Tập số: {{this.episode}}, Giá thuê {{this.rentCost}}</p>
-                            <div class="chapter-book">
-                                <button class="btn btn-success btn-add-to-cart" data-id="{{this._id}}">Thêm vào giỏ hàng</button>
+                            <p href="#">Tập số: {{this.episode}}, Giá thuê {{this.rentCost}},Số lượng <span class="amount">{{this.amount}}</span>  </p>
+                            <div class="chapter-book" data-id="{{this._id}}">
+                                {{!-- handlebars helper --}}
+                                {{!-- nếu số lượng = 0 => hết hàng, ngược lại => addToCart --}}
+                                {{#if_eq this.amount}}
+                                {{/if_eq}}
                             </div>
                             <div class="more-info"></div>
                         </div>
@@ -47,22 +50,33 @@
 <script>
     document.addEventListener("DOMContentLoaded",()=>{
         var btnAddToCarts = document.querySelectorAll(".btn-add-to-cart")
+        console.log(btnAddToCarts[0].innerText)
         var cartItem = document.querySelector('.cart-item')
-        btnAddToCarts.forEach(btn => {
+        var amount = document.querySelectorAll('.amount')
+        var flag = 1
+        btnAddToCarts.forEach((btn, i) => {
             btn.onclick = function(e) {
                 e.preventDefault();
-                var idBook = this.getAttribute("data-id")
-                axios.post('/addToCart/'+ idBook)
-                .then((res)=>{
-                    const totalItem = res.data.user.cart.totalItem
-                    if(res.data){
-                        alert(res.data.message)
-                    }
-                    cartItem.innerText = totalItem
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
+                var idBook = this.parentElement.getAttribute("data-id")
+                console.log(idBook)
+                console.log("amount : ",amount[i].innerText)
+                if(amount[i].innerText <= 0){
+                    alert("hết hàng")
+                    flag = 0
+                }
+                if(flag == 1){    
+                    axios.post('/addToCart/'+ idBook)
+                    .then((res)=>{
+                        const totalItem = res.data.user.cart.totalItem
+                        if(res.data){
+                            alert(res.data.message)
+                        }
+                        cartItem.innerText = totalItem
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
             }
         })
     })

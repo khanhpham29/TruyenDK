@@ -990,3 +990,19 @@ strong {
 
 .edit-manga .form-group .cbb-status {
   width: 300px; }
+<<<<<<< HEAD
+=======
+
+.account {
+  width: 100%;
+  height: 100%; }
+  .account .avatar {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 50px; }
+    .account .avatar img {
+      width: 100%;
+      height: 100%; }
+  .account label {
+    width: 50px; }
+>>>>>>> dat2

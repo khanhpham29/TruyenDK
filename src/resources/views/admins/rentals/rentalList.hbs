@@ -5,21 +5,16 @@
         <div class="card-header">
             <h4 class="card-title mb-0">Danh sách truyện cho thuê</h4>
         </div>
-        <div class="top mb-4 mt-2">
-            <form action="">
-                <div class="wrapper">
-                    <div class="search-input"> 
-                        <input  placeholder="Type to search..."  type="text" id="search" autocomplete="off">      
-                    </div>
-                    <div class="search-result">
-                        <ul id="match-list" class="autocom-box">
-                        </ul>
-                    </div>
-                </div>
+        <div class="top">
+            <form id="form-search">
+                <input type="text" class="search-input" id="searchName" >
+                <button class="btn btn-success search-submit"  type="submit">Tìm</button>
             </form>
-            <a href="../../admin/rentals/createMangaRental" class="btn-rentals-manga mt-4">
-                <button class="btn btn-purple" >Thêm truyện cho thuê mới</button>
-            </a>
+            <div class="button mb-2">
+                <a href="../../admin/rentals/createMangaRental" class="btn-rentals-manga">
+                    <button class="btn btn-purple" >Thêm truyện cho thuê mới</button>
+                </a>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="datatable table table-striped mb-0 justify text-center mb-4">
@@ -50,48 +45,7 @@
     </div>
 </div>			
 <script>
-    document.addEventListener("DOMContentLoaded",function(){
-        var searchWrapper = document.querySelector('.search-input')
-        var search = document.getElementById('search')
-        var matchList = document.getElementById('match-list')
-        //tìm truyện và lọc nó
-        var searchMangas =  searchText =>{
-            if(searchText.length === 0){
-                matches = [];
-                searchWrapper.classList.remove("active")
-                matchList.innerHTML = ''
-                return false;
-            }
-            axios.get("/admin/rentals/searchMangaRental")
-            .then((res)=>{
-                const rentals = res.data.rentals
-                // khớp với kiểu nhập văn bản hiện tại
-                let matches = rentals.filter(rental =>{
-                    const regex = new RegExp(`${searchText}`, 'giu')
-                    return rental.nameManga.replace(/\s/gis, "").match(regex) 
-                })
-                if(matches.length === 0){
-                    searchWrapper.classList.remove("active")
-                    matchList.innerHTML = ''
-                }
-
-                outputHtml(matches)
-            })
-        }
-        const outputHtml = matches =>{
-            if(matches.length >0){
-                const html = matches.map(match =>`
-                    <a href="/admin/rentals/${match.slug}/listRental" target="_blank"><li>${match.nameManga}</li></a>
-                `)
-                .join('');
-                searchWrapper.classList.add("active")
-                matchList.innerHTML = html
-            }
-        }
-        search.addEventListener('input', ()=> searchMangas(search.value.replace(/\s/gis, "").toLowerCase()))
-    })
 </script>
-
 
 
 
