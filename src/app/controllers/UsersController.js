@@ -4,23 +4,31 @@ const imageDetail_model = require('../models/ImageDetail')
 const rental_model = require('../models/MangaRental')
 const category_model = require('../models/CategoryManga')
 const book_model = require('../models/book')
-const User_Model = require('../models/User')
-const Cart_Model = require('../models/Cart')
+const user_model = require('../models/User')
+const cart_model = require('../models/Cart')
+const post_model = require('../models/post')
+const comment_model = require('../models/comment')
 const DetailsCart_Model = require('../models/DetailCart')
+const follow_model = require('../models/FollowManga')
+const notifies_model = require('../models/Notifies')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
 class UsersController{
     // [GET] /news
     index(req,res,next){
         manga_model.find({})
-        .populate({
-            path:'idDetailManga',
-            populate:{ 
-                path:'imgDetails',
-                model:'ImgDetail',
-                match: {new: true}
+        .populate([
+            {
+                path:'idDetailManga',
+                populate:{ 
+                    path:'imgDetails',
+                    model:'ImgDetail',
+                    match: {new: true}
+                }
+            },{
+                path:'categories'
             }
-        })
+        ])
             .then((mangas) => {
                 // res.json(mangas)
                 res.render('home', {
@@ -30,34 +38,83 @@ class UsersController{
             })
             .catch(next)
     }
-    async detailManga(req, res, next){
+    async detailManga(req, res, next){   
         Promise.all([
-            manga_model.findOne({ slug: req.params.slug }).populate('category'),
+            manga_model.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
             detailManga_model.findOne({ slug: req.params.slug }).populate({
                 path:"imgDetails",
                 options: { sort: { createAt: -1 } }
-            })
+            }),
         ])
-            .then(([manga, detailManga]) => {
-                if(manga == null){
-                    return res.render('null')                   
-                }
-                else{
-                    res.render('users/detailManga', {
-                        manga: mongooseToOject(manga),
-                        detail: mongooseToOject(detailManga),
-                        layout: 'user.hbs'
-                    })
-                }
-            })
-            .catch(next)
+        .then(async ([manga, detailManga]) => {
+            const user = req.user
+            if(user)
+            {
+                const checkFollow = await follow_model.findOne({
+                    idUser: req.user._id,
+                    idManga: {$in: manga._id}
+                })
+                // res.json(manga)
+                res.render('users/detailManga', {
+                    manga: mongooseToOject(manga),
+                    detail: mongooseToOject(detailManga),
+                    checkFollow: mongooseToOject(checkFollow),
+                    layout: 'user.hbs'
+                })
+            }else{
+                res.render('users/detailManga', {
+                    manga: mongooseToOject(manga),
+                    detail: mongooseToOject(detailManga),
+                    layout: 'user.hbs'
+                })
+            }
+        })
+        .catch(next)
     }
     async readManga(req, res, next){
-        const chapter = await imageDetail_model.findOne({ slug: req.params.slug})
-        .then((chapter)=>{
-            res.render('users/chapter',{
-                chapter: mongooseToOject(chapter)
-            }) 
+        const manga =  manga_model.findOne({slug: req.params.slug})
+        Promise.all([
+            imageDetail_model.findOne({ 
+                slug: req.params.slug,
+                chapter: req.params.chap
+            }),
+            manga,
+            manga
+            .populate({
+                path:"idDetailManga",
+                populate:{
+                    path:"idPost",
+                    populate:{
+                        path:"comments",
+                        options: { sort: { createdAt: -1 } },
+                        populate:[{
+                            path:"idUser",
+                            model: "user",
+                        },{
+                            path: "replies",
+                            model: "comment",
+                            options: { sort: { createdAt: -1 } },
+                            populate:{
+                                path:"idUser",
+                                model: "user",
+                            },
+                        }]
+                    }
+                }
+            }),
+        ])
+        .then(([chapter, manga, mangaforPost])=>{
+            // res.json(mangaforPost)
+            const comments = comment_model.find({postId: manga.idPost})
+            .then((comments)=>{
+                res.render('users/chapter',{
+                    chapter: mongooseToOject(chapter),
+                    manga: mongooseToOject(manga),
+                    mangaforPost: mongooseToOject(mangaforPost),
+                    comments: multipleMongooseToOject(comments),
+                    user: req.user,
+                }) 
+            })
         })
         .catch(next)
     }
@@ -96,7 +153,6 @@ class UsersController{
             .execPopulate()
             .then(user =>{
                 const cart = user.cart
-                //console.log(cart.items)
                 res.render("users/cart",{
                     cart: cart
                 })
@@ -112,9 +168,8 @@ class UsersController{
             .catch( err => console.error(err))
     }
 
-
     async userRentals(req, res, next){
-        const cart = new Cart_Model({
+        const cart = new cart_model({
             phone: req.user.phone,
             totalPrice: req.body.totalPrice
         })
@@ -144,7 +199,7 @@ class UsersController{
                     
                 })
                 detailCart.save()
-                Cart_Model.updateOne(
+                cart_model.updateOne(
                     {
                         _id: cart._id
                     }, 
@@ -154,7 +209,7 @@ class UsersController{
                 )
                 .then(() => console.log("update thành công"))
                 .catch(next)
-                const findUser = User_Model.updateOne({
+                const findUser = user_model.updateOne({
                     _id: req.user._id
                 },{
                     $push: {
@@ -169,7 +224,6 @@ class UsersController{
                 .then(() => res.json({messge: 'Tạo đơn hàng thành công'}))
                 .catch(next)
             })
-
         })
         .catch(next)
     }
@@ -193,7 +247,7 @@ class UsersController{
     }
 
     userAccount(req, res, next){
-        User_Model.findOne({_id: req.user.id})
+        user_model.findOne({_id: req.user.id})
         .then((user) => {
             res.render('users/account', {
                 user: mongooseToOject(user)
@@ -202,25 +256,226 @@ class UsersController{
     }
 
     async userAccountUpdate(req,res,next){
-
         const file = req.file
         if(file){
-            User_Model.updateOne({_id: req.user.id}, {
+            user_model.updateOne({_id: req.user.id}, {
                 avatar: file.filename
             })
             .then(() => {
                 console.log('update avatar thành công')
             })
         }
-        await User_Model.updateOne({_id: req.user.id}, {
+        await user_model.updateOne({_id: req.user.id}, {
             name: req.body.name,
             gender: req.body.gender
         })
         .then(() => {
             console.log('thanh cong')
+            res.redirect('/')
         })
         .catch(next)
-       
+    }
+
+    viewRentalsHistory(req, res, next){
+        user_model.findOne({_id: req.user._id}).populate('idCart')
+        .then((user)=>{
+            res.render('users/rentalsHistory',{
+                user: mongooseToOject(user)
+            })
+        })
+    }
+
+    detailRentalsHistory(req, res, next){
+        cart_model.findOne({_id: req.params.id})
+        .populate({
+            path: 'idDetailCart',
+            populate:{
+                path: 'listRentalBooks.items.bookId'
+            }
+        })
+            .then((cart) => { 
+                //res.json(cart)
+                res.render('users/detailRentals', {
+                    cart: mongooseToOject(cart),
+                })
+            })
+            .catch(next)
+    }
+    
+    formChangePassword(req, res, next){
+        res.render('users/formChangePass')
+    }
+    async ChangePassword(req, res, next){
+        console.log(req.body)
+        console.log(req.user)
+        req.user.changePassword(req.user.email, req.body.password, req.body.passwordNew, req.body.passwordNewAgain)
+        .then(() => {
+            user_model.findOne({_id: req.user.id})
+            .then((a) => {
+                a.password = req.body.passwordNew
+                console.log('user', a)
+                res.redirect('/')
+            })
+            .catch(next)
+        })
+        .catch(next)
+    }
+
+    // comments
+    async postsComment(req, res, next){
+        try{
+            const post = await post_model.findById(req.params.idPost)
+            // create a comment
+            const comment = new comment_model({
+                idPost: post._id,
+                content: req.body.content,
+                idUser: req.body.idUser,
+            })
+            await comment.save()
+            // liên kết vs trang bình luận
+            post.comments.push(comment)
+            await post.save()
+            const newComment = comment_model.findById(comment._id).populate("idUser")
+            .then((newComment) =>{
+                res.status(200).json({ 
+                    comment: mongooseToOject(newComment),
+                })
+            })
+        }catch(error){
+            res.status(500).json(error)
+        }
+    }
+    // reply comments
+    async replyComment(req, res, next){
+        const comment = await comment_model.findOne({_id: req.params.idComment})
+        .then(async (comment)=>{
+            const newComment = new comment_model({
+                idComment: comment._id,
+                idPost: req.body.idPost,
+                content: req.body.content,
+                idUser: req.body.idUser,
+            })
+            await newComment.save()
+            comment.replies.push(newComment)
+            await comment.save()
+            const replyComment = await comment_model.findOne({_id: newComment._id}).populate({
+                path:"idUser",
+                model: "user"
+            })
+            .then((replyComment)=>{
+                res.status(200).json({ 
+                    replyComment: mongooseToOject(replyComment),
+                })
+            })
+            .catch((err)=>{
+                res.json(err)
+            })
+        })
+        .catch((err)=>{
+            res.json(err)
+        })
+    }
+    async followManga(req, res, next){
+        const data = req.body
+        const isExist = await follow_model.findOne({idUser: data.idUser})
+        if(!isExist){
+            const newFollow = new follow_model({
+                idUser: data.idUser,
+            })
+            newFollow.idManga.push(req.params.idManga)
+            await newFollow.save()
+            detailManga_model.findOne({idManga: req.params.idManga})
+            .then((result,err)=>{
+                // console.log(result)
+                result.arrIdFollow.push(newFollow._id)
+                result.save()
+            })
+            res.json({message: "Đã thêm vào theo dõi truyện"})
+        }
+        else{
+            isExist.idManga.push(req.params.idManga)
+            isExist.save()
+            detailManga_model.findOne({idManga: req.params.idManga})
+            .then((result,err)=>{
+                result.arrIdFollow.push(isExist._id)
+                result.save()
+            })
+            res.status(200).json({message: "Đã thêm vào theo dõi truyện"})
+        }
+    }
+    async cancelFollow(req, res, next){
+        const data = req.body
+        const isExist = await follow_model.findOne({idUser: data.idUser})
+        .then(async (isExist)=>{
+            isExist.idManga.forEach((id, index) => {
+                if (id == req.params.idManga) {
+                    isExist.idManga.splice(index, 1);
+                    return true;
+                }
+            })
+            const afterDelete = await follow_model.updateOne({
+                _id: isExist._id,
+            },{
+                idManga: isExist.idManga
+            })
+            const detailManga = await detailManga_model.findOne({idManga: req.params.idManga})
+            detailManga.arrIdFollow.pull(isExist._id)
+            detailManga.save()
+            res.status(200).json("Đã hủy theo dõi truyện")
+        })
+        .catch((err)=>{
+            res.json(err)
+        })
+    }
+    listFollow(req, res, next){
+        const user = req.user
+        if(user){
+            const listFollow = follow_model.findOne({idUser: user._id})
+            .populate({
+                path: 'idManga',
+                populate:{
+                    path: 'idDetailManga',
+                    populate:{
+                        path:'imgDetails',
+                        match: {new: true}
+                    }
+                }
+            })
+            .then((listFollow) => {
+                // res.json(listFollow)
+                res.render("users/listFollowManga",{
+                    listFollow: mongooseToOject(listFollow)
+                })
+            })
+        }else{
+            res.render("users/listFollowManga",{
+                message: "false"
+            })
+        }
+    }
+    async getNotifies(req, res, next){
+        const user = req.user
+        if(user){
+            Promise.all([
+                follow_model.findOne({idUser: user._id}),
+                notifies_model.find(
+                    {idUser: {$in: user._id}},
+                )
+                .populate({
+                    path:"idChapter"
+                })
+                .populate({
+                    path:"idManga"
+                })
+                .limit(20).sort( { createdAt: -1 } )
+            ])
+            .then(([listFollow, notification])=>{
+                res.json({
+                    notification: multipleMongooseToOject(notification),
+                    listFollow: mongooseToOject(listFollow)
+                })
+            })
+        }
     }
 }
 

@@ -10,18 +10,18 @@ const methodOverride = require('method-override')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
 
 const app = express()
-const port = process.env.PORT || 3000
-
+const port = process.env.PORT || 5000
+// bữa lên mạng xem thằng kia làm @@ nó thiết lập như này à 
 const http = require('http')
 const server = http.createServer(app)
 const socketAPI = require('./socketAPI')
+const socketNotify = require('./socketNotify')
 socketAPI.io.attach(server)
+socketNotify.io.attach(server)
 const route = require('./routes/index')
 const bodyParser = require('body-parser')
 
 const SortMiddleware = require('./app/middlewares/sortMiddleware')
-const findUser = require('./app/middlewares/findUser')
-
 // Connect to DB    
 db.connect();
 app.use(cookieParser())
@@ -32,7 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Customs middlewares
 app.use(SortMiddleware)
-app.use(findUser)
 
 // Template engine
 app.engine('hbs', 

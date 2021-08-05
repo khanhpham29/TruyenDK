@@ -8,12 +8,13 @@
                 <h1>{{manga.nameManga}}</h1>
                 <div class="txt">
                     <span class="info-item">Tên khác: {{manga.otherName}}</span>
-                    <p class="info-item">Tình trạng: {{manga.status}}</p>
+                    <span class="info-item">Tình trạng: {{manga.idDetailManga.status}}</span>
+                    <span class="info-item">Số lượng theo dõi: {{manga.idDetailManga.arrIdFollow.length}}</span>
                 </div>
                 <ul class="list01">
-                    {{#each manga.category}}
+                    {{#each manga.categories}}
                         <li class="li03">
-                            <a href="#">{{this.tenloai}}</a>
+                            <a href="#">{{this.nameCategory}}</a>
                         </li>
                     {{/each}}
                 </ul>
@@ -38,7 +39,7 @@
                             <h4 class="title-book">
                                 <p href="#">Tên Truyện: {{nameManga}}</p>
                             </h4>
-                            <p href="#">Tập số: {{episode}}, Giá thuê {{rentCost}}</p>
+                            <p href="#">Tập số: {{episode}}, Giá thuê {{rentCost}}, số lượng {{amount}}</p>
                             <div class="chapter-book">
                                 <a class="btn btn-info" href="{{slug}}/../edit/{{episode}}">Sửa thông tin truyện</a>
                             </div>

@@ -1,0 +1,43 @@
+<div class="container mt-4">
+    <div class="row">
+        <h1>List post</h1>
+        <form action="POST" id="listPost">
+            <div class="row">
+                {{#each posts}}
+                    <div class="col-sm-4  mt-2 mb-2">
+                        <div class="card" style="width: 18rem;">
+                            <img src="/img/{{this.imgPost}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.title}}</h5>
+                                <p class="card-text">{{this.content}}</p>
+                                <a href="/admin/post/{{this.id}}" class="btn btn-primary" data-id="{{this.id}}" >read more</a>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var socket = io()
+    socket.on("new_post", function(data){
+        console.log(data)
+        var html = ""
+        html+= '<div class="col-sm-4 mt-2 mb-2">'
+            html+= '<div class="card" style="width: 18rem;">'
+                html+= '<img src="/img/'+ data.post.imgPost +'" class="card-img-top" alt="...">'
+                html+= '<div class="card-body">'
+                    html+= '<h5 class="card-title ">' + data.post.title + '</h5>'
+                    html+= '<p class="card-text ">'+ data.post.content +'</p>'
+                    html+= '<a href="/post/'+ data.post.id +'" class="btn btn-primary read-More" data-id="' + data.post.id +'" >Read more</a>'
+                html+= '</div>'
+            html+= '</div>'
+        html+= '</div>'
+        $('#listPost').prepend(html)
+    })
+    socket.on("new_comment", (data)=>{
+        console.log(data)
+    })
+</script>

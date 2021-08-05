@@ -6,18 +6,28 @@ const commentSchema = new Schema({
     content: { 
         type: String 
     },
-    postId: {
+    idPost: {
         type: Schema.Types.ObjectId,
-        ref:"Post",
+        ref:"post",
         required:true,
     },
-    userId: { 
+    idComment:{
+        type: Schema.Types.ObjectId,
+        ref:"comment",
+    },
+    replies:[
+        {
+            type: Schema.Types.ObjectId,
+            ref:'comment',
+        }
+    ],
+    idUser: { 
         type: Schema.Types.ObjectId, 
-        ref: 'User', 
+        ref: 'user', 
         required: true },
 },{
     timestamps: { type: Date, default: Date.now}
 }
 );
 
-module.exports = mongoose.model('Comment', commentSchema);
+module.exports = mongoose.model('comment', commentSchema);

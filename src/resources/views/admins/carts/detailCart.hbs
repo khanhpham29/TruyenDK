@@ -1,4 +1,5 @@
-<div class="container">
+<div class="container mt-4 mb-2 manga">
+    <h1 class="mt-2 mb-2">Chi tiết phiếu trả </h1>
     <div class="row">
         <div class="col-sm-4">
             <b>Ngày thuê: </b><span id="dateRental">{{dateFormat cart.idDetailCart.createAt format="MM/DD/YYYY"}}</span>
@@ -16,8 +17,8 @@
         <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
         <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
     </div>
-    <form name="form-pay" >
-        <table class="table">
+    <form name="form-pay">
+        <table class="table mt-4">
             <thead>
                 <th>Truyện cho thuê</th>
                 <th>Tập số</th>
@@ -25,7 +26,7 @@
                 <th>Giá thuê/ngày</th>
                 <th>Giá truyện/cuốn</th>
                 <th>Trạng thái truyện</th>
-                <td>Số lượng đã trả</td>
+                <th>Số lượng đã trả</th>
             </thead>
                 <tbody>
                     <td id="idCart" hidden>{{cart._id}}</td>
@@ -56,7 +57,7 @@
                     {{/each}}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-success btn-submit" id="btn-submit">xác nhận</button>
+        <button type="submit" class="btn btn-success btn-submit mb-2" id="btn-submit">xác nhận</button>
     </form>
 
     
@@ -144,9 +145,8 @@
                         alert('Số lượng không hợp lệ')
                         flag = 0
                     }
-                }
-               
-                if(flag == 2){
+                }   
+                if(flag == 1){
                     this.remove()
                     var paid = rowData.querySelector('.paid')
                     paid.innerText = 'Đã trả'

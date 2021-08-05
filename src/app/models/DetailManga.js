@@ -13,6 +13,14 @@ const MangaDetailsSchema = new Schema({
 	nameManga:{ 
 		type:String,
 	},
+	arrIdFollow:[{ 
+		type:Schema.Types.ObjectId,
+		ref:'follow'
+	}],
+	idPost:{ 
+		type:Schema.Types.ObjectId,
+		ref:'post'
+	},
 	imgDetails: [{
 		type: Schema.Types.ObjectId, 
 		ref: 'ImgDetail'
@@ -21,11 +29,15 @@ const MangaDetailsSchema = new Schema({
 		type: String, 
 		default: '',
 	},
-	slug:{ type: String, slug: 'nameManga', unique: true},
+	status:{ 
+		type: String,
+		default: 'Đang tiến hành'
+	},
+	slug:{ type: String, slug: 'nameManga'},
 	createAt:{ type: Date, default: Date.now},
 	updateAt:{ type: Date, default: Date.now},
 },{
-	collection: 'details'
+	collection: 'detailMangas'
 });
 
 module.exports = mongoose.model('detail', MangaDetailsSchema)

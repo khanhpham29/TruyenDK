@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .align-items-center .checkbox-select-all-options {
   width: 120px;
   margin: 0 8px; }
@@ -9,7 +10,6 @@ html {
   -webkit-font-smoothing: antialiased;
   min-width: 300px;
   overflow-x: hidden;
-  overflow-y: scroll;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
@@ -53,19 +53,138 @@ a:active, a:focus, a:visited {
     display: flex;
     margin-bottom: 0px;
     margin-right: 30px; }
-    .top-bar .top-links li {
+    .top-bar .top-links .items {
       margin-right: 20px; }
-      .top-bar .top-links li a {
+      .top-bar .top-links .items a {
         color: #000; }
-    .top-bar .top-links li:last-child {
+      .top-bar .top-links .items .btn-notify {
+        cursor: pointer;
+        position: relative; }
+        .top-bar .top-links .items .btn-notify i {
+          font-size: 23px; }
+        .top-bar .top-links .items .btn-notify .notify-number {
+          position: absolute;
+          bottom: calc(100% - 6px);
+          right: -9px;
+          z-index: 1;
+          background-color: #f00;
+          font-size: 11px;
+          font-weight: 700;
+          border-radius: 50%;
+          padding: 2px 6px;
+          color: #fff;
+          user-select: none; }
+        .top-bar .top-links .items .btn-notify.active ~ .list-notifies-box {
+          opacity: 1;
+          visibility: visible; }
+          .top-bar .top-links .items .btn-notify.active ~ .list-notifies-box .list-notifies {
+            transform: translateX(0); }
+      .top-bar .top-links .items .list-notifies-box {
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        height: 100%;
+        width: 100%;
+        z-index: 10;
+        opacity: 0;
+        visibility: hidden;
+        transition: linear 0.3s; }
+        .top-bar .top-links .items .list-notifies-box .overlay {
+          position: absolute;
+          cursor: pointer;
+          z-index: -1;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.3); }
+        .top-bar .top-links .items .list-notifies-box .list-notifies {
+          float: right;
+          height: 100%;
+          width: 380px;
+          padding: 18px 0;
+          background-color: #fff;
+          overflow-y: auto;
+          transform: translateX(100%);
+          transition: linear 0.3s; }
+          .top-bar .top-links .items .list-notifies-box .list-notifies li {
+            width: 100%;
+            height: 90px;
+            margin: 4px 0;
+            padding: 0 14px; }
+            .top-bar .top-links .items .list-notifies-box .list-notifies li:hover {
+              background-color: #dcdcdc; }
+            .top-bar .top-links .items .list-notifies-box .list-notifies li a {
+              width: 100%;
+              height: 100%;
+              display: flex; }
+              .top-bar .top-links .items .list-notifies-box .list-notifies li a img {
+                width: 20%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center; }
+              .top-bar .top-links .items .list-notifies-box .list-notifies li a span {
+                width: 80%;
+                height: 100%;
+                padding: 8px 12px 4px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between; }
+                .top-bar .top-links .items .list-notifies-box .list-notifies li a span .content {
+                  width: 100%;
+                  height: auto; }
+                .top-bar .top-links .items .list-notifies-box .list-notifies li a span .time {
+                  width: 100%;
+                  font-size: 14px;
+                  color: #7c7c7c; }
+    .top-bar .top-links .items:last-child {
       margin-right: 0; }
   .top-bar .top-buttons.has-login {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 165px;
-    border-left: 1px solid #bbb;
-    padding-left: 25px; }
+    position: relative; }
+    .top-bar .top-buttons.has-login .user-manager {
+      font-size: 21px;
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 50%;
+      transition: linear 0.25s; }
+      .top-bar .top-buttons.has-login .user-manager:hover {
+        background-color: #bcbcbc; }
+      .top-bar .top-buttons.has-login .user-manager:active {
+        background-color: #ccc; }
+      .top-bar .top-buttons.has-login .user-manager.active ~ .list-user-manager {
+        transform: scale(1);
+        opacity: 1;
+        visibility: unset; }
+    .top-bar .top-buttons.has-login .list-user-manager {
+      position: absolute;
+      top: 100%;
+      right: 8px;
+      background-color: #fff;
+      width: max-content;
+      border-radius: 10px;
+      padding: 0;
+      margin: 0;
+      z-index: 1;
+      overflow: hidden;
+      transform-origin: top right;
+      transform: scale(0.6);
+      transition: ease 0.25s;
+      opacity: 0;
+      visibility: hidden;
+      box-shadow: 0 3px 3px 2px rgba(0, 0, 0, 0.2), 0px 2px 8px rgba(0, 0, 0, 0.4); }
+      .top-bar .top-buttons.has-login .list-user-manager .items {
+        padding: 10px 40px 10px 24px;
+        display: flex;
+        align-items: center; }
+        .top-bar .top-buttons.has-login .list-user-manager .items:hover {
+          background-color: #bcbcbc; }
+        .top-bar .top-buttons.has-login .list-user-manager .items .content {
+          margin-left: 12px;
+          text-align: right;
+          flex: 1; }
   .top-bar .top-buttons button {
     padding: 0 10px;
     border: none;
@@ -419,12 +538,51 @@ ul {
     flex-wrap: wrap;
     justify-content: flex-start;
     margin-bottom: 10px; }
+    .latest .list-manga .manga-item:before {
+      content: "";
+      width: 10px;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: -10px; }
+    .latest .list-manga .manga-item.open .more-info {
+      opacity: 1;
+      visibility: visible;
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px); }
+    .latest .list-manga .manga-item.open.show-left .more-info {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px); }
+    .latest .list-manga .manga-item.show-left .more-info {
+      left: initial;
+      right: 100%;
+      -webkit-transform: translateX(-40px);
+      transform: translateX(-40px); }
     .latest .list-manga .manga-item {
       text-align: center;
       position: relative; }
+      .latest .list-manga .manga-item .top-notice {
+        position: absolute;
+        top: 9px;
+        left: 8px;
+        font-size: 1; }
+        .latest .list-manga .manga-item .top-notice span {
+          font-size: 13px;
+          font-weight: 500;
+          color: #fff;
+          padding: 2px 6px 3px; }
+        .latest .list-manga .manga-item .top-notice .time-ago {
+          border-radius: 5px;
+          background-color: #56ccf2;
+          margin-right: 5px; }
+      .latest .list-manga .manga-item .story-cover {
+        -o-object-fit: cover;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ccc; }
       .latest .list-manga .manga-item a img {
-        width: 150px;
-        height: 200px; }
+        width: 180px;
+        height: 240px; }
       .latest .list-manga .manga-item .manga-cover {
         -o-object-fit: cover;
         object-fit: cover;
@@ -446,6 +604,68 @@ ul {
           letter-spacing: -.5px;
           text-align: justify;
           color: #000; }
+      .latest .list-manga .manga-item .more-info {
+        width: 310px;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s;
+        border-radius: 6px;
+        background-color: #fff;
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        -webkit-transform: translateX(40px);
+        transform: translateX(40px);
+        z-index: 100; }
+        .latest .list-manga .manga-item .more-info .title-more {
+          font-size: 13px;
+          font-weight: 700;
+          color: #f18121;
+          letter-spacing: normal;
+          margin-top: 0; }
+        .latest .list-manga .manga-item .more-info .title-more-other {
+          font-weight: 500;
+          letter-spacing: normal;
+          color: #757575;
+          line-height: 1;
+          margin-top: 5px;
+          margin-bottom: 10px; }
+        .latest .list-manga .manga-item .more-info .info {
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1.5;
+          color: #000; }
+        .latest .list-manga .manga-item .more-info .list-tags {
+          margin: 10px 0;
+          font-size: 0; }
+          .latest .list-manga .manga-item .more-info .list-tags a {
+            display: inline-block;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #fff;
+            padding: 3px 7px 2px;
+            margin-right: 2px;
+            margin-bottom: 2px; }
+          .latest .list-manga .manga-item .more-info .list-tags a.blue {
+            background-color: #56ccf2; }
+        .latest .list-manga .manga-item .more-info .excerpt {
+          font-size: 13px;
+          font-weight: 500;
+          color: #000; }
+      .latest .list-manga .manga-item .more-info:before {
+        position: absolute;
+        top: 25px;
+        left: -9px;
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 9px solid #fff; }
     .latest .list-manga li {
       margin-bottom: 15px; }
     .latest .list-manga .manga-item:before {
@@ -493,6 +713,47 @@ span {
     padding: 0; }
     #path .breadcrumb li + li:before {
       content: "\0003E"; }
+
+strong {
+  color: #363636;
+  font-weight: 700; }
+
+.comment-container {
+  padding-bottom: 40px; }
+  .comment-container .story-detail-title {
+    color: #f18121;
+    font-size: 24px; }
+  .comment-container .story-detail-title i {
+    margin-right: 10px; }
+  .comment-container .group01 {
+    overflow: hidden;
+    clear: both;
+    margin-top: 20px; }
+    .comment-container .group01 .list-comments {
+      clear: both; }
+      .comment-container .group01 .list-comments .info-comment {
+        padding: 10px; }
+      .comment-container .group01 .list-comments .outline-content-comment {
+        background: #f7f7f7;
+        padding: 10px;
+        border-radius: 10px; }
+      .comment-container .group01 .list-comments .item-comment {
+        margin-left: 55px; }
+        .comment-container .group01 .list-comments .item-comment .outline-content-comment {
+          background: #f7f7f7;
+          padding: 10px;
+          border-radius: 10px; }
+      .comment-container .group01 .list-comments .content-comment {
+        padding: 10px 0;
+        color: #000; }
+      .comment-container .group01 .list-comments .action-comment span {
+        color: #f18121;
+        font-size: 13px;
+        cursor: pointer; }
+      .comment-container .group01 .list-comments .action-comment .reply-comment {
+        margin-left: 20px; }
+      .comment-container .group01 .list-comments .reply {
+        padding-left: 60px; }
 
 .breadcrumb {
   font-size: 1rem;
@@ -615,8 +876,12 @@ span {
     opacity: .6; }
   .story-detail .story-detail-menu li.li01 a {
     background: #8bc34a; }
-  .story-detail .story-detail-menu li.li02 a {
+  .story-detail .story-detail-menu li.li02 form[name="form-follow-manga"] .btn-subscribe {
     background: #ff2853; }
+    .story-detail .story-detail-menu li.li02 form[name="form-follow-manga"] .btn-subscribe::after {
+      content: "Theo dõi"; }
+  .story-detail .story-detail-menu li.li02 form[name="form-follow-manga"].cancel-follow .btn-subscribe::after {
+    content: "Hủy theo dõi"; }
   .story-detail .story-detail-menu li.li03 a {
     background: #bd10e0; }
 
@@ -738,3 +1003,6 @@ span {
       height: 100%; }
   .account label {
     width: 50px; }
+
+.user-detail-rentals .info {
+  width: 300px; }

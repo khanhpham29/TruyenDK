@@ -1,5 +1,5 @@
 <div class="story-see container">
-    <div class="story-see-main">
+    <div class="story-see-main mt-2">
         <div class="block">
             <div class="box">
                 <div id="path" class="path-top">
@@ -23,7 +23,7 @@
                 </div>
                 <div>
                     <div class="detail-title">
-                        <a href="#">{{chapter.nameManga}}</a> {{chapter.chapter}}
+                        <a href="/manga/{{chapter.slug}}">{{chapter.nameManga}}</a> Chap {{chapter.chapter}}
                     </div>
                     <time datetime="">(cập nhật lúc: {{dateFormat chapter.createAt format="HH:mm DD/MM/YYYY "}} )</time>
                 </div>
@@ -33,6 +33,322 @@
                     <img src="/img/{{this.fileName}}" alt="" class="lazy">
                 {{/each}}
             </div>
+            <div class="story-detail has-background-white on">
+                <div id="path" class="path-top">
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="/">
+                                <span>Trang chủ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/manga/{{chapter.slug}}">
+                                <span>{{chapter.nameManga}}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span>{{chapter.chapter}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="comment-container">
+                    <span class="story-detail-title">
+                        <i class="fa fa-comments"></i>
+                        Bình luận (<span class="comment-count">{{comments.length}}</span>)
+                    </span>
+                    <div class="group01 comments-container">
+                        <form onsubmit="" id="form-comment"  method="POST">
+                            <input type="hidden" name="idPost" value="{{manga.idDetailManga.idPost._id}}">
+                            <input type="hidden" name="idUser" value="{{user._id}}">
+                            <input type="hidden" name="userName" value="{{user.name}}">
+                            <div class="form-floating mt-2">
+                                <textarea class="form-control" placeholder="Leave a comment here" name="content" style="height: 100px"></textarea>
+                                <label for="floatingTextarea2">Nội dung bình luận</label>
+                            </div>
+                            <button type="submit" class="btn btn-success mt-2 float-right">submit</button>
+                        </form>
+                        <form action="" id="listComments" class="list-comments ">
+                            {{#each mangaforPost.idDetailManga.idPost.comments}}
+                                <article class="info-comment comment-main-level">
+                                    <div class="outside-comment  comment-main-level">
+                                        <div class="item-comment">
+                                            <div class="outline-content-comment">
+                                                <div>
+                                                    <strong>{{idUser.name}}</strong>
+                                                    {{!-- <span class="time">{{dateFormat this.createAt format='DD/MM/YYYY'}}</span> --}}
+                                                </div>
+                                                <div class="content-comment">
+                                                    {{content}}
+                                                </div>
+                                            </div>
+                                            <div class="action-comment">
+                                                <span class="like-comment" data-id="{{_id}}">
+                                                    <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                                    <span class="total-like-comment"></span>
+                                                </span>
+                                                <span class="reply-comment" data-user="{{idUser._id}}" data-id="{{_id}}">
+                                                    <i class="far fa-comment"></i>
+                                                    Trả lời
+                                                </span>
+                                            </div>
+                                            {{!-- Quăng cái list cmt vào chỗ này --}}
+                                            <div class="list-reply-comment">
+                                                {{#replies}}
+                                                    <article class="info-comment reply-list">
+                                                        <div class="outside-comment  comment-main-level">
+                                                            <div class="item-comment">
+                                                                <div class="outline-content-comment">
+                                                                    <div>
+                                                                        <strong>{{idUser.name}}</strong>
+                                                                    </div>
+                                                                    <div class="content-comment">
+                                                                        {{content}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="action-comment">
+                                                                    <span class="like-comment" data-id="{{_id}}">
+                                                                        <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                                                        <span class="total-like-comment"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                {{/replies}}
+                                            </div>
+                                            {{!-- trả lời append vào nó sẽ nằm đây --}}
+                                        </div>
+                                    </div>
+                                </article>
+                            {{/each}}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (){
+        var postIdElement = $('input[name="idPost"]').val()
+        var userIdElement = $('input[name="idUser"]').val()
+        var userNameElement = $('input[name="userName"]').val() 
+        var contentCommentElement = $('textarea[name="content"]')
+        var replyComment = $('.reply-comment')
+        // khái báo nó đây
+        let arrUrl = window.location.href.split("/");
+        let socket = io({
+            query: {
+                "manga-name": arrUrl[4],
+                "chapter": arrUrl[5]
+            },
+            path: "/socket.io/manga"
+        });
+        function FuncRepCmt(btnReply) {
+            if(btnReply.parent().parent().find(".form-reply-comment").length == 0)
+            {
+                let commentId = btnReply[0].getAttribute("data-id");
+                let html = `
+                    <form class="form-reply-comment">
+                        <input type="hidden" name="idPost" value="${postIdElement}">
+                        <input type="hidden" name="idUser" value="${userIdElement}">
+                        <div class="form-floating mt-2">
+                            <textarea class="form-control" placeholder="Leave a comment here" name="content" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Nội dung bình luận</label>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-2 float-right">submit</button>
+                    </form>
+                `
+                let elParent = btnReply.parent().append(html)
+                let formReply = elParent.find(".form-reply-comment")
+                formReply.on("submit", function(event) {
+                    event.preventDefault();
+                    var contentCommentReply = formReply.find("textarea").val()
+                    var userIdCommentReply = formReply.find('input[name="idUser"]').val()
+                    var postIdCommentReply = formReply.find('input[name="idPost"]').val()
+                    axios.post('../../post/'+ commentId +'/replyComment',{
+                        content: contentCommentReply,
+                        idUser: userIdCommentReply,
+                        idPost: postIdCommentReply
+                    })
+                    .then((res)=>{
+                        var data = res.data.replyComment
+                        let dataWS = res.data;
+                        dataWS.manga = {
+                            "manga-name": arrUrl[4],
+                            "chapter": arrUrl[5]
+                        }
+                        dataWS.commentId = commentId;
+                        socket.emit("reply_comment", dataWS)
+                        var html = `
+                            <article class="info-comment reply">
+                                    <div class="outside-comment comment-main-level" >
+                                        <div class="outline-content-comment" >
+                                            <div>
+                                                <strong> ${data.idUser.name} </strong>
+                                            </div>
+                                            <div class="content-comment">
+                                                ${data.content}
+                                            </div>
+                                        </div>
+                                        <div class="action-comment">
+                                            <span class="like-comment" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                                <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                                <span class="total-like-comment"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        `
+                        elParent.parent().find('.list-reply-comment').prepend(html)
+                        elParent.find('.form-reply-comment').remove()
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                })
+            }
+        }
+
+        document.getElementById('form-comment').addEventListener("submit",(event)=>{
+            event.preventDefault()
+            if(userIdElement == ""){
+                window.location.href = window.location.origin + "/login"
+            }
+            var contentElement = this.querySelector('textarea[name="content"]').value
+            
+            axios.post("/post/" + postIdElement + "/comment", {
+                idUser: userIdElement,
+                content: contentElement,
+            }) 
+            .then(function (res) {
+                console.log(res.data)
+                var data = res.data.comment
+                let dataWS = res.data;
+                dataWS.manga = {
+                    "manga-name": arrUrl[4],
+                    "chapter": arrUrl[5]
+                }
+                // gọi hàm để nó emit cái data á
+                socket.emit("new_comment", dataWS)
+                var html = `
+                    <article class="info-comment comment-main-level">
+                        <div class="outside-comment comment-main-level" style="margin-left: 55px;">
+                            <div>
+                                <div class="outline-content-comment" >
+                                    <div>
+                                        <strong> ${userNameElement} </strong>
+                                    </div>
+                                    <div class="content-comment">
+                                        ${data.content}
+                                    </div>
+                                </div>
+                                <div class="action-comment">
+                                    <span class="like-comment" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                        <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                        <span class="total-like-comment"></span>
+                                    </span>
+                                    <span class="reply-comment" data-user="${data.idUser}" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                        <i class="far fa-comment"></i>
+                                        Trả lời
+                                    </span>
+                                </div>
+                                <div class="list-reply-comment">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `
+                let boxParent = $('#listComments').prepend(html);
+                let newCmtAct = boxParent.find(".info-comment:first-child .action-comment");
+                let btnLike = newCmtAct.find(".like-comment");
+                let btnReply = newCmtAct.find(".reply-comment");
+                btnReply.on("click", function() {
+                    FuncRepCmt($(this));
+                });
+                contentCommentElement.val('')
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+        })
+        replyComment.on("click", function() {
+            FuncRepCmt($(this));
+        })
+        socket.on("new_comment", (data)=>{
+            console.log(data)
+            var data = data.comment
+            var html = `
+                    <article class="info-comment comment-main-level">
+                        <div class="outside-comment comment-main-level" style="margin-left: 55px;">
+                            <div>
+                                <div class="outline-content-comment" >
+                                    <div>
+                                        <strong> ${data.idUser.name} </strong>
+                                    </div>
+                                    <div class="content-comment">
+                                        ${data.content}
+                                    </div>
+                                </div>
+                                <div class="action-comment">
+                                    <span class="like-comment" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                        <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                        <span class="total-like-comment"></span>
+                                    </span>
+                                    <span class="reply-comment" data-user="${data.idUser}" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                        <i class="far fa-comment"></i>
+                                        Trả lời
+                                    </span>
+                                </div>
+                                <div class="list-reply-comment">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `
+            let boxParent = $('#listComments').prepend(html);
+            let newCmtAct = boxParent.find(".info-comment:first-child .action-comment");
+            let btnLike = newCmtAct.find(".like-comment");
+            let btnReply = newCmtAct.find(".reply-comment");
+            btnReply.on("click", function() {
+                FuncRepCmt($(this));
+            });
+            contentCommentElement.val('')
+        })
+        socket.on("reply_comment", (data)=>{
+            console.log(data)
+            // biến dùng trong hàm thì dùng let, đừng dùng var
+            let html = `
+                        <article class="info-comment reply">
+                                <div class="outside-comment comment-main-level" >
+                                    <div class="outline-content-comment" >
+                                        <div>
+                                            <strong> ${data.replyComment.idUser.name} </strong>
+                                        </div>
+                                        <div class="content-comment">
+                                            ${data.replyComment.content}
+                                        </div>
+                                    </div>
+                                    <div class="action-comment">
+                                        <span class="like-comment" data-id="${data.replyComment.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                            <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                            <span class="total-like-comment"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    `
+            $('.info-comment.comment-main-level').each((index, cmt) => {
+                if ($(cmt).find('.reply-comment').attr('data-id') == data.commentId) {
+                    $(cmt).find('.list-reply-comment').prepend(html)
+                }
+            })
+        })
+    })
+    
+</script>

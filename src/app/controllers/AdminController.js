@@ -1,7 +1,7 @@
 const Manga = require('../models/Manga')
-const DetailManga = require('../models/DetailManga')
+const detailmanga_model = require('../models/DetailManga')
 const ImageDetail = require('../models/ImageDetail')
-const Category = require('../models/CategoryManga')
+const categoies_model = require('../models/CategoryManga')
 const rental_model = require('../models/MangaRental')
 const User_Model = require('../models/User')
 const Cart_Model = require('../models/Cart')
@@ -9,7 +9,8 @@ const DetailsCart_Model = require('../models/DetailCart')
 const post_model = require('../models/post')
 const comment_model = require('../models/comment')
 const book_model = require('../models/book')
-
+const follow_model = require('../models/FollowManga')
+const notifies_model = require('../models/Notifies')
 const multer = require('multer')
 const path = require('path')
 
@@ -21,15 +22,15 @@ const { listeners } = require('../models/Manga')
 
 
 const handleErrors = (err) => {
-    let errors = { tenloai: '', tapso: ''}
+    let errors = { category: ''}
     // duplicate error code-point
     if( err.code === 11000){
-        errors.tenloai = 'Thể loại này đã tồn tại'
+        errors.category = 'Thể loại này đã tồn tại'
         return errors
     }
     console.log(err.message)
     // validation erros
-    if(err.message.includes('categorys validation failed')){
+    if(err.message.includes('categories validation failed')){
         Object.values(err.errors).forEach(({properties}) =>{
             errors[properties.path] = properties.message
         })
@@ -42,8 +43,9 @@ class AdminController{
     // [GET] /manga
     // Hiển thị tất cả manga trong db
     async manga(req, res, next){
-        // console.log('User: ',req.user)
-        const mangas = await Manga.find({}).populate('category')
+        const mangas = await Manga.find({})
+        .populate('categories')
+        .populate('idDetailManga')
             .then((mangas) => {
                 res.render('admins/mangas/mangaList', {
                     mangas: multipleMongooseToOject(mangas),
@@ -54,7 +56,7 @@ class AdminController{
     }
     //[GET] /manga/add
     formMangaCreate(req, res, next){
-        Category.find({})
+        categoies_model.find({})
             .then(categories => {
                 res.render('admins/mangas/mangaCreate', 
                     { categories:  multipleMongooseToOject(categories),
@@ -69,16 +71,15 @@ class AdminController{
     //[POST] /manga/add
     async mangaCreate(req, res, next){
         const data =  req.body
-        console.log(data)
         const mangaNew =  new Manga({
             nameManga: data.nameManga,
             otherName: data.nameManga2,
-            category: data.category,
+            categories: data.category,
             image: req.file.filename,
         })
         await mangaNew.save()
         
-        const detailManga = new DetailManga({
+        const detailManga = new detailmanga_model({
             idManga: mangaNew._id,
             nameManga: mangaNew.nameManga,
             description: data.description,
@@ -98,8 +99,8 @@ class AdminController{
     //[GET] /manga/edit
     formMangaEdit(req, res, next){
         Promise.all([
-            Manga.findOne({slug: req.params.slug}).populate('category'), 
-            Category.find({}),
+            Manga.findOne({slug: req.params.slug}).populate('categories'), 
+            categoies_model.find({}),
         ])
         .then(([mangas, categories]) => {
                 res.render('admins/mangas/mangaEdit', { 
@@ -110,18 +111,18 @@ class AdminController{
             })
         .catch(next)
     }   
-    
-
     //form edit manga
     //[POST] /manga/edit
     async mangaEdit(req, res, next){
-
         if(req.file == null)
         {
             Manga.updateOne({ slug: req.params.slug }, {
                 nameManga: req.body.nameManga,
                 status: req.body.tinhtrang,
-                category: req.body.category,
+                categories: req.body.category,
+            })
+            detailmanga_model.updateOne({slug: req.params.slug},{
+                status: req.body.tinhtrang,
             })
             .then(() => res.json({
                 message: "Sửa thành công"
@@ -131,9 +132,11 @@ class AdminController{
         else{
             Manga.updateOne({ slug: req.params.slug }, {
                 nameManga: req.body.nameManga,
-                status: req.body.tinhtrang,
-                category: req.body.category,
+                categories: req.body.category,
                 image: req.file.filename,
+            })
+            detailmanga_model.updateOne({slug: req.params.slug},{
+                status: req.body.tinhtrang,
             })
             .then(() => res.json({
                 message: "Sửa thành công"
@@ -147,25 +150,19 @@ class AdminController{
     //Thông tin chi tiết của 1 manga
     infoManga(req, res, next){
         const sort = { createAt: -1}
-            
         Promise.all([
-            Manga.findOne({ slug: req.params.slug }).populate('category'),
-            DetailManga.findOne({ slug: req.params.slug }),
+            Manga.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
+            detailmanga_model.findOne({ slug: req.params.slug }),
             ImageDetail.find({ slug: req.params.slug}).sort(sort)
         ])
             .then(([manga, detail, chapters]) => {
-                if(manga == null){
-                    return res.render('null')                   
-                }
-                else{
-                    res.render('admins/mangas/mangaDetail', {
-                        manga: mongooseToOject(manga),
-                        detail: mongooseToOject(detail),
-                        chapters: multipleMongooseToOject(chapters),
-                        layout: 'admin.hbs'
-                    })
-                }
-                
+                // res.json(manga)
+                res.render('admins/mangas/mangaDetail', {
+                    manga: mongooseToOject(manga),
+                    detail: mongooseToOject(detail),
+                    chapters: multipleMongooseToOject(chapters),
+                    layout: 'admin.hbs'
+                })
             })
             .catch(next)
     }
@@ -175,7 +172,7 @@ class AdminController{
     // [GET]/manga/:tentruyen/:chapter
     readChap(req, res, next){
         Promise.all([
-            DetailManga.findOne({tentruyen: req.params.tentruyen}),
+            detailmanga_model.findOne({tentruyen: req.params.tentruyen}),
                 //.populate('ImgDetail'), 
                 ImageDetail.find({chapter: req.params.chapter})
         ])            
@@ -205,19 +202,25 @@ class AdminController{
     //Mở form thêm chap mới vào truyện
     //[GET] /manga/:tentruyen/addChap
     async createChapterManga(req,res,next){
-        const manga = await Manga.findOne({ slug: req.params.slug })
-        .then(manga => {
+        Promise.all([
+            Manga.findOne({ slug: req.params.slug }),
+            ImageDetail.findOne({ slug: req.params.slug }).sort({chapter:-1})  
+        ])
+
+        .then(([manga, chapter]) => {
+            // res.json(chapter)
             res.render('admins/mangas/mangaCreateChapter', 
             {
-                manga: mongooseToOject(manga), 
+                manga: mongooseToOject(manga),
+                chapter: mongooseToOject(chapter),
                 layout: 'admin.hbs'
             })
         })
         .catch(next)
     }
-    
     //Thêm chap mới vào truyện
     //[POST] /manga/:tentruyen/addChap
+    //
     async createChapter(req, res, next){
         const files = req.files
         if(files.length < 1){
@@ -232,44 +235,62 @@ class AdminController{
                     filePath: element.path.split('\\').slice(2).join('\\'),
                 }
                 filesArr.push(file)
-            });
-            const detailExist = await DetailManga.findOne({
-                slug: req.params.slug
             })
-            .then((detailExist)=>{
-                const checkChapter = ImageDetail.findOne({
-                    slug: req.params.slug,
-                    chapter: req.body.chapter
+            var chapterExist = false
+            const detailManga = await detailmanga_model.findOne({
+                slug: req.params.slug
+            }).populate("imgDetails")
+            .then( async (detailManga)=>{
+                detailManga.imgDetails.forEach((el)=>{
+                    if(el.chapter == req.body.chapter){
+                        chapterExist = true
+                    }
                 })
-                if(checkChapter != null){
-                    const checkNew = detailExist.imgDetails.length
+                if(chapterExist == false){
+                    const checkNew = detailManga.imgDetails.length
                     if(checkNew > 0){
-                        ImageDetail.findOne(
-                            {  new: true },
-                            function(err, result){
-                                if(err){
-                                    console.log(err)
-                                }else{
-                                    if(!result){
-                                        res.status(400).send()
-                                    }else{
-                                        result.new = "false"
-                                        result.save()
-                                    }
-                                }
-                            }
-                        )
+                        ImageDetail.findOne({
+                            slug: req.params.slug,
+                            new: true 
+                        },
+                        function(err, result){
+                            result.new = "false"
+                            result.save()
+                        })
                     }
                     const imgChapManga =  new ImageDetail({
                         imgManga: filesArr,
                         chapter: req.body.chapter,
-                        idDetail: detailExist._id,
-                        nameManga: detailExist.nameManga
+                        idDetail: detailManga._id,
+                        nameManga: detailManga.nameManga
                     })
                     imgChapManga.save()
-                    detailExist.imgDetails.push(imgChapManga)
-                    detailExist.save()
-                    .then(() => res.json({message: "Thêm chương thành công"}))
+                    detailManga.imgDetails.push(imgChapManga)
+                    await detailManga.save()
+                    const usersFollow = await follow_model.find({idManga: {$in: detailManga.idManga}})
+                    var listUserId = []
+                    usersFollow.forEach((el)=>{
+                        listUserId.push(el.idUser)
+                    })
+                    const newNotification =  new notifies_model({
+                        idChapter: imgChapManga._id,
+                        idManga: detailManga.idManga,
+                        idUser: listUserId
+                    })
+                    await newNotification.save()
+                    const notification = notifies_model.findById(newNotification._id)
+                    .populate({
+                        path:"idChapter"
+                    })
+                    .populate({
+                        path:"idManga"
+                    })
+                    .then((notification) => {
+                        res.json({
+                            message: "Thêm chương thành công",
+                            notification: mongooseToOject(notification),
+                        })
+                    })
                     .catch(err =>{
                         res.json(err)
                     })
@@ -279,9 +300,9 @@ class AdminController{
             })
         }
     }
-    //search with tentruyen or tenkhac
+   //---------------------------Search----------------------------------------//
     async searchManga(req, res, next){
-    const mangas = await Manga.find({}).populate('category')
+    const mangas = await Manga.find({})
         .then((mangas) => {
             res.json({
                 mangas: multipleMongooseToOject(mangas),
@@ -289,12 +310,16 @@ class AdminController{
         })
         .catch(next)    
     }
-    
-
+    async searchMangaRental(req, res, next){
+        const rentals = await rental_model.find({})
+            .then((rentals) => {
+                res.json({
+                    rentals: multipleMongooseToOject(rentals),
+                })
+            })
+            .catch(next)    
+        }
     //---------------------------RENTALS----------------------------------------//
-    
-
-    
 
     newRentals(req, res, next){
         Cart_Model.find({status: 'Chưa xác thực'})
@@ -444,14 +469,16 @@ class AdminController{
         })
         .catch(next)
     }
-
-   
-
     detailRentals(req, res, next){
         const detailCart = DetailsCart_Model.findOne({idCart: req.params.id})
-        .populate('listRentalBooks.items.bookId')
+        .populate({
+            path: 'listRentalBooks.items.bookId',
+        })
+        .populate({
+            path: 'idCart',
+        })
         .then((detailCart) => {
-            //res.json(detailCart)
+            // res.json(detailCart)
             res.render('admins/carts/cart-detail', {
                 detailCart: mongooseToOject(detailCart),
                 layout:'admin'
@@ -462,7 +489,6 @@ class AdminController{
     pagnination(req,res, next){
         let perPage = 16; // số lượng sản phẩm xuất hiện trên 1 page
         let page = req.params.page || 1; 
-  
         DetailsCart_Model
         .find() // find tất cả các data
         .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
@@ -478,7 +504,13 @@ class AdminController{
             });
         });
     }
-
+    async xemChiTiet(req, res, next){
+        const detail = await DetailsCart_Model.findOne({_id: req.params.id})
+        .then((detail)=>{
+            res.render("admins/carts/xemChiTiet")
+        })
+        .catch(err => res.json(err))
+    }
     
 
     //---------------------------------------------------------------------------//
@@ -494,8 +526,10 @@ class AdminController{
     }
     async listMangaRentals(req, res, next){
         Promise.all([
-            Manga.findOne({ slug: req.params.slug }).populate('category'),
-            DetailManga.findOne({ slug: req.params.slug }),
+            Manga.findOne({ slug: req.params.slug })
+            .populate('categories')
+            .populate('idDetailManga'),
+            detailmanga_model.findOne({ slug: req.params.slug }),
             book_model.find({ slug: req.params.slug}),
         ])
         .then(([manga, detail, list])=>{
@@ -622,28 +656,27 @@ class AdminController{
             })
         }
     }
-    
     //---------------------------------------------------------------------------//
     //Categorys
     //[GET] /admin/categorys
-    categorys(req, res, next){
-        Promise.all([   Category.find({}).sorttable(req), 
-                        Category.countDocumentsDeleted(),
+    categories(req, res, next){
+        Promise.all([   categoies_model.find({}).sorttable(req), 
+                        categoies_model.countDocumentsDeleted(),
                     ])
-            .then(([categorys, deleteCount]) =>{
-                res.render('admins/categorys/categoryList',{
+            .then(([categories, deleteCount]) =>{
+                res.render('admins/categories/categoryList',{
                     deleteCount,
-                    categorys: multipleMongooseToOject(categorys),
+                    categories: multipleMongooseToOject(categories),
                     layout: 'admin'
                 })
             }) 
             .catch(next)
     }
     categoryTrash(req, res, next){
-        Category.findDeleted({})
-            .then(categorys =>{
-                res.render('admins/categorys/categoryTrash',{
-                    categorys: multipleMongooseToOject(categorys),
+        categoies_model.findDeleted({})
+            .then(categories =>{
+                res.render('admins/categories/categoryTrash',{
+                    categories: multipleMongooseToOject(categories),
                     layout: 'admin'
                 })
             })
@@ -651,15 +684,15 @@ class AdminController{
     }
     //[GET]  /admin/categorys/formCategoryCreate
     formCategoryCreate(req, res, next){
-        res.render('admins/categorys/categoryCreate',{
+        res.render('admins/categories/categoryCreate',{
             layout: 'admin.hbs'
         })
     }
     //[POST]
     categoryCreate(req, res, next){
         const data = req.body
-        const category = new Category(data)
-        category.save()
+        const categories = new categoies_model(data)
+        categories.save()
         .then(()=> res.status(200).json({message: "Thêm thành công"}))
         .catch((err) =>{
             const errors = handleErrors(err)
@@ -669,11 +702,11 @@ class AdminController{
     }
     //[GET] /categorys/:id/categoryEdit
     async categoryEdit(req, res, next){
-        const theloai = await Category.findById(req.params.id)
-            .then((theloai)=>{
-                console.log(theloai)
-                res.render('admins/categorys/categoryEdit',{
-                    theloai: mongooseToOject(theloai),
+        const category = await categoies_model.findById(req.params.id)
+            .then((category)=>{
+                console.log(category)
+                res.render('admins/categories/categoryEdit',{
+                    category: mongooseToOject(category),
                     layout: 'admin'
                 })
             })
@@ -682,21 +715,21 @@ class AdminController{
     //[PUT] /categorys/:id
     async categoryUpdate(req, res, next){
         const formdata = req.body
-        await Category.updateOne({ _id: req.params.id }, formdata)
-            .then(() => res.redirect('../categorys'))
+        await categoies_model.updateOne({ _id: req.params.id }, formdata)
+            .then(() => res.redirect('../categories'))
             .catch(next)
     }
     //[DELETE] /categorys/:id
     categoryDelete(req, res, next){
-        Category.delete({ _id: req.params.id})
+        categoies_model.delete({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
     }
     //[GET] /categorys/categoryTrash
     categoryTrash(req, res, next){
-        Category.findDeleted({})
+        categoies_model.findDeleted({})
             .then(theloais =>{
-                res.render('admins/categorys/categoryTrash',{
+                res.render('admins/categories/categoryTrash',{
                     theloais: multipleMongooseToOject(theloais),
                     layout: 'admin'
                 })
@@ -705,20 +738,20 @@ class AdminController{
     }
     //[PATCH] /categorys/:id
     categoryRestore(req, res, next){
-        Category.restore({ _id: req.params.id})
+        categoies_model.restore({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
     }
 
     //[DELETE] /categorys/:id/categoryForceDelete
     categoryForceDelete(req, res, next){
-        Category.deleteOne({ _id: req.params.id})
+        categoies_model.deleteOne({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
     }
     //[PATCH] /categorys/:id/categoryRestore
     categoryRestore(req, res, next){
-        Category.restore({ _id: req.params.id})
+        categoies_model.restore({ _id: req.params.id})
             .then(() => res.redirect('back'))
             .catch(next)
     }
@@ -726,17 +759,17 @@ class AdminController{
     handleFormActions(req, res, next){
         switch(req.body.action){
             case 'delete':
-                Category.delete({ _id: {$in: req.body.categoryIds }})
+                categoies_model.delete({ _id: {$in: req.body.categoryIds }})
                     .then(() => res.redirect('back'))
                     .catch(next)
                 break;
             case 'restore':
-                Category.restore({ _id: {$in: req.body.categoryIds }})
+                categoies_model.restore({ _id: {$in: req.body.categoryIds }})
                     .then(() => res.redirect('back'))
                     .catch(next)
                     break
             case 'deleteForce':
-                Category.deleteMany({ _id: {$in: req.body.categoryIds }})   
+                categoies_model.deleteMany({ _id: {$in: req.body.categoryIds }})   
                     .then(() => res.redirect('back'))
                     .catch(next)
                     break
@@ -757,24 +790,19 @@ class AdminController{
         .catch(next)
     }
     async searchUsers(req, res, next){
-        const value = req.query.user
-        await User_Model.findOne({
-            phone: {$regex: new RegExp(value)}
-        }
-        )
-        .then((user) => res.render('admins/users/search-user', {
-            user: mongooseToOject(user),
-            layout: 'admin.hbs'
-        }))
+        const users = await User_Model.find({})
+        .then((users) => {
+            res.json({users: multipleMongooseToOject(users)})
+        })
         .catch(next)
     }
-    //Posts
+    //--------------Posts--------------------//
     async listPosts(req, res, next){
         try{
             const sort = { createdAt: -1}
             const posts = post_model.find({}).sort(sort)
             .then((posts) =>{
-                res.render("posts/listPosts",{
+                res.render("admins/posts/listPosts",{
                     posts: multipleMongooseToOject(posts),
                     layout: 'admin'
                 })
@@ -786,35 +814,59 @@ class AdminController{
         }
     }
     formPostsPost(req, res, next){
-        res.render('posts/formPost',{layout: 'admin'})
+        const mangas = Manga.find({posted: false})
+        .then((mangas)=>{
+            res.render('admins/posts/formPost',{
+                mangas: multipleMongooseToOject(mangas),
+                layout: 'admin'
+            })
+        })
+        .catch((err)=>{
+            res.status(400).json(err)
+        })
     }
     async postsPost(req, res, next){
-        try{
+        const manga = Manga.findOne({nameManga: req.body.nameManga})
+        .then(async (manga)=>{
             const post = new post_model({
                 title: req.body.title,
                 content: req.body.content,
-                imgPost: req.file.filename
+                imgPost: req.file.filename,
             })
             await post.save()
             .then((post) =>{
-                res.status(200).send({ 
-                    message: "Đăng bài thành công",
-                    post: mongooseToOject(post),
-                    layout: 'admin'
+                const postNew = post_model.updateOne({_id: post._id},{
+                    idManga: manga._id
+                })
+                Manga.updateOne({_id: manga._id},{
+                    posted: true,
+                })
+                detailmanga_model.updateOne({idManga: manga._id},{
+                    idPost: post._id
+                })
+                .then((postNew)=>{
+                    res.status(200).json({
+                        message: "Đăng bài thành công",
+                        post: postNew
+                    })
                 })
             })
-        }catch(error){
-            res.status(500).json({err: error})
-        }
+            .catch((err) => {
+                res.json(err)
+            })
+        })
+        .catch((err)=>{
+            res.json(err)
+        })
     }
     async postsGetById(req, res, next){
         try{
-            const post =  await post_model.findById({ _id: req.params.postId }).populate({
+            const post =  await post_model.findById({ _id: req.params.idPost }).populate({
                 path: "comments",
                 options: { sort: { createdAt: -1 } }
             })
             .then((post)=>{
-                res.render('posts/comments',{ 
+                res.render('admins/posts/comments',{ 
                     post: mongooseToOject(post),
                     layout: 'admin'
                 })
@@ -827,7 +879,7 @@ class AdminController{
     async postsUpdate(req, res, next){
         try{
             const post = await post_model.findByIdAndUpdate({
-                _id: req.params.postId
+                _id: req.params.idPost
             }, req.body,{
                 new: true,
                 runValidators: true,
@@ -840,7 +892,7 @@ class AdminController{
     async postsDelete(req, res, next){
         try{
             const post = await post_model.findByIdAndRemove({
-                _id: req.params.postId
+                _id: req.params.idPost
             })
             res.json(post)
         }
@@ -850,10 +902,10 @@ class AdminController{
     }
     async postsComment(req, res, next){
         try{
-            const post = await post_model.findById(req.params.postId)
+            const post = await post_model.findById(req.params.idPost)
             // create a comment
             const comment = new comment_model({
-                postId: post._id,
+                idPost: post._id,
                 content: req.body.content,
                 userId: req.body.userId,
             })

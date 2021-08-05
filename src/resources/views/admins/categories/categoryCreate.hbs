@@ -1,0 +1,52 @@
+<div class="container">
+    <h1>Thể loại</h1>
+    <div class="row">
+        <div class="col-sm-8 offset-2">
+            <form method="POST" id="categoryCreate">
+                <div class="form-group">
+                    <label for="theloai">Tên thể loại</label>
+                    <input type="text" class="form-control" name="nameCategory" value="">
+                    <div class="category error" style="color:red" value=""></div>
+                </div>
+                
+                <div class="mt-2 mb-2 float-right">
+                    <button type="submit" class="btn btn-outline-success">Tạo thể loại</button>
+                    <a href="/admin/categories" class="btn btn-outline-primary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var form = document.forms["categoryCreate"]
+        var categoryErr = $('.category.error')
+        form.addEventListener("submit", async (e)=>{
+            e.preventDefault()
+            //reset error
+            categoryErr.text('')
+            const nameCategory = form.nameCategory.value
+            axios.post("../categories/categoryCreate",{
+                nameCategory: nameCategory,
+            })
+            .then(function (res){
+                console.log(res.data)
+                alert(res.data.message)
+            })
+            .catch(function (err){
+                if(err.response){
+                    console.log(err.response.data)
+                    const data = err.response.data.errors
+                    if(data.nameCategory == "Vui lòng nhập tên thể loại")
+                    {
+                        const tenloaiErr = data.nameCategory 
+                        categoryErr.text(tenloaiErr)
+                    }else if(data.category == "Thể loại này đã tồn tại"){
+                        const tenloaiErr = data.category 
+                        categoryErr.text(tenloaiErr)
+                    }
+                }
+            })
+        })
+    })
+</script>

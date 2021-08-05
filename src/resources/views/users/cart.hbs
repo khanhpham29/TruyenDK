@@ -22,15 +22,15 @@
                             <th name="rentCost" class="rentCost">{{this.bookId.rentCost}}</th>
                             <th name="cost" class="cost">{{this.bookId.cost}}</th>
                             <th name="amount" class="amount">
-                               <button class="amountPlus" style="border: none;" data-id="{{this.bookId._id}}">
-                                   <i class="fas fa-plus"></i>
-                               </button>
+                                <button class="amountPlus" style="border: none;" data-id="{{this.bookId._id}}">
+                                    <i class="fas fa-plus"></i>
+                                </button>
 
-                               <span class="valueAmount">{{this.amount}}</span>
+                                <span class="valueAmount">{{this.amount}}</span>
                                 
                                 <button class="amountMinus" style="border: none" data-id="{{this.bookId._id}}"> 
-                                   <i class="fa fa-minus" aria-hidden="true"></i>
-                               </button> 
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </button> 
                             </th>
                             <th name="amountBook" class="amountBook" hidden>{{this.bookId.amount}}</th>
 
@@ -71,7 +71,6 @@
         var tongtienEl = document.querySelector('.tong-tien')
         var amountPlus = document.querySelectorAll('.amountPlus')
         var amountMinus = document.querySelectorAll('.amountMinus')
-        console.log(amountMinus)
         var valueAmount = document.getElementsByClassName('valueAmount')
         var elTable = document.getElementById('table')
 
@@ -106,19 +105,19 @@
 
         amountMinus.forEach((minus, i) => {
             minus.onclick = function(){              
-                tongtienEl.innerText = ''
                 var value = valueAmount[i].innerText//lấy giá trị hiển tại
                 var amountMinus = parseInt(value) -1//trừ 1
                 var flag = 1
-               if(amountMinus < 1){
-                   alert('Không thể giảm!!!')
-                   flag = 0
-               }
-               else{
-                   valueAmount[i].innerText = amountMinus
-               } 
+                if(amountMinus < 1){
+                    alert('Không thể giảm!!!')
+                    flag = 0
+                }
+                else{
+                    valueAmount[i].innerText = amountMinus
+                } 
                 var idItem = this.getAttribute("data-id")
                 if(flag == 1){
+                    tongtienEl.innerText = ''
                     axios.post('/cart/minus/' + idItem)
                     .then((res)=>{
                         const totalPrice = res.data.totalPrice
@@ -152,6 +151,7 @@
                     console.log(err)
                 })
             }
+            
         })
         form.addEventListener("submit", async function(e){
             e.preventDefault()
@@ -168,10 +168,11 @@
                 var amount = valueAmount[i].innerText
                 var amountBook = row.querySelector('.amountBook').innerText
                 
-                console.log(amountBook)
-                console.log(amount)
-                if(amountBook < amount){
-                    alert('Số lượng không đủ!!')
+                console.log("sl truyện cho thuê", amountBook)
+                console.log("sl truyện thuê",amount)
+                console.log('kho', amountBook ,' < ' , amount)
+                if(parseInt(amountBook) < parseInt(amount)){    
+                    console.log(amountBook ,' < ' , amount)
                     flag = 0
                 }
                 else{
@@ -184,6 +185,9 @@
                 })
                 }  
             })
+            if(flag == 0){
+                alert('Số lượng ko đủ!')
+            }
             if(flag == 1){
                 axios.post('/rentals',{
                 items: items,
@@ -192,7 +196,11 @@
             })
                 .then(async (res)=>{
                     console.log(res.data)
-                    var success  = await res.data.message
+                    var success  = await res.data.messge
+                    alert(success)
+                    if(success == 'Tạo đơn hàng thành công'){
+                        location.assign('/')
+                    }
                 })
                 .catch((err)=>{
                     console.log(err)

@@ -7,9 +7,16 @@
             <h4 class="card-title mb-0">Danh sách người dùng</h4>
         </div>
         <div class="top mb-4">
-            <form action="/admin/users/search" class="form-horizontal" >
-                <input type="text" class="search-input " id="search" name="member" placeholder="Nhập số điện thoại 10 số">
-                <button class="search-submit btn btn-success"  type="submit">Tìm</button>
+            <form action="">
+                <div class="wrapper">
+                    <div class="search-input"> 
+                        <input  placeholder="Nhập số điện thoại..."  type="text" id="search" autocomplete="off">      
+                    </div>
+                    <div class="search-result">
+                        <ul id="match-list" class="autocom-box">
+                        </ul>
+                    </div>
+                </div>
             </form>
         </div>
         <div class="userlist">
@@ -41,3 +48,43 @@
     </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var searchWrapper = document.querySelector('.search-input')
+        var search = document.getElementById('search')
+        var matchList = document.getElementById('match-list')
+        var searchPhones =  searchText =>{
+            if(searchText.length === 0){
+                matches = [];
+                searchWrapper.classList.remove("active")
+                matchList.innerHTML = ''
+                return false;
+            }
+            axios.get("/admin/users/search")
+            .then((res)=>{
+                const users = res.data.users
+                let matches = users.filter(user =>{
+                    const regex = new RegExp(`${searchText}`, 'giu')
+                    return user.phone.replace(/\s/gis, "").match(regex) 
+                })
+                if(matches.length === 0){
+                    searchWrapper.classList.remove("active")
+                    matchList.innerHTML = ''
+                }
+
+                outputHtml(matches)
+            })
+        }
+        const outputHtml = matches =>{
+            if(matches.length >0){
+                const html = matches.map(match =>`
+                    <a href="#" target="_blank"><li>${match.name}</li></a>
+                `)
+                .join('');
+                searchWrapper.classList.add("active")
+                matchList.innerHTML = html
+            }
+        }
+        search.addEventListener('input', ()=> searchPhones(search.value.replace(/\s/gis, "").toLowerCase()))
+    })
+</script>

@@ -1,0 +1,34 @@
+<div class="container mt-4">
+    <div class="latest">
+        <div class="caption">
+            <a href="#">
+                <span><i class="fas fa-star"></i></span>
+                "Danh sách truyện theo dõi"
+            </a>
+        </div>
+        <ul class="list-manga grid-6">
+        {{#if listFollow}}
+            {{#with listFollow}}
+                {{#idManga}}
+                    <li>
+                        <div class="manga-item">
+                            <a href="/manga/{{slug}}"> <img class="manga-cover " src="/img/{{image}}" alt="#"> </a>
+                            <h3 class="title-book">
+                                <a href="/manga/{{slug}}">{{nameManga}}</a>
+                            </h3>
+                            <div class="chapter-book">
+                                {{#idDetailManga.imgDetails}}
+                                    <a href="/manga/{{slug}}/{{chapter}}">Chương {{this.chapter}}</a>
+                                {{/idDetailManga.imgDetails}}
+                            </div>
+                            <div class="more-info"></div>
+                        </div>
+                    </li>
+                {{/idManga}}
+            {{/with}}
+        {{else}}
+            <h1>Không tìm thấy kết quả</h1>
+        {{/if}}
+        </ul>
+    </div>
+</div>

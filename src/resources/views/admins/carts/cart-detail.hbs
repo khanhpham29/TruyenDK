@@ -1,5 +1,5 @@
 <div class="container">
-    <a href="/admin/rentals/list" class="btn btn-info">Quay lại</a>
+    <a href="../" class="btn btn-info">Quay lại</a>
     <form name="form-pay" >
         <table class="table">
             <thead>
@@ -9,6 +9,8 @@
                 <th>Giá thuê/lần</th>
                 <th>Giá truyện/cuốn</th>
             </thead>
+            <tbody>
+            </tbody>
                 <tbody>
                     {{#each detailCart.listRentalBooks.items}}
                     <tr class="row-data">
@@ -20,9 +22,10 @@
                         <td class="amountPaid" hidden>{{this.amountPaid}}</td> 
                     </tr>         
                     {{/each}}
-            </tbody>
+                </tbody>
         </table>
     </form>
+    <div>Trạng thái {{detailCart.idCart.status}}</div>
     <div>Ngày thuê: {{dateFormat detailCart.createAt}}</div>
     <div>Số quyển truyện: {{detailCart.totalItem}}</div>
     <div>Tổng tiền: {{detailCart.totalPrice}}</div>

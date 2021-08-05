@@ -14,21 +14,21 @@ const mangaSchema = new Schema({
 		type:Schema.Types.ObjectId,
 		ref:'detail'
 	},
+	posted:{
+		type: Boolean,
+		default:false,
+	},
 	otherName:{
 		type: String, 
 		default:''
 	},
-	category:[{ 
+	categories:[{ 
 		type: Schema.Types.ObjectId,
-		ref: 'categorys',
+		ref: 'categories',
 	}],
 	image:{ 
 		type: String,
 		required: [true, "Vui lòng chọn hình"]
-	},
-	status:{ 
-		type: String,
-		default: 'Đang tiến hành'
 	},
 	slug:{ type: String, slug: 'nameManga', unique: true},
 },{

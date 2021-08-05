@@ -21,7 +21,7 @@
                     <th class="reason-reject" >{{this.reason}}</th>
                     <th>{{this.totalPrice}}</th>
                     <th class="detail">
-                        <a href="/admin/rentals/{{this._id}}/detail" class="btn btn-info  btn-detail" data-id="{{this._id}}">Chi tiết</a>
+                        <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info  btn-detail" data-id="{{this._id}}">Chi tiết</a>
                     </th>
                 </tr>
             {{/each}}
@@ -31,51 +31,3 @@
     </div>
 </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded",function(){
-        var status = document.querySelectorAll('.id-status')
-        var co = 1;
-        
-
-
-        status.forEach((btn, i)=>{
-            btn.onclick = function (){
-                var idItem = this.getAttribute("data-id")
-                var value = document.getElementById(idItem)
-                var co = 1;
-                if(value.innerText == 'Chưa xác thực'){
-                    var varConfirm = confirm('Bạn đã xác nhận yêu cầu?')
-                    if(varConfirm){
-                        value.innerText = 'Đã xác nhận'
-                    }                        
-                }
-                else if(value.innerText == 'Đã xác nhận'){
-                    var varConfirm = confirm('Khách hàng đã đến nhận truyện?')
-                    if(varConfirm){
-                        value.innerText = 'Đã nhận'
-                    }
-                }
-                else if(value.innerText == 'Đã nhận'){
-                    co = 0;
-                }
-                console.log("co: ", co)
-                const valueData = value.innerText
-                if(co == 1){
-                    axios.post('/admin/rentals/' + idItem,{
-                        statusRental: valueData,
-                    })
-                    .then((res)=>{      
-                        const statusRental = res.data
-                        console.log(statusRental)
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                    })
-                }
-                                              
-            }    
-        })
-
-    })
-</script>

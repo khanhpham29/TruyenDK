@@ -70,12 +70,13 @@ userSchema.pre('save', async function (next){
     const salt = await bcrypt.genSalt()
     this.password  = await bcrypt.hash(this.password, salt)
     next()
-
 })
+
+
 // phương thức tĩnh để đăng nhập người dùng
 userSchema.statics.login = async function(email, password){
     const user = await this.findOne({ email })
-    if (user){
+    if(user){
         const auth = await bcrypt.compare(password, user.password)
         if(auth){
             return user
@@ -84,6 +85,24 @@ userSchema.statics.login = async function(email, password){
     }
     throw Error('Sai tài khoản hoặc mật khẩu')
 }
+
+userSchema.methods.changePassword = async function(email, password,passwordNew, passwordNewAgain){
+
+    const auth = await bcrypt.compare(password, this.password)
+    if(auth){
+        console.log('giống')
+        if(passwordNew == passwordNewAgain){
+            console.log('đổi pass thành công')
+        }
+        else{
+            throw Error('mật khẩu ko giống')
+        }
+    }
+    else{
+        throw Error('Sai tài khoản hoặc mật khẩu')
+    }
+}
+
 userSchema.methods.addToCart = async function (bookId){
     const book = await book_model.findById(bookId)
     if (book) {
@@ -139,7 +158,7 @@ userSchema.methods.amountPlus = async function (bookId){
         }
         if(!cart.totalPrice){
             cart.totalPrice = 0
-        }
+        } 
         cart.totalPrice += book.rentCost + book.cost
         cart.totalItem += 1
         // console.log('User in schema ', this.cart)   
