@@ -1,4 +1,21 @@
 <div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <b>Ngày thuê: </b><span id="dateRental">{{dateFormat cart.idDetailCart.createAt format="MM/DD/YYYY"}}</span>
+        </div>
+        <div class="col-sm-4"><b>Ngày trả:</b><span id="date"></span></div>
+        <div class="col-sm-4"><b>Số ngày trễ: </b><span id="dateDelay"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"> <b>Tiền thuê: </b><span id="totalRentCost"></span></div>
+        <div class="col-sm-4"> <b> Tiền cọc:</b> <span id="totalCost"></span></div>
+        <div class="col-sm-4"> <b>Tổng tiền đã nhận: </b> <span id="totalPrice">{{cart.totalPrice}}</span></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"><b>Số tiền phạt: </b><span id="fine"></span>đ</div>
+        <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
+        <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
+    </div>
     <form name="form-pay" >
         <table class="table">
             <thead>
@@ -42,23 +59,7 @@
         <button type="submit" class="btn btn-success btn-submit" id="btn-submit">xác nhận</button>
     </form>
 
-    <div class="row">
-        <div class="col-sm-4">
-            Ngày thuê: <span id="dateRental">{{dateFormat cart.idDetailCart.createAt format="MM/DD/YYYY"}}</span>
-        </div>
-        <div class="col-sm-4">Ngày trả:<span id="date"></span></div>
-        <div class="col-sm-4">Số ngày trễ: <span id="dateDelay"></span></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">Tiền thuê: <span id="totalRentCost"></span></div>
-        <div class="col-sm-4">Tiền cọc: <span id="totalCost"></span></div>
-        <div class="col-sm-4">Tổng tiền đã nhận: <span id="totalPrice">{{cart.totalPrice}}</span></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">Số tiền phạt: <span id="fine"></span>đ</div>
-        <div class="col-sm-4">Số tiền trả lại: <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
-        <div class="col-sm-4">Số ngày thuê: <span id="numberRental">{{cart.idDetailCart.numberRental}}</span></div>
-    </div>
+    
 </div>
 
 <script>

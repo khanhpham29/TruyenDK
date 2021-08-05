@@ -123,7 +123,7 @@ class UsersController{
             let cartUser = req.user.cart.items
             const items = req.body.items
             const detailCart = new DetailsCart_Model({
-                numberRental: req.body.numberRental,
+                //numberRental: req.body.numberRental,
                 idCart: cart._id,
                 totalItem: req.user.cart.totalItem,
                 totalPrice: req.user.cart.totalPrice,
@@ -181,6 +181,46 @@ class UsersController{
                 res.json(cart)
             })
             .catch( err => console.error(err))
+    }
+
+    decreaseProductCarts(req, res, next){
+        req.user.amountMinus(req.params.id)
+            .then((user) =>{
+                const cart = user.cart
+                res.json(cart)
+            })
+            .catch( err => console.error(err))
+    }
+
+    userAccount(req, res, next){
+        User_Model.findOne({_id: req.user.id})
+        .then((user) => {
+            res.render('users/account', {
+                user: mongooseToOject(user)
+            })
+        })
+    }
+
+    async userAccountUpdate(req,res,next){
+
+        const file = req.file
+        if(file){
+            User_Model.updateOne({_id: req.user.id}, {
+                avatar: file.filename
+            })
+            .then(() => {
+                console.log('update avatar thành công')
+            })
+        }
+        await User_Model.updateOne({_id: req.user.id}, {
+            name: req.body.name,
+            gender: req.body.gender
+        })
+        .then(() => {
+            console.log('thanh cong')
+        })
+        .catch(next)
+       
     }
 }
 

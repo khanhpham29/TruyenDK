@@ -71,6 +71,7 @@ router.get('/categorys/categoryTrash', adminController.categoryTrash)
 router.get('/categorys', adminController.categorys)
 
 //-------------------------RENTAL------------------------//
+router.get('/test/:page', adminController.pagnination)
 
 router.get('/rentals/new', adminController.newRentals)
 router.post('/rentals/new/:id', adminController.confirmNewRentals)
@@ -86,11 +87,9 @@ router.post('/rentals/pay/:id/book', adminController.payBookRentals)
 
 
 router.post('/rentals/:id/reject', adminController.rejectRentals)
-router.post('/rentals/:id/return', adminController.returnRentals)
 router.get('/rentals/:id/detail', adminController.detailRentals)
-router.post('/rentals/:id', adminController.controlRentals)
 router.get('/rentals/list', adminController.userRentalsList)
-router.get('/rentals/list/finally', adminController.finallyRentals)
+
 
 
 

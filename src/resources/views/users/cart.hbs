@@ -8,6 +8,7 @@
                     <th>Tên truyện</th>
                     <th>Tập số</th>
                     <th>Giá Thuê/7 ngày</th>
+                    <th>Giá truyện/1 cuốn</th>
                     <th>Số lượng</th>
                     <th>Hành động</th>
                 </tr>
@@ -19,6 +20,7 @@
                             <th name="nameManga" class="nameManga">{{this.bookId.nameManga}}</th>
                             <th name="episode" class="episode">{{this.bookId.episode}}</th>
                             <th name="rentCost" class="rentCost">{{this.bookId.rentCost}}</th>
+                            <th name="cost" class="cost">{{this.bookId.cost}}</th>
                             <th name="amount" class="amount">
                                <button class="amountPlus" style="border: none;" data-id="{{this.bookId._id}}">
                                    <i class="fas fa-plus"></i>
@@ -39,10 +41,11 @@
                         </tr>
                     {{/each}}
                         <tr>
+                            <td colspan="2">Số ngày thuê: 7 ngày/1 lần</td>
                             <td colspan="4" style="text-align: right;">Tổng tiền:</td>
                             <td >
-                                <div class="tong-tien">
-                                    {{cart.totalPrice}}
+                                <div >
+                                    <span class="tong-tien">{{cart.totalPrice}}</span>đ
                                 </div>
                             </td>
                         </tr>
@@ -50,10 +53,6 @@
                 
         </table>
         <form name="form-rentals"  method="POST">
-            <div>
-                <label for="">Số ngày thuê: 7 ngày/1 lần</label>
-                
-            </div>
             <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
             <button type="submit" class="btn btn-success submitForm disabled" id="submitForm">Xác nhận</button>
         </form>
@@ -67,8 +66,12 @@
         var cartItem = document.querySelector('.cart-item')
         var form = document.forms['form-rentals']
         var submitForm = $('.submitForm')
+        var minusEl = $('.amountMinus')
+
         var tongtienEl = document.querySelector('.tong-tien')
         var amountPlus = document.querySelectorAll('.amountPlus')
+        var amountMinus = document.querySelectorAll('.amountMinus')
+        console.log(amountMinus)
         var valueAmount = document.getElementsByClassName('valueAmount')
         var elTable = document.getElementById('table')
 
@@ -90,14 +93,42 @@
                 valueAmount[i].innerText = amountPlus
                 var idItem = this.getAttribute("data-id")
 
-                axios.post('/test1/' + idItem)
+                axios.post('/cart/plus/' + idItem)
                 .then((res)=>{
                     const totalPrice = res.data.totalPrice
-                    tongtienEl.innerText = totalPrice + "₫"
+                    tongtienEl.innerText = totalPrice
                 })
                 .catch((err)=>{
                     console.log(err)
                 })
+            }
+        })
+
+        amountMinus.forEach((minus, i) => {
+            minus.onclick = function(){              
+                tongtienEl.innerText = ''
+                var value = valueAmount[i].innerText//lấy giá trị hiển tại
+                var amountMinus = parseInt(value) -1//trừ 1
+                var flag = 1
+               if(amountMinus < 1){
+                   alert('Không thể giảm!!!')
+                   flag = 0
+               }
+               else{
+                   valueAmount[i].innerText = amountMinus
+               } 
+                var idItem = this.getAttribute("data-id")
+                if(flag == 1){
+                    axios.post('/cart/minus/' + idItem)
+                    .then((res)=>{
+                        const totalPrice = res.data.totalPrice
+                        tongtienEl.innerText = totalPrice
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+                
             }
         })
 
@@ -114,7 +145,7 @@
                 .then((res)=>{
                     const totalPrice = res.data.cart.totalPrice
                     const totalItem = res.data.cart.totalItem
-                    tongtienEl.innerText = totalPrice + "₫"
+                    tongtienEl.innerText = totalPrice
                     cartItem.innerText = totalItem
                 })
                 .catch((err)=>{
@@ -125,20 +156,22 @@
         form.addEventListener("submit", async function(e){
             e.preventDefault()
             const items = []
-            var numberRental = form.numberRental.value
+            //var numberRental = form.numberRental.value
             var totalPrice = tongtienEl.innerText
+            console.log(totalPrice)
             var flag = 1
             var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-data')
             rowData.forEach((row, i) => {
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
-                var amount = row.querySelector('.amount').innerText
+                var amount = valueAmount[i].innerText
                 var amountBook = row.querySelector('.amountBook').innerText
                 
                 console.log(amountBook)
+                console.log(amount)
                 if(amountBook < amount){
-                    alert('Số lượg không đủ!!')
+                    alert('Số lượng không đủ!!')
                     flag = 0
                 }
                 else{
@@ -154,8 +187,8 @@
             if(flag == 1){
                 axios.post('/rentals',{
                 items: items,
-                totalPrice: totalPrice,
-                numberRental: numberRental,
+                totalPrice: parseInt(totalPrice),
+                //numberRental: numberRental,
             })
                 .then(async (res)=>{
                     console.log(res.data)
