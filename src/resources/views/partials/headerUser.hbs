@@ -49,9 +49,14 @@
 				</ul>
 				<div class="top-buttons has-login">
 					{{#if user}}
-						<span class="far fa-user user-manager"></span>
+						{{#if user.avatar}}
+							<div class="user-manager user-manager-avatar">
+								<img src="../../../img/{{user.avatar}}" alt="" width="30px" height="30px">
+							</div>
+						{{else}}
+							<span class="far fa-user user-manager"></span>
+						{{/if}}
 						<ul class="list-user-manager">
-							
 							<li class="items">
 								<i class="far fa-user"></i>
 								<a class="content" style="text-decoration:none"  href="/account">Quản lý tài khoản</a>
@@ -65,7 +70,7 @@
 								<a class="content" style="text-decoration:none"  href="/account/change-password">Đổi mật khẩu</a>
 							</li>
 							<li class="items">
-								<i class="fas fa-sign-out-alt"></i>
+								<i class="fas fa-sign-out-alt"></i>	
 								<a class="content" style="text-decoration:none"  href="/logout">Đăng Xuất</a>
 							</li>
 						</ul>

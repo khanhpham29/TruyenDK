@@ -87,19 +87,18 @@ userSchema.statics.login = async function(email, password){
 }
 
 userSchema.methods.changePassword = async function(email, password,passwordNew, passwordNewAgain){
-
     const auth = await bcrypt.compare(password, this.password)
     if(auth){
-        console.log('giống')
+        console.log('mk cũ giống')
         if(passwordNew == passwordNewAgain){
-            console.log('đổi pass thành công')
+            console.log('nhạp lại mk thành công')
         }
         else{
-            throw Error('mật khẩu ko giống')
+            throw Error('Nhập lại mật khẩu ko giống!')
         }
     }
     else{
-        throw Error('Sai tài khoản hoặc mật khẩu')
+        throw Error('Sai mật khẩu')
     }
 }
 

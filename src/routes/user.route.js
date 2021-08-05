@@ -20,6 +20,7 @@ router.post('/cart/minus/:id', usersController.decreaseProductCarts)
 //Xem thông tin tài khoản
 router.get('/account', usersController.userAccount)
 router.post('/account/update',upload.single('avatar'), usersController.userAccountUpdate)
+
 //Xem lịch sử mua hàng
 router.get('/account/rentals-history', usersController.viewRentalsHistory)
 //Xem chi tiết
