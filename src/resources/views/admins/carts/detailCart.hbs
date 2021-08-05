@@ -14,7 +14,7 @@
     </div>
     <div class="row">
         <div class="col-sm-4"><b>Số tiền phạt: </b><span id="fine"></span>đ</div>
-        <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay">{{cart.totalPrice}}</span>đ</div>
+        <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay"></span>đ</div>
         <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
     </div>
     <form name="form-pay">
@@ -23,9 +23,9 @@
                 <th>Truyện cho thuê</th>
                 <th>Tập số</th>
                 <th>Số lượng</th>
-                <th>Giá thuê/ngày</th>
+                <th>Giá thuê/lần</th>
                 <th>Giá truyện/cuốn</th>
-                <th>Trạng thái truyện</th>
+                {{!-- <th>Trạng thái truyện</th> --}}
                 <th>Số lượng đã trả</th>
             </thead>
                 <tbody>
@@ -37,13 +37,14 @@
                         <td class="amount">{{this.amount}}</td>
                         <td class="rentCost">{{this.bookId.rentCost}}</td>
                         <td class="cost">{{this.bookId.cost}}</td>
-                        <td>
+                        {{!-- <td>
                             <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
                                 <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
-                                <option value="Hư hại" data-id="2">Hư hại</option>
-                                <option value="Mất" data-id="3">Mất</option>
+                                <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
+                                <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
+                                <option value="Mất" data-id="4">Mất</option>
                             </select>
-                        </td>
+                        </td> --}}
                         <td class="paid" data-id="{{this.bookId._id}}">
                             
                             {{#if this.status}}
@@ -77,8 +78,7 @@
         var totalPricePay = document.getElementById('totalPricePay')//Số tiền trả lại
         var totalRentCost = document.getElementById('totalRentCost')//Tổng tiền thuê
         var totalCost = document.getElementById('totalCost')//Tổng tiền thuê
-        console.log(totalCost)
-        totalRentCost.innerText  = 1
+
         var form = document.forms['form-pay']
         var valueDateRental = document.getElementById('dateRental').innerText//giá trị của ngày -> Số
         var dateRental = new Date(valueDateRental)//Chuyển về kiếu ngày
@@ -99,6 +99,8 @@
         rowData.forEach((row) => {
             var rowRentCost = row.querySelector('.rentCost').innerText
             var rowAmount = row.querySelector('.amount').innerText
+            var amountPaid = row.querySelector('.amountPaid').innerText
+            console.log(amountPaid)
             valueTotalRentCost += rowRentCost * rowAmount
             totalRentCost.innerText =  valueTotalRentCost
         })
@@ -109,6 +111,7 @@
             var rowAmount = row.querySelector('.amount').innerText
             valueTotalCost += rowRentCost * rowAmount
             totalCost.innerText =  valueTotalCost
+            totalPricePay.innerText = valueTotalCost
         })
 
         if(dateDelay <= 0){
@@ -131,8 +134,9 @@
                 var amount = rowData.querySelector('.amount').innerText
                 var valueAmountPaid = rowData.querySelector('.amountPaid')
                 var statusPayBooks = rowData.querySelector('.cbb-status-book')//lấy cbb status book
-                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
-
+                //var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                var rentCost = rowData.querySelector('.rentCost').innerText
+                console.log(rentCost)
                 var flag = 1
                 var amountPaid = 1
 
@@ -145,11 +149,14 @@
                         alert('Số lượng không hợp lệ')
                         flag = 0
                     }
-                }   
+                }
+                console.log(totalCost.innerText - parseInt(amountPaid)*rentCost)
+                totalRentCost.innerText -=  parseInt(amountPaid)*rentCost
+
                 if(flag == 1){
                     this.remove()
                     var paid = rowData.querySelector('.paid')
-                    paid.innerText = 'Đã trả'
+                    paid.innerText = 'Đã trả '+amountPaid+' cuốn'
                     axios.post('/admin/rentals/pay/' +idItem,{
                         idCart: idCart,
                         amountPaid: amountPaid,
@@ -169,8 +176,8 @@
                 var episode = row.querySelector('.episode').innerText
                 var amount = row.querySelector('.amount').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
-                var statusPayBooks = row.querySelector('.cbb-status-book')
-                var id = statusPayBooks.options[statusPayBooks.selectedIndex].getAttribute('data-id')
+                //var statusPayBooks = row.querySelector('.cbb-status-book')
+                //var id = statusPayBooks.options[statusPayBooks.selectedIndex].getAttribute('data-id')
                 var datePay = document.getElementById('date').innerText
                 var idCart = document.getElementById('idCart').innerText
 
@@ -180,10 +187,15 @@
                     nameManga: nameManga,
                     episode: episode,
                     amount: amount,
-                    statusPayBooks: id,
+                    //statusPayBooks: id,
                 })
                     .then((res)=>{
-                        console.log(res)
+                        console.log(res.data.message)
+                        const result = res.data.message
+                        if(result == 'Phiếu thuê dã hoàn thành'){
+                            alert(result)
+                            location.assign('/admin/rentals/pay/')
+                        }
                     })
                     .catch((err)=>{
                         console.log(err)
