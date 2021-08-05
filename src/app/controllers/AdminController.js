@@ -412,7 +412,7 @@ class AdminController{
         Cart_Model.updateOne({_id: req.params.id },{ status: 'Đã hoàn thành' })
         .then((cartUp) => console.log(cartUp))
         Cart_Model.findOne({_id: req.params.id })
-        .then((cart) => console.log(cart))  
+        .then((cart) => res.json({message: 'Phiếu thuê dã hoàn thành'}))  
         .catch(err => console.log("loi"))
         
     }
