@@ -18,7 +18,7 @@
         <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
     </div>
     <form name="form-pay">
-        <table class="table mt-4">
+        <table class="table table-striped table-bordered mt-4 " style="text-align:center; justify-content: center;">
             <thead>
                 <th>Truyện cho thuê</th>
                 <th>Tập số</th>
@@ -27,36 +27,47 @@
                 <th>Giá truyện/cuốn</th>
                 {{!-- <th>Trạng thái truyện</th> --}}
                 <th>Số lượng đã trả</th>
+                <th>Tình trạng sách</th>
+                <th>Ngày trả</th>
             </thead>
-                <tbody>
-                    <td id="idCart" hidden>{{cart._id}}</td>
-                    {{#each cart.idDetailCart.listRentalBooks.items}}
-                    <tr class="row-data">
-                        <td class="nameManga"> {{this.bookId.nameManga}}</td>
-                        <td class="episode">{{this.bookId.episode}}</td>
-                        <td class="amount">{{this.amount}}</td>
-                        <td class="rentCost">{{this.bookId.rentCost}}</td>
-                        <td class="cost">{{this.bookId.cost}}</td>
-                        {{!-- <td>
-                            <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
-                                <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
-                                <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
-                                <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
-                                <option value="Mất" data-id="4">Mất</option>
-                            </select>
-                        </td> --}}
-                        <td class="paid" data-id="{{this.bookId._id}}">
-                            
-                            {{#if this.status}}
-                                {{this.status}}      
-                            {{else}}
-                                <button class="btn btn-primary btn-paid" data-id="{{this.bookId._id}}">Trả trước</button>
-                            {{/if}}
-                        </td>
-                        <td class="amountPaid" hidden>{{this.amountPaid}}</td> 
-                    </tr>         
-                    {{/each}}
-            </tbody>
+            <tbody>
+                <td id="idCart" hidden>{{cart._id}}</td>
+                {{#each cart.idDetailCart.listRentalBooks.items}}
+                <tr class="row-data">
+                    <td class="nameManga" style="vertical-align: middle;"> {{this.bookId.nameManga}}</td>
+                    <td class="episode" style="vertical-align: middle;">{{this.bookId.episode}}</td>
+                    <td class="amount" style="vertical-align: middle;">{{this.amount}}</td>
+                    <td class="rentCost" style="vertical-align: middle;">{{this.bookId.rentCost}}</td>
+                    <td class="cost" style="vertical-align: middle;"    >{{this.bookId.cost}}</td>
+                    {{!-- <td>
+                        <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
+                            <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
+                            <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
+                            <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
+                            <option value="Mất" data-id="4">Mất</option>
+                        </select>
+                    </td> --}}
+                    <td class="paid" data-id="{{this.bookId._id}}">
+                        
+                        {{#if this.status}}
+                            {{this.status}}      
+                        {{else}}
+                            <button class="btn btn-primary btn-paid" data-id="{{this.bookId._id}}">Trả trước</button>
+                        {{/if}}
+                    </td>
+                    <td class="amountPaid" hidden>{{this.amountPaid}}</td>
+                    <td>
+                        <select name="" id="">
+                            <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
+                            <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
+                            <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
+                            <option value="Mất" data-id="4">Mất</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>         
+                {{/each}}
+        </tbody>
         </table>
         <button type="submit" class="btn btn-success btn-submit mb-2" id="btn-submit">xác nhận</button>
     </form>

@@ -1,6 +1,5 @@
 
 <div class="content container-fluid">
-
     <div class="account-box mt-5">
         <div class="account-wrapper">
             <div class="alert alert-danger login fade" role="alert"></div>
@@ -56,11 +55,14 @@
             alertLogin.text('')
 
             try{
+                axios.post('/login',)
                 const res = await fetch('/login',{
                     method: 'POST',
                     body: JSON.stringify({ email, password}),
                     headers: { "Content-Type": "application/json" }
-                })
+                })\
+                // axios
+                axios.post('login',{formdata})
                 const data = await res.json()
                 if(data.errors){
                     alertLogin.removeClass("fade")

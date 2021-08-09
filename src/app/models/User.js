@@ -89,9 +89,8 @@ userSchema.statics.login = async function(email, password){
 userSchema.methods.changePassword = async function(email, password,passwordNew, passwordNewAgain){
     const auth = await bcrypt.compare(password, this.password)
     if(auth){
-        console.log('mk cũ giống')
         if(passwordNew == passwordNewAgain){
-            console.log('nhạp lại mk thành công')
+            console.log('nhập lại mk thành công')
         }
         else{
             throw Error('Nhập lại mật khẩu ko giống!')
