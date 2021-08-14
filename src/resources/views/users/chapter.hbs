@@ -313,7 +313,7 @@
                 contentCommentElement.val('')
             })
             .catch(function (err) {
-                console.log(err)
+                console.log(err.response)
             })
         })
         replyComment.on("click", function() {

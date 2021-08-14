@@ -111,21 +111,23 @@ userSchema.methods.addToCart = async function (bookId){
         var cart = this.cart
         if(cart.items.length == 0 ){
             cart.items.push({bookId: book._id, amount: 1})
-            cart.totalPrice = book.rentCost + book.cost
+            cart.totalPrice = book.rentCost + book.cost + book.cost * 0.25
             cart.totalItem += 1
         }else{
             const isExisting = cart.items.findIndex(objInItems => {
                 return new String(objInItems.bookId).trim() == String(book._id).trim()
             }) 
             if( isExisting >= 0 ){
-                cart.items[isExisting].amount += 1
+                //cart.items[isExisting].amount += 1
+                console.log('đã có!!')
+                return false
             }else{
                 cart.items.push({bookId: book._id, amount: 1})
             }
             if(!cart.totalPrice){
                 cart.totalPrice = 0
             }
-            cart.totalPrice += book.rentCost + book.cost
+            cart.totalPrice += book.rentCost + book.cost + book.cost * 0.25
             cart.totalItem += 1
         }
         // console.log('User in schema ', this.cart)   

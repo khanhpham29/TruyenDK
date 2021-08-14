@@ -110,13 +110,19 @@ class RentalController {
         },{
             datePay: req.body.datePay
         })
-        
         Cart_Model.updateOne({_id: req.params.id },{ status: 'Đã hoàn thành' })
         .then((cartUp) => console.log(cartUp))
-        Cart_Model.findOne({_id: req.params.id })
-        .then((cart) => res.json({message: 'Phiếu thuê dã hoàn thành'}))  
-        .catch(err => console.log("loi"))
-        
+        DetailsCart_Model.findOne({
+            idCart: req.params.id
+        })
+        .then(cart => {console.log(cart)})
+
+        // Cart_Model.findOne({_id: req.params.id }).populate('idDetailCart')
+        // .then((cart) => {
+        //     idDetailCart
+        //     res.json({message: 'Phiếu thuê dã hoàn thành'})
+        // })  
+        .catch(err => console.log("loi"))    
     }
 
     userRentalsList(req, res, next){
@@ -130,27 +136,33 @@ class RentalController {
             .catch(next)
     }
 
-    paidOneBook(req, res, next){
-        
+    paidOneBook(req, res, next){    
         const idRentalBook = req.params.id
         DetailsCart_Model.findOne({idCart: req.body.idCart})
         .then(async (detailCart) => {
-            console.log("id rental: ",idRentalBook)
             const indexItems = detailCart.listRentalBooks.items.findIndex(objInItems =>{
                 return new String(objInItems.bookId).trim() == String(idRentalBook).trim()
             })
-            console.log("index item: ",indexItems)
-
             if( indexItems >= 0 ){
-                detailCart.listRentalBooks.items[indexItems].status = "Đã trả " + req.body.amountPaid + " cuốn"
-                detailCart.listRentalBooks.items[indexItems].amountPaid = req.body.amountPaid
-                if( detailCart.listRentalBooks.items[indexItems].amountPaid == detailCart.listRentalBooks.items[indexItems].amount ){
-                    detailCart.listRentalBooks.items[indexItems].status = "Đã trả hết"
-                }
+                //detailCart.listRentalBooks.items[indexItems].status = "Đã trả " + req.body.amountPaid + " cuốn"
+                //detailCart.listRentalBooks.items[indexItems].amountPaid = req.body.amountPaid
+                //if( detailCart.listRentalBooks.items[indexItems].amountPaid == detailCart.listRentalBooks.items[indexItems].amount ){
+                detailCart.listRentalBooks.items[indexItems].status = "Đã trả"
+                detailCart.listRentalBooks.items[indexItems].datePayBook = req.body.datePayBook
+                detailCart.listRentalBooks.items[indexItems].statusBook = req.body.statusBook
                 detailCart.save()
-                console.log("amount in detailcart: ", detailCart.listRentalBooks.items[indexItems])
-            }
-            
+                console.log(detailCart.listRentalBooks.items[indexItems]._id)
+                book_model.findOne({_id: detailCart.listRentalBooks.items[indexItems].bookId})
+                .then((book) => {
+                    book_model.updateOne({_id: detailCart.listRentalBooks.items[indexItems].bookId},{
+                        amount: book.amount + 1
+                    })
+                    .then(() => console.log('update thành công'))
+                    .catch(() => console.log('loi'))
+                })
+                .catch((next))     
+                
+            }           
         })
     }
 
@@ -205,13 +217,6 @@ class RentalController {
               }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
             });
         });
-    }
-    async xemChiTiet(req, res, next){
-        const detail = await DetailsCart_Model.findOne({_id: req.params.id})
-        .then((detail)=>{
-            res.render("admins/carts/xemChiTiet")
-        })
-        .catch(err => res.json(err))
     }
 }
 module.exports = new RentalController

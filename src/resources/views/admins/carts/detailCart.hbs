@@ -13,7 +13,7 @@
         <div class="col-sm-4"> <b>Tổng tiền đã nhận: </b> <span id="totalPrice">{{cart.totalPrice}}</span></div>
     </div>
     <div class="row">
-        <div class="col-sm-4"><b>Số tiền phạt: </b><span id="fine"></span>đ</div>
+        <div class="col-sm-4"><b>Số tiền phạt: </b><span id="fine">0</span>đ</div>
         <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay"></span>đ</div>
         <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
     </div>
@@ -22,49 +22,40 @@
             <thead>
                 <th>Truyện cho thuê</th>
                 <th>Tập số</th>
-                <th>Số lượng</th>
+                {{!-- <th>Số lượng</th> --}}
                 <th>Giá thuê/lần</th>
                 <th>Giá truyện/cuốn</th>
-                {{!-- <th>Trạng thái truyện</th> --}}
-                <th>Số lượng đã trả</th>
-                <th>Tình trạng sách</th>
+                <th>Trả trước truyện</th>
+                <th>Tình trạng truyện</th>
                 <th>Ngày trả</th>
             </thead>
             <tbody>
                 <td id="idCart" hidden>{{cart._id}}</td>
                 {{#each cart.idDetailCart.listRentalBooks.items}}
+                {{this.bookId.datePayBook}}
                 <tr class="row-data">
                     <td class="nameManga" style="vertical-align: middle;"> {{this.bookId.nameManga}}</td>
                     <td class="episode" style="vertical-align: middle;">{{this.bookId.episode}}</td>
-                    <td class="amount" style="vertical-align: middle;">{{this.amount}}</td>
+                    {{!-- <td class="amount" style="vertical-align: middle;">{{this.amount}}</td> --}}
                     <td class="rentCost" style="vertical-align: middle;">{{this.bookId.rentCost}}</td>
                     <td class="cost" style="vertical-align: middle;"    >{{this.bookId.cost}}</td>
-                    {{!-- <td>
+                    <td class="paid" data-id="{{this.bookId._id}}">
+                        {{#if this.status}}
+                            {{this.status}}      
+                        {{else}}
+                            <button class="btn btn-primary btn-paid" data-id="{{this.bookId._id}}">Trả</button>
+                        {{/if}}
+                    </td>
+                    <td class="amountPaid" hidden>{{this.amountPaid}}</td>
+                    <td>
                         <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
                             <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
                             <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
                             <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
                             <option value="Mất" data-id="4">Mất</option>
                         </select>
-                    </td> --}}
-                    <td class="paid" data-id="{{this.bookId._id}}">
-                        
-                        {{#if this.status}}
-                            {{this.status}}      
-                        {{else}}
-                            <button class="btn btn-primary btn-paid" data-id="{{this.bookId._id}}">Trả trước</button>
-                        {{/if}}
                     </td>
-                    <td class="amountPaid" hidden>{{this.amountPaid}}</td>
-                    <td>
-                        <select name="" id="">
-                            <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
-                            <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
-                            <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
-                            <option value="Mất" data-id="4">Mất</option>
-                        </select>
-                    </td>
-                    <td></td>
+                    <td class="datePayBook">{{this.datePayBook}}</td>
                 </tr>         
                 {{/each}}
         </tbody>
@@ -77,8 +68,8 @@
 
 <script>
     document.addEventListener("DOMContentLoaded",function(){
-        var btnPaid = document.querySelectorAll('.btn-paid')
-
+        var btnPaid = document.querySelectorAll('.btn-paid')   
+        var rowData = this.querySelector('.table').querySelectorAll('.row-data')//Lấy giá trị trên 1 dòng 
         var today = new Date();//Lấy ngày hiện tại
         var dateRentalReal = new Date();//Ngày trả truyện thực tế
         var btnSubmit = document.querySelector('.btn-submit')
@@ -88,94 +79,145 @@
         var valueFine = document.getElementById('fine')//tiền phạt       
         var totalPricePay = document.getElementById('totalPricePay')//Số tiền trả lại
         var totalRentCost = document.getElementById('totalRentCost')//Tổng tiền thuê
-        var totalCost = document.getElementById('totalCost')//Tổng tiền thuê
-
+        var totalCost = document.getElementById('totalCost')//Tổng tiền cọc
         var form = document.forms['form-pay']
         var valueDateRental = document.getElementById('dateRental').innerText//giá trị của ngày -> Số
         var dateRental = new Date(valueDateRental)//Chuyển về kiếu ngày
 
-        var date = (today.getMonth()+1) +'/'+ today.getDate()+'/'+ today.getFullYear();
-        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        var datenow = document.querySelector('#date').innerText = date
+        var date = (today.getMonth()+1) +'/'+ today.getDate()+'/'+ today.getFullYear();//lấy ngày hiện tại
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();//lấy giờ hiện tại
+        var datenow = document.querySelector('#date').innerText = date//gán giá trị ngày hiện tại vào chỗ ngày trả
 
         dateRentalReal= dateRentalReal.setDate(today.getDate() - dateRental.getDate())
         var valueDateDiff = new Date(dateRentalReal)
-
-        var dateDiff = valueDateDiff.getDate()-30
-        var dateDelay = dateDiff - numberRental.innerText
+        var dateDiff = valueDateDiff.getDate() - 30 //Lấy số ngày
+        //7 là số ngày thuê
+        var dateDelay = dateDiff // Số ngày trễ --------------               Thêm - 7
         
-        var rowData = this.querySelector('.table').querySelectorAll('.row-data')
-        //Tính và hiển thị tổng tiền thuê
-        var valueTotalRentCost = 0
-        rowData.forEach((row) => {
-            var rowRentCost = row.querySelector('.rentCost').innerText
-            var rowAmount = row.querySelector('.amount').innerText
-            var amountPaid = row.querySelector('.amountPaid').innerText
-            console.log(amountPaid)
-            valueTotalRentCost += rowRentCost * rowAmount
-            totalRentCost.innerText =  valueTotalRentCost
-        })
+        //Hiển thị số ngày trễ
+        if(dateDelay > 0){
+            valueDateDelay.innerText = dateDelay
+        }
+        else{
+            valueDateDelay.innerText = 0
+        }
+        
         //Tính và hiển thị tổng tiền cọc
-        var valueTotalCost = 0
+        var valueTotalCost = 0//Tổng tiền thuê
+        var valueTotalPricePay = 0//Tổng tiền trả lại
+        var valueTotalFine = 0//Tổng tiền phạt
+        
         rowData.forEach((row) => {
             var rowRentCost = row.querySelector('.cost').innerText
-            var rowAmount = row.querySelector('.amount').innerText
-            valueTotalCost += rowRentCost * rowAmount
+            //var rowAmount = row.querySelector('.amount').innerText
+            valueTotalCost += rowRentCost * 1 + rowRentCost * 0.25//Tổng tiền cọc
             totalCost.innerText =  valueTotalCost
             totalPricePay.innerText = valueTotalCost
+            valueTotalPricePay = valueTotalCost//Tièn phải tả band dầu bằng số tiền cọc
         })
 
-        if(dateDelay <= 0){
-            valueDateDelay.innerText = 0
-            valueFine.innerText = 0
-        }
-        else if(dateDelay > 0){
-            var dateNumber = dateDiff - numberRental.innerText
-            valueDateDelay.innerText = dateNumber
-            var fine = 1000 * dateNumber
-            valueFine.innerText = fine
-            totalPricePay.innerText = (totalPrice.innerText - fine)
-        }
+        //Tính và hiển thị tổng tiền thuê
+        var valueTotalRentCost = 0
+        rowData.forEach((row, i) => {
+            var rowRentCost = row.querySelector('.rentCost').innerText
+            var paid = row.querySelector('.paid')
+            //var rowAmount = row.querySelector('.amount').innerText
+            //var amountPaid = row.querySelector('.amountPaid').innerText
+            
+            valueTotalRentCost += rowRentCost * 1
+            totalRentCost.innerText =  valueTotalRentCost
+            if(dateDelay > 0){
+                if(paid.innerText == 'Trả'){
+                    valueTotalRentCost += rowRentCost * 1.5// Trả trễ thơi hạn tăng thêm 1.5 lần tiền
+                    totalRentCost.innerText =  valueTotalRentCost
+                    //Tiền trả lại sau khi trừ tiền thuê
+                    
+                }
+            }
+            if( i+1 == rowData.length){
+                valueTotalPricePay = totalPrice.innerText - valueTotalRentCost
+                totalPricePay.innerText = valueTotalPricePay
 
+            }
+        })
+
+        //Tính tiền phạt
+        rowData.forEach((row, i) => {
+            var statusPayBooks = row.querySelector('.cbb-status-book')//lấy cbb status book
+            var rowRentCost = row.querySelector('.cost').innerText
+            statusPayBooks.onchange = function(){            
+                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                valueTotalFine = 0
+                totalPricePay.innerText = parseInt(totalCost.innerText)
+                if(valueStatusPayBook == "Nguyên vẹn"){
+                    valueTotalFine += 0
+                    valueFine.innerText = valueTotalFine
+                    totalPricePay.innerText -=  parseInt(valueFine.innerText)
+                }
+                else if(valueStatusPayBook == "Hư hại nhẹ"){
+                    console.log('tổng tièn phạt:', valueTotalFine)
+                    console.log('tổng tièn trả:', valueTotalPricePay)
+                    valueTotalFine +=  parseInt(rowRentCost)*0.5
+                    var a = parseInt(rowRentCost)*0.5
+                    valueFine.innerText = valueTotalFine
+                    valueTotalPricePay -=  a
+                    totalPricePay.innerText = valueTotalPricePay
+                    console.log('tổng tièn phạt sau:', valueTotalFine)
+                    console.log('tổng tièn trả sau:', valueTotalPricePay)
+                }
+                else if(valueStatusPayBook == "Hư hại nặng"){
+                    console.log('tổng tièn phạt:', valueTotalFine)
+                    console.log('tổng tièn trả:', valueTotalPricePay)
+                    valueTotalFine += parseInt(rowRentCost)
+                    var a = parseInt(rowRentCost)
+                    valueFine.innerText = valueTotalFine
+                    valueTotalPricePay -= a
+                    totalPricePay.innerText =  valueTotalPricePay
+                    console.log('tổng tièn phạt sau:', valueTotalFine)
+                    console.log('tổng tièn trả sau:', valueTotalPricePay)
+                }
+                else if(valueStatusPayBook == "Mất"){
+                    console.log('tổng tièn phạt:', valueTotalFine)
+                    console.log('tổng tièn trả:', valueTotalPricePay)
+                    valueTotalFine += parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                    var a = parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                    valueFine.innerText = valueTotalFine
+                    valueTotalPricePay -=  a
+                    totalPricePay.innerText = valueTotalPricePay
+                    console.log('tổng tièn phạt:', valueTotalFine)
+                    console.log('tổng tièn trả:', valueTotalPricePay)
+                }
+            }    
+        })
+        //Trả 1 cuốn truyện
         btnPaid.forEach(btn => {
             btn.onclick = function (){
                 var idItem = this.getAttribute("data-id")
                 var rowData = this.parentElement.parentElement
                 var idCart = document.getElementById('idCart').innerText
-                var amount = rowData.querySelector('.amount').innerText
+                //var amount = rowData.querySelector('.amount').innerText
                 var valueAmountPaid = rowData.querySelector('.amountPaid')
                 var statusPayBooks = rowData.querySelector('.cbb-status-book')//lấy cbb status book
-                //var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                console.log(valueStatusPayBook)
                 var rentCost = rowData.querySelector('.rentCost').innerText
-                console.log(rentCost)
-                var flag = 1
+                var datePayBook = rowData.querySelector('.datePayBook')
                 var amountPaid = 1
-
-                if(amount == 1){
-                    var confirmPaid = confirm("Trả trước?")
-                }
-                else if(amount > 1){
-                    amountPaid = prompt("Số quyển trả trước?")
-                    if(amountPaid > amount){
-                        alert('Số lượng không hợp lệ')
-                        flag = 0
-                    }
-                }
-                console.log(totalCost.innerText - parseInt(amountPaid)*rentCost)
-                totalRentCost.innerText -=  parseInt(amountPaid)*rentCost
-
-                if(flag == 1){
+                var confirmPaid = confirm("Trả trước?")
+                if(confirmPaid){
                     this.remove()
                     var paid = rowData.querySelector('.paid')
-                    paid.innerText = 'Đã trả '+amountPaid+' cuốn'
+                    paid.innerText = 'Đã trả'
+                    datePayBook.innerText = date
                     axios.post('/admin/rentals/pay/' +idItem,{
                         idCart: idCart,
                         amountPaid: amountPaid,
+                        datePayBook: date,
+                        statusBook: valueStatusPayBook,
                     })
                     .then((res) => console.log(res.data))
                     .catch(err => console.log(err))
                 }
-                
             }
         })
 
@@ -185,7 +227,7 @@
             rowData.forEach((row) =>{
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
-                var amount = row.querySelector('.amount').innerText
+                //var amount = row.querySelector('.amount').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
                 //var statusPayBooks = row.querySelector('.cbb-status-book')
                 //var id = statusPayBooks.options[statusPayBooks.selectedIndex].getAttribute('data-id')
@@ -197,7 +239,7 @@
                     datePay: datePay,
                     nameManga: nameManga,
                     episode: episode,
-                    amount: amount,
+                    //amount: amount,
                     //statusPayBooks: id,
                 })
                     .then((res)=>{

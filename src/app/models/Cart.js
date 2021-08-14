@@ -23,9 +23,9 @@ const cartSchema =  new Schema({
     totalPrice: {
         type: Number,
         default: 0
-    }
-},{
-    timestamps : true,
+    },
+    createAt:{ type: Date, default: Date.now},
+	updateAt:{ type: Date, default: Date.now},
 },{
     collection: 'carts'
 })
