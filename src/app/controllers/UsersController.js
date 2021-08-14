@@ -11,41 +11,160 @@ const comment_model = require('../models/comment')
 const DetailsCart_Model = require('../models/DetailCart')
 const follow_model = require('../models/FollowManga')
 const notifies_model = require('../models/Notifies')
+const favourites_model = require('../models/Favourite')
 const bcrypt = require('bcrypt')
 const { multipleMongooseToOject } = require('../../util/mongoose')
 const { mongooseToOject } = require('../../util/mongoose')
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+const handleErrors = (err) => {
+    let errors = { password: '', passwordNew: ''}
+    // sai tài khoản hoặc mật khẩu
+    if(err.message === 'Sai mật khẩu') {
+        errors.password = 'Sai mật khẩu'
+    }
+    if(err.message === 'Vui lòng nhập thông tin'){
+        errors.message = 'Vui lòng nhập thông tin'
+    }
+    if(err.message === 'Mật khẩu mới ít nhất có 8 ký tự'){
+        errors.passwordNew = 'Mật khẩu mới ít nhất có 8 ký tự'
+    }
+    // validation erros
+    if (err.message.includes('user validation failed')){
+        Object.values(err.errors).forEach(({properties}) =>{
+            errors[properties.path] = properties.message
+        })
+    }
+    return errors
+}
+
 class UsersController{
     // [GET] /news
-    index(req,res,next){
-        manga_model.find({})
-        .populate([
-            {
-                path:'idDetailManga',
-                populate:{ 
-                    path:'imgDetails',
-                    model:'ImgDetail',
-                    match: {new: true}
+    async index(req,res,next){
+
+        const count = await manga_model.countDocuments()
+        var rand = function(min, max){
+            // console.log(Math.floor( Math.random() * count ))
+            return Math.floor(Math.random() * (max - min)) + min
+        }
+        Promise.all([
+            manga_model.find({})
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
                 }
-            },{
-                path:'categories'
-            }
+            ]),
+            manga_model.findOne()
+            .skip( rand(( count, count/6)))
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
+                }
+            ]),
+            manga_model.findOne()
+            .skip( rand( (count/6), (count/6)*2))
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
+                }
+            ]),
+            manga_model.findOne()
+            .skip( rand( (count/6)*2, (count/6)*3))
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
+                }
+            ]),
+            manga_model.findOne()
+            .skip( rand( (count/6)*3, (count/6)*4))
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
+                }
+            ]),
+            manga_model.findOne()
+            .skip( rand( (count/6)*4, (count/6)*5))
+            .populate([
+                {
+                    path:'idDetailManga',
+                    populate:{ 
+                        path:'imgDetails',
+                        model:'ImgDetail',
+                        match: {new: true}
+                    }
+                },{
+                    path:'categories'
+                }
+            ])
+            
         ])
-            .then((mangas) => {
-                // res.json(mangas)
-                res.render('home', {
-                    mangas: multipleMongooseToOject(mangas),
-                    layout: 'user.hbs'
-                })
+        .then(([mangas ,heroLeftTop, heroLeftBottom , herocenter, heroRightTop, heroRightBottom]) => {
+            // res.json(mangas)
+            res.render('home', {
+                layout: 'user.hbs',
+                heroLeftTop: mongooseToOject(heroLeftTop),
+                heroLeftBottom: mongooseToOject(heroLeftBottom),
+                heroCenter: mongooseToOject(herocenter),
+                heroRightTop: mongooseToOject(heroRightTop),
+                heroRightBottom: mongooseToOject(heroRightBottom),
+                mangas: multipleMongooseToOject(mangas),
             })
-            .catch(next)
+        })
+        .catch(next)
     }
 
     async detailManga(req, res, next){   
         Promise.all([
             manga_model.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
-            detailManga_model.findOne({ slug: req.params.slug }).populate({
+            detailManga_model.findOne({ slug: req.params.slug })
+            .populate({
                 path:"imgDetails",
-                options: { sort: { createAt: -1 } }
+                options: { sort: { createAt: -1 } },
+                
+            })
+            .populate({ 
+                path: "idFavourite"
             }),
         ])
         .then(async ([manga, detailManga]) => {
@@ -56,7 +175,7 @@ class UsersController{
                     idUser: req.user._id,
                     idManga: {$in: manga._id}
                 })
-                // res.json(manga)
+                // res.json(detailManga)
                 res.render('users/detailManga', {
                     manga: mongooseToOject(manga),
                     detail: mongooseToOject(detailManga),
@@ -310,23 +429,34 @@ class UsersController{
 
     async ChangePassword(req, res, next){
         let flag = 0
-        console.log(req.user)
         await req.user.changePassword(req.user.email, req.body.password, req.body.passwordNew, req.body.passwordNewAgain)
         .then((a) => {     
-            console.log('a')  
+            console.log(a)
             flag = 1
         })
-        .catch(next)
+        .catch((err)=>{
+            const errors = handleErrors(err)
+            res.status(400).json({errors})
+        })
         if(flag == 1){
             const salt = await bcrypt.genSalt()
-            const password  = await bcrypt.hash(req.body.passwordNew, 10)
-            console.log(password)
-            user_model.findByIdAndUpdate({_id: req.user._id}, {password: password}, {new: true})
+            const password  = await bcrypt.hash(req.body.passwordNew, salt)
+            user_model.updateOne(
+                {
+                    _id: req.user._id
+                }, 
+                {
+                    password: password
+                }
+            )
             .then((a) => {
                 console.log("thành công",a)
-                res.redirect('/')
+                res.status(200).json({message: "true"})
             })
-            .catch(next)
+            .catch((err)=>{
+                const errors = handleErrors(err)
+                res.status(400).json({errors})
+            })
         }
 
     }
@@ -397,6 +527,66 @@ class UsersController{
             res.json(err)
         })
     }
+
+    // like commnets
+    async likeComment(req, res, next){
+        const checkLike = await comment_model.find(
+            { 
+                $and: [
+                    {
+                        _id: req.body.idComment
+                    },
+                    {
+                        likes: {$in: req.params.idUser }
+                    }
+                ]
+            },
+        )
+        .then(async (checkLike)=>{
+            if(isEmpty(checkLike)){
+                const comment = await comment_model.updateOne(
+                    {
+                        _id: req.body.idComment
+                    },
+                    {
+                        $push: {likes: req.params.idUser}
+                    }
+                )
+                .then(async (comment)=>{
+                    const cmt = await comment_model.findById(req.body.idComment)
+                    res.status(200).json({
+                        comment: mongooseToOject(cmt),
+                        message: "true",
+                    })
+                })
+                .catch((err)=>{
+                    res.status(400).json({message: err.message})
+                })
+            }else{
+                const comment = await comment_model.updateOne(
+                    {
+                        _id: req.body.idComment
+                    },
+                    {
+                        $pull: {likes: req.params.idUser}
+                    }
+                )
+                .then(async (comment)=>{
+                    const cmt = await comment_model.findById(req.body.idComment)
+                    res.status(200).json({
+                        comment: mongooseToOject(cmt),
+                        message: "true",
+                    })
+                })
+                .catch((err)=>{
+                    res.status(400).json({message: err.message})
+                })
+            }
+        })
+        .catch(next)
+
+    }
+    // follow Manga
     async followManga(req, res, next){
         const data = req.body
         const isExist = await follow_model.findOne({idUser: data.idUser})
@@ -497,6 +687,41 @@ class UsersController{
                     listFollow: mongooseToOject(listFollow)
                 })
             })
+        }
+    }
+    async favourite(req, res, next){
+        const isCheck = await favourites_model.findOne({idManga: req.params.idManga})
+        if(isCheck != null){
+            const isExist = favourites_model.findOne({arrIdUser: {$in: req.body.idUser} })
+            .then((isExist) => {
+                if(isExist == null){
+                    isCheck.arrIdUser.push(req.body.idUser)
+                    isCheck.save()
+                    res.status(200).json({
+                        favourite: isCheck,
+                        message: "true",
+                    })
+                }else{
+                    res.status(200).json({message: "false"})
+                }
+            })
+            .catch(err => console.error(err))
+        }else{
+            const newfavourite = new favourites_model({
+                idManga: req.params.idManga
+            })
+            console.log("else: ", newfavourite)
+            newfavourite.arrIdUser.push(req.body.idUser)
+            await newfavourite.save()
+            const detailManga = await detailManga_model.updateOne(
+                {
+                    idManga: req.params.idManga
+                },
+                {
+                    idFavourite: newfavourite._id
+                }
+            )
+            res.status(200).json({message: "true"})
         }
     }
 }

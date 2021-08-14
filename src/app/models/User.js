@@ -86,18 +86,22 @@ userSchema.statics.login = async function(email, password){
     throw Error('Sai tài khoản hoặc mật khẩu')
 }
 
-userSchema.methods.changePassword = async function(email, password,passwordNew, passwordNewAgain){
-    const auth = await bcrypt.compare(password, this.password)
-    if(auth){
-        if(passwordNew == passwordNewAgain){
-            console.log('nhập lại mk thành công')
-        }
-        else{
-            throw Error('Nhập lại mật khẩu ko giống!')
-        }
+userSchema.methods.changePassword = async function(email, password, passwordNew, passwordNewAgain){
+    if(password == '' || passwordNewAgain == '' || passwordNew == ''){
+        throw Error('Vui lòng nhập thông tin')
+    }
+    else if( passwordNew.length < 8){
+        throw Error('Mật khẩu mới ít nhất có 8 ký tự')
     }
     else{
-        throw Error('Sai mật khẩu')
+        const auth = await bcrypt.compare(password, this.password)
+        console.log(auth)
+        if(auth){
+            return auth
+        }
+        else{
+            throw Error('Sai mật khẩu')
+        }
     }
 }
 

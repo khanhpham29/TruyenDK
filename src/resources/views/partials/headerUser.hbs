@@ -19,6 +19,7 @@
 					<li class="items">
 						<a href="/listfollow">Theo dõi truyện</a>
 					</li>
+					{{#if user}}
 					<li class="items">
 						<span class="btn-notify">
 							<i class="far fa-bell"></i>
@@ -32,20 +33,20 @@
 					{{!-- <li>
 						<a href="/category">Thể loại</a>
 					</li> --}}
-					<li class="items">
-						<a href="/cart">
-							<span>
-								<i class="fas fa-shopping-cart cart-item">
-									{{#if (isdefined user.cart.totalItem)}}
-										{{user.cart.totalItem}}
-									{{else}}
-										Giỏ hàng
-									{{/if}}
-
-								</i>
-							</span>
-						</a>
-					</li>
+						<li class="items">
+							<a href="/cart">
+								<span>
+									<i class="fas fa-shopping-cart cart-item">
+										{{#if (isdefined user.cart.totalItem)}}
+											{{user.cart.totalItem}}
+										{{else}}
+											Giỏ hàng
+										{{/if}}
+									</i>
+								</span>
+							</a>
+						</li>
+					{{/if}}
 				</ul>
 				<div class="top-buttons has-login">
 					{{#if user}}
@@ -91,99 +92,103 @@
 <script>
 	document.addEventListener("DOMContentLoaded",()=>{
 		var numberNewNotify = 0;
-		document.querySelector(".user-manager").onclick = function(e) {
-			this.classList.toggle("active");
-		}
-
-		document.querySelector(".btn-notify").onclick = function(e) {
-			this.classList.add("active");
-			numberNewNotify = 0;
-			document.querySelector(".btn-notify .notify-number").innerText = numberNewNotify;
-		}
-		document.querySelector(".list-notifies-box .overlay").onclick = function(e) {
-			document.querySelector(".btn-notify").classList.remove("active");
-		}
-
-		function formatTime(time) {
-			let timeNow = new Date().getTime();
-			let timeCreate = new Date(time);
-			let seconds = Math.floor((timeNow - timeCreate.getTime())/1000);
-			if (seconds > (60*60*24)) {
-				let day = timeCreate.getDate();
-				let month = timeCreate.getMonth() + 1;
-				return `${day} tháng ${month}`;
-			} else {
-				let minutes = Math.floor(seconds/60);
-				let hour = Math.floor(minutes/60);
-				if (seconds == 0)
-					return "Vừa xong";
-				else if (minutes == 0 && hour == 0)
-					return `${seconds} giây trước`;
-				else if (hour > 0) 
-					return `${hour} giờ trước`;
-				else
-					return `${minutes} phút trước`;
+		var userManager  = document.querySelector(".user-manager")
+		if(userManager){
+			userManager.onclick = function(e) {
+				this.classList.toggle("active");
 			}
-		}
 
-		function formatDuplicate(arr) {
-			let arrNew = [];
-			arr.forEach(v => {
-				let check = false;
-				arrNew.forEach(v2 => {
-					if (v == v2) {
-						check = true;
-					}
-				})
-				if (!check) {arrNew.push(v)}
-			});
-			return arrNew;
-		}
+			document.querySelector(".btn-notify").onclick = function(e) {
+				this.classList.add("active");
+				numberNewNotify = 0;
+				document.querySelector(".btn-notify .notify-number").innerText = numberNewNotify;
+			}
+			document.querySelector(".list-notifies-box .overlay").onclick = function(e) {
+				document.querySelector(".btn-notify").classList.remove("active");
+			}
 
-		axios.get("/notifies")
-		.then((res)=>{
-			res.data.notification.forEach((notify)=>{
-				let time = formatTime(notify.createdAt);
-				let content = `Truyện ${notify.idManga.nameManga} vừa cập nhật chap ${notify.idChapter.chapter}`;
-				let link = `/manga/${notify.idManga.slug}/${notify.idChapter.chapter}`;
-				$(".list-notifies").append(`
-					<li>
+			function formatTime(time) {
+				let timeNow = new Date().getTime();
+				let timeCreate = new Date(time);
+				let seconds = Math.floor((timeNow - timeCreate.getTime())/1000);
+				if (seconds > (60*60*24)) {
+					let day = timeCreate.getDate();
+					let month = timeCreate.getMonth() + 1;
+					return `${day} tháng ${month}`;
+				} else {
+					let minutes = Math.floor(seconds/60);
+					let hour = Math.floor(minutes/60);
+					if (seconds == 0)
+						return "Vừa xong";
+					else if (minutes == 0 && hour == 0)
+						return `${seconds} giây trước`;
+					else if (hour > 0) 
+						return `${hour} giờ trước`;
+					else
+						return `${minutes} phút trước`;
+				}
+			}
+
+			function formatDuplicate(arr) {
+				let arrNew = [];
+				arr.forEach(v => {
+					let check = false;
+					arrNew.forEach(v2 => {
+						if (v == v2) {
+							check = true;
+						}
+					})
+					if (!check) {arrNew.push(v)}
+				});
+				return arrNew;
+			}
+
+			axios.get("/notifies")
+			.then((res)=>{
+				res.data.notification.forEach((notify)=>{
+					let time = formatTime(notify.createdAt);
+					let content = `Truyện ${notify.idManga.nameManga} vừa cập nhật chap ${notify.idChapter.chapter}`;
+					let link = `/manga/${notify.idManga.slug}/${notify.idChapter.chapter}`;
+					$(".list-notifies").append(`
+						<li>
+							<a href="${link}">
+								<img src="/img/${notify.idManga.image}" alt="" class="avt">
+								<span>
+									<div class="content">${content}</div>
+									<div class="time">${time}</div>
+								</span>
+							</a>
+						</li>
+					`);
+				});	
+				let socket = io({
+					query: {
+						mangas: res.data.listFollow.idManga
+					},
+					path: "/socket.io/notify"
+				});
+				socket.on("new_notify", (data)=>{
+					let time = formatTime(data.createdAt);
+					let content = `Truyện ${data.manga.nameManga} vừa cập nhật chap ${data.chapter.chapter}`;
+					let link = `/manga/${data.manga.slug}/${data.chapter.chapter}`;
+					$(".list-notifies").prepend(`<li>
 						<a href="${link}">
-							<img src="/img/${notify.idManga.image}" alt="" class="avt">
+							<img src="/img/${data.manga.image}" alt="" class="avt">
 							<span>
 								<div class="content">${content}</div>
 								<div class="time">${time}</div>
 							</span>
 						</a>
-					</li>
-				`);
-			});	
-			let socket = io({
-				query: {
-					mangas: res.data.listFollow.idManga
-				},
-				path: "/socket.io/notify"
-			});
-			socket.on("new_notify", (data)=>{
-				let time = formatTime(data.createdAt);
-				let content = `Truyện ${data.manga.nameManga} vừa cập nhật chap ${data.chapter.chapter}`;
-				let link = `/manga/${data.manga.slug}/${data.chapter.chapter}`;
-				$(".list-notifies").prepend(`<li>
-					<a href="${link}">
-						<img src="/img/${data.manga.image}" alt="" class="avt">
-						<span>
-							<div class="content">${content}</div>
-							<div class="time">${time}</div>
-						</span>
-					</a>
-				</li>`);
-				numberNewNotify++;
-				document.querySelector(".btn-notify .notify-number").innerText = numberNewNotify;
-			});
-		})
-		.catch((err)=>{
-			console.log(err)
-		})
+					</li>`);
+					numberNewNotify++;
+					document.querySelector(".btn-notify .notify-number").innerText = numberNewNotify;
+				});
+			})
+			.catch((err)=>{
+				console.log(err)
+			})
+		}	
+		
 	})
 </script>
 

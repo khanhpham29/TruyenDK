@@ -84,14 +84,12 @@ router.get('/rentals/confirm', rentalController.confirmRentals)
 router.post('/rentals/confirm/:id', rentalController.confirmToRentals)
 router.get('/rentals/pay', rentalController.payRentals)
 router.get('/rentals/pay/:id/detail', rentalController.detailPayRentals)
-router.post('/rentals/pay/:id/', rentalController.paidOneBook)
+router.post('/rentals/pay/:id/', rentalController.paidOneBook)  
 router.post('/rentals/pay/:id/book', rentalController.payBookRentals)
 router.get('/rentals/comfirm/:id/detail', rentalController.xemChiTiet)
 router.post('/rentals/:id/reject', rentalController.rejectRentals)
 router.get('/rentals/list/:id/detail', rentalController.detailRentals)
 router.get('/rentals/list', rentalController.userRentalsList)
-
-
 
 //-----------------------USERS--------------------//
 router.get('/users', mangaController.listUsers)

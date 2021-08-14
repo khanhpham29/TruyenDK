@@ -1,24 +1,73 @@
-<div class="container">   
-    <form action="/account/change-password" class="col-sm-4 offset-6" method="POST">
-        <h2>Đổi mật khẩu</h2>
-        <div class="form-group">
-            <label for="">Nhập mật khẩu cũ</label>
-            <input id="password" name="password" class="form-control" type="password">
+<div class="container mt-4 has-background-white">
+    <div class="messages columns">
+        {{> sidebar-account}}
+        <div class="column columns">
+            <div class="account user-main column">
+                <form  name="change-password">
+                    <h2>Đổi mật khẩu</h2>
+                    <div class="form-group">
+                        <label for="">Nhập mật khẩu cũ</label>
+                        <input id="password" name="password" style="width:500px" class="form-control" type="password">
+                        <div class="password old error mt-2" style="color:red"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nhập mật khẩu mới</label>
+                        <input id="passwordNew" name="passwordNew" style="width:500px" class="form-control" type="password">
+                        <div class="password new error mt-2" style="color:red"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nhập lại mật khẩu</label>
+                        <input id="passwordNewAgain" name="passwordNewAgain" style="width:500px" class="form-control" type="password">
+                        <div class="password again error mt-2" style="color:red"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success ">Đổi mật khẩu</button>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Nhập mật khẩu mới</label>
-            <input id="passwordNew" name="passwordNew" class="form-control" type="password">
-        </div>
-        <div class="form-group">
-            <label for="">Nhập lại mật khẩu</label>
-            <input id="passwordNewAgain" name="passwordNewAgain" class="form-control" type="password">
-        </div>
-        <button class="btn btn-success">Đổi mật khẩu</button>
-    </form>
+    </div>
 </div>
 
+
 <script>
-    var password = document.getElementById('password')
-    var passwordNew = document.getElementById('passwordNew')
-    var passwordNewAgain = document.getElementById('passwordNewAgain')
+    document.addEventListener("DOMContentLoaded", function(){
+        var form = document.forms['change-password']
+        var oldErr = $('.password.old.error')
+        var againErr = $('.password.again.error')
+        var newErr = $('.password.new.error')
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            password = form.password.value
+            passwordNew = form.passwordNew.value
+            passwordNewAgain = form.passwordNewAgain.value
+            oldErr[0].innerText = ''
+            againErr[0].innerText = ''
+            newErr[0].innerText = ''
+            if( passwordNew !== passwordNewAgain){
+                againErr[0].innerText = "Không trùng với mất khẩu mới"
+            }else{
+                axios.post("/account/change-password",{
+                    password: password,
+                    passwordNew: passwordNew,
+                    passwordNewAgain: passwordNewAgain,
+                })
+                .then((res)=>{
+                    //console.log(res.data)
+                    alert("Đổi mật khẩu thành công")
+                    location.assign('/')
+                })
+                .catch((err)=>{
+                    const data = err.response.data.errors
+                    console.log(data)
+                    if(data.message != null){
+                        alert(data.message)
+                    }else if(data.password != ""){
+                        oldErr[0].innerText = data.password
+                    }
+                    else if(data.passwordNew != ""){
+                        newErr[0].innerText = data.passwordNew 
+                    }
+                })
+            }
+        })
+    })
 </script>

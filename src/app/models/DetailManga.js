@@ -17,6 +17,10 @@ const MangaDetailsSchema = new Schema({
 		type:Schema.Types.ObjectId,
 		ref:'follow'
 	}],
+	idFavourite:{ 
+		type:Schema.Types.ObjectId,
+		ref:'favourite'
+	},
 	idPost:{ 
 		type:Schema.Types.ObjectId,
 		ref:'post'

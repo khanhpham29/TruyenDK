@@ -9,6 +9,7 @@ const { checkAdmin } = require('../app/middlewares/authMiddleware')
 const usersController = require('../app/controllers/UsersController')
 
 
+router.post('/manga/favourite/:idManga', usersController.favourite)
 router.post('/manga/cancelFollow/:idManga', usersController.cancelFollow)
 router.post('/manga/follow/:idManga', requireAuth , usersController.followManga)
 router.get('/manga/:slug/:chap', usersController.readManga)
@@ -31,6 +32,7 @@ router.post('/account/change-password', usersController.ChangePassword)
 
 router.get('/listFollow', usersController.listFollow)
 router.get('/notifies', usersController.getNotifies)
+router.post('/post/:idUser/likeCommnet', requireAuth, usersController.likeComment)
 router.post('/post/:idPost/comment', requireAuth, usersController.postsComment)
 router.post('/post/:idComment/replyComment', usersController.replyComment)
 router.post('/addToCart/:id', requireAuth , usersController.addToCart)
