@@ -29,18 +29,20 @@
                 <a href="../../admin/manga" class="btn btn-success float-right" style="margin:0 5px">Trở về </a>
                 <a href="../../admin/manga/{{manga.slug}}/addchap" class="btn btn-success float-right">Thêm Chương </a>
             </div>
-            <table class="table ">
+            <table class="table mt-4">
                 <thead>
                     <tr>
                         <td>Chương số</td>
                         <td>Thời gian tạo</td>
+                        <td>Hành động</td>
                     </tr>
                 </thead>
                 <tbody>
                     {{#chapters}}
                         <tr>
-                            <td>Chương {{chapter}}</td>
+                            <td><a target="_blank" href="/manga/{{slug}}/{{chapter}}">Chương {{chapter}}</a></td>
                             <td>{{dateFormat createAt format='DD/MM/YYYY'}}</td>
+                            <td><button class="btn btn-success">Sửa</button></td>
                         </tr>
                     {{/chapters}}
                 </tbody>

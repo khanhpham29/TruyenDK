@@ -141,12 +141,20 @@ class UsersController{
     }
     async addToCart(req, res, next){
         req.user.addToCart(req.params.id)
-        .then(() =>{
-            const user = req.user
-            res.json({
-                message:"Thêm vào giỏ hàng thành công",
-                user
-            })
+        .then((a) =>{
+            console.log(a)
+            if(a == false){
+                res.json({
+                    message:"Tập truyện này đã có trong giỏ hàng!",
+                }) 
+            }
+            else{
+                const user = req.user
+                res.json({
+                    message:"Thêm vào giỏ hàng thành công",
+                    user
+                })
+            } 
         }).catch( err => console.error(err))
     }
     async getCart(req, res, next){
@@ -346,9 +354,15 @@ class UsersController{
             post.comments.push(comment)
             await post.save()
             const newComment = comment_model.findById(comment._id).populate("idUser")
-            .then((newComment) =>{
+            .then(async (newComment) =>{
+                const postGetComments = await post_model.findById(post._id).populate("comments")
+                var totalCmt = postGetComments.comments.length
+                postGetComments.comments.forEach((el) => {
+                    totalCmt += el.replies.length
+                })
                 res.status(200).json({ 
                     comment: mongooseToOject(newComment),
+                    totalCmt 
                 })
             })
         }catch(error){
@@ -372,9 +386,15 @@ class UsersController{
                 path:"idUser",
                 model: "user"
             })
-            .then((replyComment)=>{
+            .then( async (replyComment)=>{
+                const post = await post_model.findById(comment.idPost).populate("comments")
+                var totalCmt = post.comments.length
+                post.comments.forEach((el) => {
+                    totalCmt += el.replies.length
+                })
                 res.status(200).json({ 
                     replyComment: mongooseToOject(replyComment),
+                    totalCmt
                 })
             })
             .catch((err)=>{

@@ -24,9 +24,8 @@ const detailsCartSchema =  new Schema({
             statusBook: {
                 type: String,
             },
-            amountPaid:{
-                type: Number,
-                default: 0,
+            datePayBook:{
+                type: String,
             }
         }],
         
@@ -39,7 +38,10 @@ const detailsCartSchema =  new Schema({
     },
 
     totalPrice:{ 
-        type: Number
+        type: Number,
+    },
+    totalFine: {
+        type: Number,
     },
     numberRental: {
         type: Number,

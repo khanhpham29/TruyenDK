@@ -138,6 +138,7 @@
         var userNameElement = $('input[name="userName"]').val() 
         var contentCommentElement = $('textarea[name="content"]')
         var replyComment = $('.reply-comment')
+        var commnetCount = $('.comment-count')
         // khái báo nó đây
         let arrUrl = window.location.href.split("/");
         let socket = io({
@@ -166,6 +167,7 @@
                 let formReply = elParent.find(".form-reply-comment")
                 formReply.on("submit", function(event) {
                     event.preventDefault();
+                    commnetCount[0].innerText = ""
                     var contentCommentReply = formReply.find("textarea").val()
                     var userIdCommentReply = formReply.find('input[name="idUser"]').val()
                     var postIdCommentReply = formReply.find('input[name="idPost"]').val()
@@ -175,6 +177,8 @@
                         idPost: postIdCommentReply
                     })
                     .then((res)=>{
+                        let totalComment = res.data.totalCmt
+                        commnetCount[0].innerText = totalComment
                         var data = res.data.replyComment
                         let dataWS = res.data;
                         dataWS.manga = {
@@ -208,7 +212,7 @@
                         elParent.find('.form-reply-comment').remove()
                     })
                     .catch((err)=>{
-                        console.log(err)
+                        console.log(err.response)
                     })
                 })
             }
@@ -220,13 +224,13 @@
                 window.location.href = window.location.origin + "/login"
             }
             var contentElement = this.querySelector('textarea[name="content"]').value
-            
+            commnetCount[0].innerText = ""
             axios.post("/post/" + postIdElement + "/comment", {
                 idUser: userIdElement,
                 content: contentElement,
             }) 
             .then(function (res) {
-                console.log(res.data)
+                commnetCount[0].innerText = res.data.totalCmt    
                 var data = res.data.comment
                 let dataWS = res.data;
                 dataWS.manga = {
@@ -273,7 +277,7 @@
                 contentCommentElement.val('')
             })
             .catch(function (err) {
-                console.log(err)
+                console.log(err.response)
             })
         })
         replyComment.on("click", function() {
@@ -321,7 +325,6 @@
         })
         socket.on("reply_comment", (data)=>{
             console.log(data)
-            // biến dùng trong hàm thì dùng let, đừng dùng var
             let html = `
                         <article class="info-comment reply">
                                 <div class="outside-comment comment-main-level" >
