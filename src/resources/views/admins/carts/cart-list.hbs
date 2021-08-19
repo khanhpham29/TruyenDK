@@ -1,33 +1,94 @@
 <div class="container">
     <div class="row">
         <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Phone</th>
-                <th>Trạng thái</th>
-                <th>Lý do</th>
-                <th>Tổng tiền</th>
-                <th colspan="3"></th>
-            </tr>
-        </thead>
-        <tbody>
-            
-            {{#each cart}}
+            <thead>
                 <tr>
-                    <th>{{sum @index 1}}</th>
-                    <th>{{this.phone}}</th>
-                    <th class="id-status" data-id="{{this._id}}" id="{{this._id}}">{{this.status}} </th>
-                    <th class="reason-reject" >{{this.reason}}</th>
-                    <th>{{this.totalPrice}}</th>
-                    <th class="detail">
-                        <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info  btn-detail" data-id="{{this._id}}">Chi tiết</a>
-                    </th>
+                    {{!-- <th>#</th> --}}
+                    <th>Phone</th>
+                    <th>Trạng thái</th>
+                    <th>Lý do</th>
+                    <th>Tổng tiền</th>
+                    <th colspan="3"></th>
                 </tr>
-            {{/each}}
-            
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {{#each cart}}
+                    <tr class="row-data">
+                        <th>{{sum @index 1}}</th>
+                        <th>{{this.phone}}</th>
+                        <th class="id-status" data-id="{{this._id}}" id="{{this._id}}">{{this.status}} </th>
+                        <th class="reason-reject" >{{this.reason}}</th>
+                        <th>{{this.totalPrice}}</th>
+                        <th class="detail">
+                            <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info  btn-detail" data-id="{{this._id}}">Chi tiết</a>
+                        </th>
+                    </tr>
+                {{/each}}    
+            </tbody>
+        </table>
+        <div id="valueData"></div>
+        <form id="form-test">
+            <input type="text" id="input-test">
+            <button id='submit'>Submit</button>
+        </form>
     </div>
 </div>
-</div>
+
+<script>
+    var inputTest = document.getElementById('input-test')
+    var formTest = document.getElementById('form-test')
+    var valueData = document.getElementById('valueData')
+
+    var rowData = document.querySelector('.row-data')
+    console.log(rowData)
+
+    
+
+
+    const socket = io({
+        path: "/socket.io/rental"
+    })
+    {{!-- formTest.addEventListener('submit', function(e){
+        e.preventDefault()
+        const mess = inputTest.value
+        socket.emit('test',{
+            message: mess
+        })
+        inputTest.value = ''
+    })
+
+    socket.on('chat-test',(mess)=>{
+        var item = document.createElement('div')
+        item.innerHTML = mess.message
+        valueData.appendChild(item)
+    }) --}}
+
+
+    socket.on("cart-list", (data) => {
+        console.log('data bên cart list', data)
+        console.log('data phone bên cart list', data.phone)
+        var newRow = document.createElement('tr');
+        var td1 = document.createElement('td')
+        var td2 = document.createElement('td')
+        var td3 = document.createElement('td')
+        var td4 = document.createElement('td')
+        var td5 = document.createElement('td')
+        var td6 = document.createElement('td')
+        td1.innerHTML = 1
+        td2.innerHTML =  data.phone
+        td3.innerHTML = data.status
+        td4.innerHTML = data.reason
+        td5.innerHTML = data.totalPrice
+        td6.innerHTML = `
+            <a href="/admin/rentals/list/${data._id}/detail" class="btn btn-info  btn-detail" data-id="${data._id}">Chi tiết</a>
+        `
+        newRow.appendChild(td1); // The first cell
+        newRow.appendChild(td2); // The second cell
+        newRow.appendChild(td3); // The second cell
+        newRow.appendChild(td4); // The second cell
+        newRow.appendChild(td5); // The second cell
+        newRow.appendChild(td6); // The second cell
+
+        rowData.parentNode.insertBefore(newRow, rowData); 
+    })
+</script>

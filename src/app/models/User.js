@@ -60,6 +60,13 @@ const userSchema =  new Schema({
     },
     gender: {
         type: String
+    },
+    status: {
+        type: String,
+        default: 'active'
+    },
+    reason: {
+        type: String,
     }
 },{
     collection: 'users'
@@ -79,7 +86,14 @@ userSchema.statics.login = async function(email, password){
     if(user){
         const auth = await bcrypt.compare(password, user.password)
         if(auth){
-            return user
+            console.log('user',user)
+            if(user.status == 'block'){
+                throw Error('Tài khoản đã bị khóa!')
+                // console.log('tai khoan bi khoa!')
+            }
+            else{
+                return user
+            }
         }
         throw Error('Sai tài khoản hoặc mật khẩu')
     }
@@ -141,7 +155,7 @@ userSchema.methods.removeInCart = async function (itemId){
     })
     const book = await book_model.findById(cart.items[isExisting].bookId)
     if(isExisting >= 0 ){
-        cart.totalPrice -= (book.rentCost * cart.items[isExisting].amount + book.cost)
+        cart.totalPrice -= (book.rentCost * cart.items[isExisting].amount + book.cost + book.cost * 0.25)
         console.log(cart.totalPrice)
         cart.totalItem -= cart.items[isExisting].amount
         cart.items.splice(isExisting, 1)

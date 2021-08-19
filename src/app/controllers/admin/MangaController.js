@@ -310,24 +310,7 @@ class AdminController{
         .catch(next)    
     }
 
-    //--------------USER--------------------//
-    async listUsers(req, res, next){
-        await User_Model.find({role: "member"})
-        .then((users) => {
-            res.render('admins/users/list-users', {
-                users: multipleMongooseToOject(users),
-                layout:'admin'
-            })
-        })
-        .catch(next)
-    }
-    async searchUsers(req, res, next){
-        const users = await User_Model.find({})
-        .then((users) => {
-            res.json({users: multipleMongooseToOject(users)})
-        })
-        .catch(next)
-    }
+
     
 }
 

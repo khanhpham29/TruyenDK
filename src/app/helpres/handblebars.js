@@ -44,6 +44,17 @@ module.exports = {
             return '<button class="btn btn-danger btn-add-to-cart disable" >Hết hàng</button>'
         }
     },
+
+
+    block_unblock_account: function (a) {
+        if(a == 'active'){
+            return '<a href="#" class="btn btn-danger btn-block-account">Khóa</a>'
+        }          
+        else{
+            return '<a href="#" class="btn btn-success btn-block-account">Mở khóa</a>'
+        }
+    },
+    
     pagination: (currentPage, totalPage, size, options)=>{
         var startPage, endPage, context;
         if (arguments.length === 3) {

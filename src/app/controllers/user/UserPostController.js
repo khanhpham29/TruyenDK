@@ -15,6 +15,7 @@ const favourites_model = require('../../models/Favourite')
 const bcrypt = require('bcrypt')
 const { multipleMongooseToOject } = require('../../../util/mongoose')
 const { mongooseToOject } = require('../../../util/mongoose')
+
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
