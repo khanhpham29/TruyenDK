@@ -17,7 +17,7 @@
         <div class="col-sm-4"><b>Số tiền trả lại:</b> <span id="totalPricePay"></span>đ</div>
         <div class="col-sm-4"><b>Số ngày thuê: </b><span id="numberRental">7 ngày</span></div>
     </div>
-    <form name="form-pay">
+    <form name="form-pay" class="form-pay">
         <table class="table table-striped table-bordered mt-4 " style="text-align:center; justify-content: center;">
             <thead>
                 <th>Truyện cho thuê</th>
@@ -47,13 +47,17 @@
                         {{/if}}
                     </td>
                     <td class="amountPaid" hidden>{{this.amountPaid}}</td>
-                    <td>
-                        <select class="form-select cbb-status-book" name="cbb-status-book" class="cbbStatusBook">
-                            <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
-                            <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
-                            <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
-                            <option value="Mất" data-id="4">Mất</option>
-                        </select>
+                    <td class="statusBook">
+                        {{#if this.statusBook}}
+                            {{this.statusBook}}
+                        {{else}}
+                            <select class="form-select cbb-status-book" name="cbb-status-book">
+                                <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
+                                <option value="Hư hại nhẹ" data-id="2">Hư hại nhẹ</option>
+                                <option value="Hư hại nặng" data-id="3">Hư hại nặng</option>
+                                <option value="Mất" data-id="4">Mất</option>
+                            </select>
+                        {{/if}}
                     </td>
                     <td class="datePayBook">{{this.datePayBook}}</td>
                 </tr>         
@@ -92,7 +96,7 @@
         var valueDateDiff = new Date(dateRentalReal)
         var dateDiff = valueDateDiff.getDate() - 30 //Lấy số ngày
         //7 là số ngày thuê
-        var dateDelay = dateDiff // Số ngày trễ --------------               Thêm - 7
+        var dateDelay = dateDiff -7 // Số ngày trễ --------------               Thêm - 7
         
         //Hiển thị số ngày trễ
         if(dateDelay > 0){
@@ -123,7 +127,6 @@
             var paid = row.querySelector('.paid')
             //var rowAmount = row.querySelector('.amount').innerText
             //var amountPaid = row.querySelector('.amountPaid').innerText
-            
             valueTotalRentCost += rowRentCost * 1
             totalRentCost.innerText =  valueTotalRentCost
             if(dateDelay > 0){
@@ -137,57 +140,72 @@
             if( i+1 == rowData.length){
                 valueTotalPricePay = totalPrice.innerText - valueTotalRentCost
                 totalPricePay.innerText = valueTotalPricePay
-
             }
         })
 
-        //Tính tiền phạt
-        rowData.forEach((row, i) => {
-            var statusPayBooks = row.querySelector('.cbb-status-book')//lấy cbb status book
+        //Tính tiền phạt 
+        var tienphattam = 0
+        var abc = []
+        for(var i = 0;i<rowData.length;i++){
+            abc.push(0)
+        }
+        var statusPayBooks = this.querySelector('.page-wrapper').querySelector('.manga').querySelector('.form-pay').querySelectorAll('.row-data')
+        console.log(statusPayBooks)
+        
+        statusPayBooks.forEach((row, i) => {  
+            var rowDataStatusPayBooks = row.querySelector('.statusBook').querySelector('.cbb-status-book')//lấy cbb status book
+            console.log('statusPayBooks',rowDataStatusPayBooks)  
+            
             var rowRentCost = row.querySelector('.cost').innerText
-            statusPayBooks.onchange = function(){            
-                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
-                valueTotalFine = 0
-                totalPricePay.innerText = parseInt(totalCost.innerText)
-                if(valueStatusPayBook == "Nguyên vẹn"){
-                    valueTotalFine += 0
-                    valueFine.innerText = valueTotalFine
-                    totalPricePay.innerText -=  parseInt(valueFine.innerText)
+            //if(rowDataStatusPayBooks != null){
+                
+                rowDataStatusPayBooks.onchange = function(){   
+                    console.log(i) 
+                    var valueStatusPayBook = rowDataStatusPayBooks.options[rowDataStatusPayBooks.selectedIndex].value //Lấy giá trị mà nó hiện có 
+                    console.log('a1',valueStatusPayBook)
+                    totalPricePay.innerText = parseInt(totalCost.innerText) 
+                    if(valueStatusPayBook == "Nguyên vẹn"){
+                        valueTotalFine -= abc[i]
+                        console.log('valueTotalFine sau',valueTotalFine)
+                        valueFine.innerText = valueTotalFine
+                        totalPricePay.innerText -=  parseInt(valueTotalFine)
+                        abc[i] = 0
+                    }
+                    else if(valueStatusPayBook == "Hư hại nhẹ"){    
+                        valueTotalFine +=  parseInt(rowRentCost)*0.5
+                        var a = parseInt(rowRentCost)*0.5
+                        valueFine.innerText = valueTotalFine
+                        valueTotalPricePay -=  a
+                        totalPricePay.innerText = valueTotalPricePay
+                        //Lưu tiền phạt tạm
+                        tienphattam = a
+                        abc[i] = tienphattam
+                        console.log('tien phat tam 1', abc)
+                    }
+                    else if(valueStatusPayBook == "Hư hại nặng"){
+                        valueTotalFine += parseInt(rowRentCost)
+                        var a = parseInt(rowRentCost)
+                        valueFine.innerText = valueTotalFine
+                        valueTotalPricePay -= a
+                        totalPricePay.innerText =  valueTotalPricePay
+                        //Lưu tiền phạt tạm
+                        tienphattam = a
+                        abc[i] = tienphattam
+                        console.log('tien phat tam 1', abc)
+                    }
+                    else if(valueStatusPayBook == "Mất"){
+                        valueTotalFine += parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                        var a = parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                        valueFine.innerText = valueTotalFine
+                        valueTotalPricePay -=  a
+                        totalPricePay.innerText = valueTotalPricePay
+                        //Lưu tiền phạt tạm
+                        tienphattam = a
+                        abc[i] = tienphattam
+                        console.log('tien phat tam 1', abc)
+                    } 
                 }
-                else if(valueStatusPayBook == "Hư hại nhẹ"){
-                    console.log('tổng tièn phạt:', valueTotalFine)
-                    console.log('tổng tièn trả:', valueTotalPricePay)
-                    valueTotalFine +=  parseInt(rowRentCost)*0.5
-                    var a = parseInt(rowRentCost)*0.5
-                    valueFine.innerText = valueTotalFine
-                    valueTotalPricePay -=  a
-                    totalPricePay.innerText = valueTotalPricePay
-                    console.log('tổng tièn phạt sau:', valueTotalFine)
-                    console.log('tổng tièn trả sau:', valueTotalPricePay)
-                }
-                else if(valueStatusPayBook == "Hư hại nặng"){
-                    console.log('tổng tièn phạt:', valueTotalFine)
-                    console.log('tổng tièn trả:', valueTotalPricePay)
-                    valueTotalFine += parseInt(rowRentCost)
-                    var a = parseInt(rowRentCost)
-                    valueFine.innerText = valueTotalFine
-                    valueTotalPricePay -= a
-                    totalPricePay.innerText =  valueTotalPricePay
-                    console.log('tổng tièn phạt sau:', valueTotalFine)
-                    console.log('tổng tièn trả sau:', valueTotalPricePay)
-                }
-                else if(valueStatusPayBook == "Mất"){
-                    console.log('tổng tièn phạt:', valueTotalFine)
-                    console.log('tổng tièn trả:', valueTotalPricePay)
-                    valueTotalFine += parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
-                    var a = parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
-                    valueFine.innerText = valueTotalFine
-                    valueTotalPricePay -=  a
-                    totalPricePay.innerText = valueTotalPricePay
-                    console.log('tổng tièn phạt:', valueTotalFine)
-                    console.log('tổng tièn trả:', valueTotalPricePay)
-                }
-            }    
+            //}    
         })
         //Trả 1 cuốn truyện
         btnPaid.forEach(btn => {
@@ -198,14 +216,18 @@
                 //var amount = rowData.querySelector('.amount').innerText
                 var valueAmountPaid = rowData.querySelector('.amountPaid')
                 var statusPayBooks = rowData.querySelector('.cbb-status-book')//lấy cbb status book
+                console.log(statusPayBooks)
+                var statusBook = rowData.querySelector('.statusBook')  
                 var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
-                console.log(valueStatusPayBook)
+                console.log('valueStatusPayBook', valueStatusPayBook)
                 var rentCost = rowData.querySelector('.rentCost').innerText
                 var datePayBook = rowData.querySelector('.datePayBook')
                 var amountPaid = 1
                 var confirmPaid = confirm("Trả trước?")
-                if(confirmPaid){
-                    this.remove()
+                if(confirmPaid){  
+                    this.remove()    
+                    statusBook.innerText = valueStatusPayBook
+                    statusPayBooks.remove()
                     var paid = rowData.querySelector('.paid')
                     paid.innerText = 'Đã trả'
                     datePayBook.innerText = date
@@ -224,13 +246,14 @@
         form.addEventListener("submit", function(e){
             e.preventDefault()
             var rowData = document.querySelectorAll('.row-data')
+            var flag = 0
             rowData.forEach((row) =>{
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
                 //var amount = row.querySelector('.amount').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
-                //var statusPayBooks = row.querySelector('.cbb-status-book')
-                //var id = statusPayBooks.options[statusPayBooks.selectedIndex].getAttribute('data-id')
+                var statusPayBooks = row.querySelector('.cbb-status-book')
+                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
                 var datePay = document.getElementById('date').innerText
                 var idCart = document.getElementById('idCart').innerText
 
@@ -240,20 +263,25 @@
                     nameManga: nameManga,
                     episode: episode,
                     //amount: amount,
-                    //statusPayBooks: id,
+                    statusBook: valueStatusPayBook,
                 })
                     .then((res)=>{
                         console.log(res.data.message)
                         const result = res.data.message
-                        if(result == 'Phiếu thuê dã hoàn thành'){
-                            alert(result)
-                            location.assign('/admin/rentals/pay/')
-                        }
+                        var flag = 1
+                        
                     })
                     .catch((err)=>{
                         console.log(err)
                     })
             })
+            if(flag == 1){
+                if(result == 'Phiếu thuê dã hoàn thành'){
+                    alert(result)
+                    location.assign('/admin/rentals/pay/')
+                }
+            }
+            
         })
 
 

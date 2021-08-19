@@ -27,23 +27,21 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>STT</th>
                         <th>
-                            Category
-                            {{{sortTable 'tenloai' _sort}}}
+                            Tên thể loại
+                            {{{sortTable 'nameCategory' _sort}}}
                         </th>
                         <th>
-                            Creation time
+                            Thời gian tạo
                             {{{sortTable 'createAt' _sort}}}
                         </th>
-                        <th colspan="2">Action</th>
+                        <th colspan="2">Hành động</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody-table">
                     {{#each categories}}
                     <tr>
                         <td> <input type="checkbox" value="{{this._id}}" id="" name="categoryIds[]"/>&nbsp;</td>
-                        <td>{{sum @index 1}}</td>
                         <td>{{this.nameCategory}}</td>
                         <td>{{dateFormat this.createAt }}</td>
                         <td>
@@ -79,6 +77,36 @@
                 </div>
             </div>
         </form>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination float-right">
+                {{#pagination 1 pages 6 }}
+                    <div class="pagination">
+                        {{#unless startFromFirstPage}}
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {{/unless}}
+                        {{#each pages}}
+                            {{#if isCurrent}}
+                            <li class="page-item" value="{{page}}"><a class="page-link" href="#">{{page}}</a></li>
+                            {{/if}}
+                            {{#unless isCurrent}}
+                            <li class="page-item" value="{{page}}"><a class="page-link" href="#">{{page}}</a></li>
+                            {{/unless}}
+                        {{/each}}
+                        {{#unless endAtLastPage}}
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {{/unless}}
+                    </div>
+                {{/pagination}}
+            </ul>
+        </nav>
     </div>
 </div>
 {{!-- delete hidden form --}}
@@ -87,33 +115,27 @@
 <script>
     document.addEventListener("DOMContentLoaded", function (){
         var deleteForm = document.forms['formCategoryDelete']
-
         var btnDeleteCategory = document.getElementById('btn-delete-category')
         var checkBoxAll = $('#checkbox-all')
         var categoryItemCheckbox = $('input[name="categoryIds[]"]')
         var checkAllSubmitBtn = $('.check-all-submit-btn')
+        var pageItems = $('.page-item')
+        var tbodyTable = $('#tbody-table')
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             categoryId = button.getAttribute('data-id')
         })
-        btnDeleteCategory.onclick = function (){
-            deleteForm.action = '/admin/categories/' + categoryId + '?_method=DELETE'
-            deleteForm.submit()
-        }
-
-        //Check box all clicked
-        checkBoxAll.change(function (){
-            var isCheckAll = $(this).prop('checked')
-            categoryItemCheckbox.prop('checked', isCheckAll)
-            renderCheckAllSubmitBtn()
-        })
-
-        //Category item checkbox changed
-        categoryItemCheckbox.change(function (){
-            var isCheckAll = categoryItemCheckbox.length === $('input[name="categoryIds[]"]:checked').length
-            checkBoxAll.prop('checked', isCheckAll)
-            renderCheckAllSubmitBtn()
-        })
+        
+        //formatTiem
+        function formatTime(time) {
+			let timeNow = new Date().getTime();
+			let timeCreate = new Date(time)
+			let seconds = Math.floor((timeNow - timeCreate.getTime())/1000)
+            let day = timeCreate.getDate()
+            let month = timeCreate.getMonth() + 1
+            let year = timeCreate.getFullYear() 
+            return `0` + `${day}/` + `0` + `${month}/${year}`
+		}
         //render check all submit
         function renderCheckAllSubmitBtn(){
             var checkedCount = $('input[name="categoryIds[]"]:checked').length
@@ -123,7 +145,65 @@
                 checkAllSubmitBtn.addClass('disabled')
             }
         }
-        
+
+        btnDeleteCategory.onclick = function (){
+            deleteForm.action = '/admin/categories/' + categoryId + '?_method=DELETE'
+            deleteForm.submit()
+        }
+        //Check box all clicked
+        checkBoxAll.change(function (){
+            var isCheckAll = $(this).prop('checked')
+            $('input[name="categoryIds[]"]').prop('checked', isCheckAll)
+            renderCheckAllSubmitBtn()
+        })
+
+        //Category item checkbox changed
+        categoryItemCheckbox.change(function (){
+            var isCheckAll = categoryItemCheckbox.length === $('input[name="categoryIds[]"]:checked').length
+            checkBoxAll.prop('checked', isCheckAll)
+            renderCheckAllSubmitBtn()
+        })
+
+        pageItems.each((index, btn)=>{
+            btn.addEventListener("click", function(){
+                axios.get("../admin/categories?page="+btn.value)
+                .then((res)=>{
+                    const data = res.data.categories
+                    tbodyTable.html('')
+                    for(let i = 0; i < data.length; i++)
+                    {
+                        const elment = data[i]
+                        let time = formatTime(elment.createAt)
+                        var html = `
+                            <tr>
+                                <td> <input type="checkbox" value="${elment._id}" id="" name="categoryIds[]"/>&nbsp;</td>
+                                <td>${elment.nameCategory}</td>
+                                <td>${time}</td>
+                                <td>
+                                    <a href="/admin/categories/${elment._id}/categoryEdit" class="btn btn-outline-warning">Sửa</a>
+                                    <a href="/admin/categories/${elment._id}/categoryDelete" class="btn btn-outline-danger test" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="${data._id}" >Xóa</a>
+                                </td>
+                            </tr>
+                        `
+                        tbodyTable.append(html)
+                    }
+                    checkBoxAll.prop('checked', false);
+                    categoryItemCheckbox = $('input[name="categoryIds[]"]')
+
+                    //Category item checkbox changed
+                    categoryItemCheckbox.change(function (){
+                        var isCheckAll = categoryItemCheckbox.length === $('input[name="categoryIds[]"]:checked').length
+                        console.log(isCheckAll)
+                        console.log(checkBoxAll)
+                        checkBoxAll.prop('checked', isCheckAll)
+                        renderCheckAllSubmitBtn()
+                    })
+                })
+                .catch((err)=>{ 
+                    console.log(err)
+                })
+            })
+        })
     })
 
 </script>

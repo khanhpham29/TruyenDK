@@ -20,22 +20,63 @@ const mongoose = require('mongoose')
 const { PromiseProvider } = require('mongoose')
 const { listeners } = require('../../models/Manga')
 
+// Page size
+const PAGE_SIZE = 5
 
 class CategoryController{
     //Categorys
     //[GET] /admin/categorys
     categories(req, res, next){
-        Promise.all([   categoies_model.find({}).sorttable(req), 
-                        categoies_model.countDocumentsDeleted(),
-                    ])
-            .then(([categories, deleteCount]) =>{
-                res.render('admins/categories/categoryList',{
-                    deleteCount,
-                    categories: multipleMongooseToOject(categories),
-                    layout: 'admin'
+        var page = req.query.page
+        if(page){   
+            //get page
+            page = parseInt(page)
+            if(page < 1){
+                page = 1
+            }
+            var soLuongBoQua = (page-1) * PAGE_SIZE  
+            categoies_model.find({})
+            .skip(soLuongBoQua)
+            .sorttable(req)
+            .limit(PAGE_SIZE)
+
+            .then(async (categories) =>{
+                categoies_model.countDocuments({})
+                .then(async (total)=>{
+                    var pages = Math.ceil(total / PAGE_SIZE)
+                    const deleteCount = await categoies_model.countDocumentsDeleted()
+                    res.json({
+                        categories,
+                        pages
+                    })
                 })
             }) 
             .catch(next)
+        }else{ 
+            categoies_model.find({})
+            .sorttable(req)
+            .limit(PAGE_SIZE)
+            
+            .then(async (categories) =>{
+                categoies_model.countDocuments({})
+                .then(async (total)=>{
+                    var pages = Math.ceil(total / PAGE_SIZE)
+                    
+                    const deleteCount = await categoies_model.countDocumentsDeleted()
+                    // res.json({
+                    //     categories,
+                    //     pages
+                    // })
+                    res.render('admins/categories/categoryList',{
+                        pages,
+                        deleteCount,
+                        categories: multipleMongooseToOject(categories),
+                        layout: 'admin'
+                    })
+                })
+            }) 
+            .catch(next)
+        }
     }
     categoryTrash(req, res, next){
         categoies_model.findDeleted({})

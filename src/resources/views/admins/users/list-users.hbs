@@ -20,30 +20,42 @@
             </form>
         </div>
         <div class="userlist">
-            <table class="datatable table table-striped mb-4">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <td>Tên</td>
-                        <td>Email</td>
-                        <td>Số điện thoại</td>
-                        <td>Hành động</td>
-                    </tr>                    
-                </thead>
-                <tbody>
-                    {{#each users}}
+            <form action="" class="abc">
+                <table class="datatable table table-striped mb-4">  
+                    <thead>
                         <tr>
-                            <th>{{sum @index 1}}</th>
-                            <td>{{this.name}}</td>
-                            <td>{{this.email}}</td>
-                            <td>{{this.phone}}</td>
-                            <td>
-                                <a href="#" class="btn btn-purple">Xem phiếu thuê</a>
-                            </td>
-                        </tr> 
-                    {{/each}} 
-                </tbody>
-            </table>
+                            <th>#</th>
+                            <td>Tên</td>
+                            <td>Email</td>
+                            <td>Số điện thoại</td>
+                            <td>Số đơn hàng</td>
+                            <td>Lý do</td>
+                            <td>Hành động</td>
+                        </tr>                    
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                            <tr>
+                                <th>{{sum @index 1}}</th>
+                                <td>{{this.name}}</td>
+                                <td>{{this.email}}</td>
+                                <td>{{this.phone}}</td>
+                                <td>{{this.idCart.length}}</td>
+                                <td class="reason">{{this.reason}}</td>
+                                <td>
+                                    <a href="#" class="btn btn-purple">Phiếu thuê</a>
+                                    <span class="" data-id="{{this._id}}">
+                                        {{#block_unblock_account this.status}}
+                                        {{/block_unblock_account}}
+                                    </span>
+                                    
+                                </td>
+                                <td class="status" hidden>{{this.status}}</td>
+                            </tr> 
+                        {{/each}} 
+                    </tbody>                   
+                </table>
+            </form>
         </div>
     </div>
     </div>
@@ -53,6 +65,7 @@
         var searchWrapper = document.querySelector('.search-input')
         var search = document.getElementById('search')
         var matchList = document.getElementById('match-list')
+        var blockAccount = document.querySelectorAll('.btn-block-account')
         var searchPhones =  searchText =>{
             if(searchText.length === 0){
                 matches = [];
@@ -64,8 +77,10 @@
             .then((res)=>{
                 const users = res.data.users
                 let matches = users.filter(user =>{
-                    const regex = new RegExp(`${searchText}`, 'giu')
-                    return user.phone.replace(/\s/gis, "").match(regex) 
+                    console.log(user.phone)
+                    //const regex = new RegExp(`${searchText}`, 'giu')
+                    //return user.phone.replace(/\s/gis, "").match(regex) 
+                    return user.phone
                 })
                 if(matches.length === 0){
                     searchWrapper.classList.remove("active")
@@ -86,5 +101,44 @@
             }
         }
         search.addEventListener('input', ()=> searchPhones(search.value.replace(/\s/gis, "").toLowerCase()))
+
+        //Khóa/mở khóa tài khoản
+        blockAccount.forEach((btn, i) =>{          
+            btn.onclick = function(){
+                var idItem = btn.parentElement.getAttribute('data-id')
+                var status = btn.parentElement.parentElement.parentElement.querySelector('.status')
+                var reasonEl = btn.parentElement.parentElement.parentElement.querySelector('.reason')
+                var reason =  ''
+                var flag = 1
+                if(btn.innerText == 'Khóa'){
+                    reason =  prompt('Nhập lý do')
+                    if(reason == ''){
+                        alert('Lý do không thể để trống!')
+                        flag = 0
+                    }
+                    else{
+                        reasonEl.innerText = reason
+                        btn.innerText = 'Mở khóa'
+                        btn.classList.remove('btn-danger') 
+                        btn.classList.add('btn-success') 
+                    }   
+                }
+                else if(btn.innerText == 'Mở khóa'){
+                    btn.innerText = 'Khóa'
+                    btn.classList.remove('btn-success') 
+                    btn.classList.add('btn-danger')  
+                }
+                if(flag == 1){
+                    axios.post("/admin/users/block/" + idItem,{
+                        status: status.innerText,
+                        reason: reason
+                    })
+                    .then((res)=>{
+                        console.log('abc')
+                        console.log(res.data)
+                    })
+                }
+            }
+        })
     })
 </script>

@@ -6,42 +6,48 @@ const { requireAuth } = require('../app/middlewares/authMiddleware')
 const { checkUser } = require('../app/middlewares/authMiddleware')
 const { checkMember } = require('../app/middlewares/authMiddleware')
 const { checkAdmin } = require('../app/middlewares/authMiddleware')
-const usersController = require('../app/controllers/UsersController')
+const usersController = require('../app/controllers/user/UserMangaController')
+const accountController = require('../app/controllers/user/AccountController')
+const userRentalController = require('../app/controllers/user/UserRentalController')
+const userPostController = require('../app/controllers/user/UserPostController')
 
 
+router.get('/', usersController.index)
+router.post('/manga/favourite/:idManga', usersController.favourite)
 router.post('/manga/cancelFollow/:idManga', usersController.cancelFollow)
 router.post('/manga/follow/:idManga', requireAuth , usersController.followManga)
 router.get('/manga/:slug/:chap', usersController.readManga)
 router.get('/manga/:slug', usersController.detailManga)
-
-router.post('/cart/plus/:id', usersController.increaseProductCarts)
-router.post('/cart/minus/:id', usersController.decreaseProductCarts)
-
-//Xem thông tin tài khoản
-router.get('/account', usersController.userAccount)
-router.post('/account/update',upload.single('avatar'), usersController.userAccountUpdate)
-
-//Xem lịch sử mua hàng
-router.get('/account/rentals-history', usersController.viewRentalsHistory)
-//Xem chi tiết
-router.get('/account/rentals-history/:id/detail', usersController.detailRentalsHistory)
-//đỏi pâssword
-router.get('/account/change-password', usersController.formChangePassword)
-router.post('/account/change-password', usersController.ChangePassword)
-
+router.get('/category', usersController.categoryOfManga)
 router.get('/listFollow', usersController.listFollow)
 router.get('/notifies', usersController.getNotifies)
-router.post('/post/:idPost/comment', requireAuth, usersController.postsComment)
-router.post('/post/:idComment/replyComment', usersController.replyComment)
-router.post('/addToCart/:id', requireAuth , usersController.addToCart)
-router.post('/deleteItem/:id',usersController.deleteItemInCart)
-router.get('/category', usersController.categoryOfManga)
-router.get('/rental', usersController.rentalOfManga)
-router.get('/cart', usersController.getCart)
-router.get('/', usersController.index)
 
-router.post('/rentals', usersController.userRentals)
 
-router.post('/rentals', usersController.userRentals)
+
+//  ACCOUNT
+//Xem thông tin tài khoản
+router.get('/account', accountController.userAccount)
+router.post('/account/update',upload.single('avatar'), accountController.userAccountUpdate)
+//Xem lịch sử mua hàng
+router.get('/account/rentals-history', accountController.viewRentalsHistory)
+//Xem chi tiết
+router.get('/account/rentals-history/:id/detail', accountController.detailRentalsHistory)
+//đổi mật khẩu
+router.get('/account/change-password', accountController.formChangePassword)
+router.post('/account/change-password', accountController.ChangePassword)
+
+router.post('/post/:idUser/likeCommnet', requireAuth, userPostController.likeComment)
+router.post('/post/:idPost/comment', requireAuth, userPostController.postsComment)
+router.post('/post/:idComment/replyComment', requireAuth , userPostController.replyComment)
+
+
+// RENTAL
+router.post('/addToCart/:id', requireAuth , userRentalController.addToCart)
+router.post('/cart/plus/:id', userRentalController.increaseProductCarts)
+router.post('/cart/minus/:id', userRentalController.decreaseProductCarts)
+router.post('/deleteItem/:id',userRentalController.deleteItemInCart)
+router.get('/rental', userRentalController.rentalOfManga)
+router.post('/rentals', userRentalController.userRentals)
+router.get('/cart', userRentalController.getCart)
 
 module.exports = router

@@ -1,0 +1,108 @@
+<div class="container">
+    <div class="tile is-ancestor">
+        {{!-- left --}}
+        <div class="tile is-3 is-vertical is-parent">
+        {{#heroLeftTop}}
+            <div class="tile is-child">
+                <a href="/manga/{{slug}}">
+                    <div class="hero-item">
+                        <img class="cover" src="/img/{{image}}" alt="cover">
+                        <div class="bottom-shadow"></div>
+                        <div class="captions">
+                            <h3>{{nameManga}}</h3>
+                        </div>
+                        {{#idDetailManga.imgDetails}}
+                        <div class="chapter orange">Chương {{chapter}}</div>
+                        {{/idDetailManga.imgDetails}}
+                    </div>
+                </a>
+            </div>
+        {{/heroLeftTop}}
+        {{#heroLeftBottom}}
+            <div class="tile is-child">
+                <a href="/manga/{{slug}}">
+                    <div class="hero-item">
+                        <img class="cover" src="/img/{{image}}" alt="cover">
+                        <div class="bottom-shadow"></div>
+                        <div class="captions">
+                            <h3>{{nameManga}}</h3>
+                        </div>
+                        {{#idDetailManga.imgDetails}}
+                        <div class="chapter green">Chương {{chapter}}</div>
+                        {{/idDetailManga.imgDetails}}
+                    </div>
+                </a>
+            </div>
+        {{/heroLeftBottom}}
+        </div>
+        {{!-- Center --}}
+        {{#heroCenter}}
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <a href="/manga/{{slug}}">
+                        <div class="hero-item has-excerpt">
+                            <img class="cover" src="img/{{image}}" alt="cover">
+                            <div class="bottom-shadow"></div>
+                            <div class="captions">
+                                <h5>Thể loại: 
+                                    {{#categories}}
+                                        {{nameCategory}},
+                                    {{/categories}}
+                                </h5>
+                                <h3>{{nameManga}}</h3>
+                            </div>
+                            {{#idDetailManga.imgDetails}}
+                            <div class="chapter red">Chương {{chapter}}</div>
+                            {{/idDetailManga.imgDetails}}
+                            <div class="excerpt">
+                                {{idDetailManga.description}}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {{/heroCenter}}
+        {{!-- right --}}
+        <div class="tile is-3 is-vertical is-parent">
+            {{#heroRightTop}}
+                <div class="tile is-child">
+                    <a href="/manga/{{slug}}">
+                        <div class="hero-item">
+                            <img class="cover" src="/img/{{image}}" alt="cover">
+                            <div class="bottom-shadow"></div>
+                            <div class="captions">
+                                <h3>{{nameManga}}</h3>
+                            </div>
+                            {{#idDetailManga.imgDetails}}
+                            <div class="chapter blue">Chương {{chapter}}</div>
+                            {{/idDetailManga.imgDetails}}
+                        </div>
+                    </a>
+                </div>
+            {{/heroRightTop}}
+            {{#heroRightBottom}}
+                <div class="tile is-child">
+                    <a href="/manga/{{slug}}">
+                        <div class="hero-item">
+                            <img class="cover" src="/img/{{image}}" alt="cover">
+                            <div class="bottom-shadow"></div>
+                            <div class="captions">
+                                <h3>{{nameManga}}</h3>
+                            </div>
+                            {{#idDetailManga.imgDetails}}
+                            <div class="chapter violet">Chương {{chapter}}</div>
+                            {{/idDetailManga.imgDetails}}
+                        </div>
+                    </a>
+                </div>
+            {{/heroRightBottom}}
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        $('.hero-item.has-excerpt').hover(function(){
+            $(this).toggleClass("open");
+        })
+    })
+</script>

@@ -55,23 +55,29 @@
             alertLogin.text('')
 
             try{
-                axios.post('/login',)
-                const res = await fetch('/login',{
-                    method: 'POST',
-                    body: JSON.stringify({ email, password}),
-                    headers: { "Content-Type": "application/json" }
-                })\
                 // axios
-                axios.post('login',{formdata})
-                const data = await res.json()
-                if(data.errors){
-                    alertLogin.removeClass("fade")
-                    alertLogin.text(data.errors.email)
-                }
-                
-                if(data.user){
-                    location.assign('/')
-                }
+                axios.post('login',{
+                    email: email,
+                    password: password
+                })
+                .then(async (res)=>{
+                    console.log("đây là res:", res.data)
+                    const data = await res.data.errors
+                    if(data.status != ''){
+                        alertLogin.removeClass("fade")
+                        alertLogin.text(data.status)
+                    }
+                    if(data.user){
+                        location.assign('/')
+                    }
+                })
+                .catch((err)=>{
+                    console.log("đây là err", err.response.data)
+                    const data = err.response.data.errors
+                    if(data.status != ''){
+                        alert(data.status)
+                    }
+                })
             }
             catch(err){
                 console.log(err)

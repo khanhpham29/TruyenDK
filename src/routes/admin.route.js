@@ -8,6 +8,7 @@ const categoryController = require('../app/controllers/admin/CategoryController'
 const rentalController = require('../app/controllers/admin/RentalController')
 const postController = require('../app/controllers/admin/PostController')
 const mangaRentalController = require('../app/controllers/admin/MangaRentalController')
+const memberController = require('../app/controllers/admin/MemberController')
 const upload = require('../app/middlewares/multer')
 
 //--------------------MANGA------------------//
@@ -93,8 +94,10 @@ router.get('/rentals/list', rentalController.userRentalsList)
 
 
 //-----------------------USERS--------------------//
-router.get('/users', mangaController.listUsers)
-router.get('/users/search', mangaController.searchUsers)
+router.get('/users', memberController.listUsers)
+router.get('/users/search', memberController.searchUsers)
+router.post('/users/block/:id', memberController.blockAccount)
+router.get('/users/history-rentals', memberController.searchUsers)
 
 //-----------------------POSTS--------------------//
 router.get('/formPosts', postController.formPostsPost)
