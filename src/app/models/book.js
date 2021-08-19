@@ -16,8 +16,6 @@ const bookSchema =  new Schema({
     rentCost: { type: Number},
     coverCost: { type: Number, default:''},
     amount: { type: Number},
-    author: { type: String}, 
-    publiser: { type: String},
     slug:{ 
         type: String, 
         slug: 'nameManga', 

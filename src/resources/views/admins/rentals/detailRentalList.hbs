@@ -29,7 +29,7 @@
                 <a href="#">
                     "Chi tiết danh sách truyện cho thuê"
                 </a>
-                
+            <a href="../../rentals/{{manga.slug}}/addNewBook/" style="color:white" class="btn btn-info float-right">Thêm cuốn mới </a>
             </div>
             <ul class="list-manga grid-6">
                 {{#list}}
@@ -41,7 +41,7 @@
                             </h4>
                             <p href="#">Tập số: {{episode}}, Giá thuê {{rentCost}}, số lượng {{amount}}</p>
                             <div class="chapter-book">
-                                <a class="btn btn-info" href="{{slug}}/../edit/{{episode}}">Sửa thông tin truyện</a>
+                                <a class="btn btn-info" style="color:white" href="{{slug}}/../edit/{{episode}}">Sửa thông tin truyện</a>
                             </div>
                             <div class="more-info">
                             </div>

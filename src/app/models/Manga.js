@@ -18,6 +18,10 @@ const mangaSchema = new Schema({
 		type: Boolean,
 		default:false,
 	},
+	lease:{
+		type: Boolean,
+		default:false,
+	},
 	otherName:{
 		type: String, 
 		default:''

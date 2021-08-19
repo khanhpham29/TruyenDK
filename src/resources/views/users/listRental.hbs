@@ -1,25 +1,10 @@
-
-<div class="container">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 class="page-title">Welcome User!</h3>
-
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Page Content -->
-<div class="container ">
+<div class="container mt-4">
     <div class="latest">
         <div class="caption">
             <a href="#">
                 <span><i class="fas fa-star"></i></span>
-                "Truyện cho thuê"
+                "Danh sách truyện cho thuê"
             </a>
         </div>
         {{#each rentals}}
@@ -44,6 +29,29 @@
                 {{/each}}
             </ul>
         {{/each}}
+    </div>
+</div>
+<div class="container">
+    <div class="latest">
+        <div class="caption">
+            <a href="#">
+                <span><i class="fas fa-star"></i></span>
+                "Caption Something"
+            </a>
+        </div>
+        <ul class="list-manga grid-6">
+            {{#rentals}}
+                <li>
+                    <div class="manga-item">
+                        <a href="/manga/{{slug}}"> <img src="/img/{{image}}" alt="#"></a>
+                        <h4 class="title-book">
+                            <p href="#">Tên Truyện: {{nameManga}}</p>
+                        </h4>
+                        <p href="#">Tổng số tập:{{books.length}}</p>
+                    </div>
+                </li>
+            {{/rentals}}
+        </ul>
     </div>
 </div>
 <script>

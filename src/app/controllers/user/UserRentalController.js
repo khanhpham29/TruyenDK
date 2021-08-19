@@ -29,7 +29,6 @@ class UserRentalController{
     async addToCart(req, res, next){
         req.user.addToCart(req.params.id)
         .then((a) =>{
-            console.log(a)
             if(a == false){
                 res.json({
                     message:"Tập truyện này đã có trong giỏ hàng!",

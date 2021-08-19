@@ -1,0 +1,119 @@
+
+<div class="container content">
+    <div class="row mt-4">
+        <form name="form-update-manga-rental"  method="POST" enctype="multipart/form-data">
+            {{#with rental}}
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Trên Truyện: </label>
+                                <select class="form-select cbb-name-manga" name="cbb-name-manga" id="nameManga">
+                                    <option value="{{nameManga}}" data-id="{{id}}" data-slug="{{slug}}">{{nameManga}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="episode">Tập số:</label>
+                            <input type="text" id="tapso" name="episode" class="form-control" value="">
+                            <div class="tapso error mt-2" style="color:red"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="amount">Số lượng: </label>
+                        <input type="text" id="amount" name="amount" class="form-control" value="">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label >Ảnh bìa:</label>
+                            <input type="file" name="avatarMangaRental" id="avatarMangaRental">
+                            <div class="image error mt-2" style="color:red"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="cost">Giá gốc: </label>
+                            <input type="text" id="cost" name="cost" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="rentCost">Giá thuê: </label>
+                            <input type="text" id="rentCost" name="rentCost" class="form-control" value="">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="coverCost">Giá bìa: </label>
+                            <input type="text" id="coverCost" name="coverCost" class="form-control" value="">
+                        </div>
+                    </div>
+                </div>
+                <div >
+                    <button type="submit" class="btn btn-outline-info">Thêm cuốn mới</button>
+                </div>
+            {{/with}}
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var form = document.forms['form-update-manga-rental']
+        var imageErr = $('.error.image')
+        var episodeErr = $('.error.tapso')
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            episodeErr.innerText = ""
+            imageErr.innerText = ""
+            var select = document.getElementById('nameManga')
+            var id = select.options[select.selectedIndex].getAttribute('data-id')
+            var slug = select.options[select.selectedIndex].getAttribute('data-slug')
+			var option = select.options[select.selectedIndex]
+            var nameManga = option.value
+            var episode = form.episode.value
+            var amount = form.amount.value
+            var avatarMangaRental = document.getElementById("avatarMangaRental").files
+            var cost = form.cost.value
+            var rentCost = form.rentCost.value
+            var coverCost = form.coverCost.value
+            let formData = new FormData()
+            formData.append("nameManga",nameManga)
+            formData.append("id",id)
+            formData.append("slug",slug)
+            formData.append("episode",episode)
+            formData.append("amount",amount)
+            formData.append("avatarMangaRental",avatarMangaRental[0])
+            formData.append("cost",cost)
+            formData.append("rentCost",rentCost)
+            formData.append("coverCost",coverCost)
+            axios.post('../../'+slug+'/addNewBook',formData,{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then((res)=>{
+                var data = res.data
+                if(data.message === "Đã thêm cuốn mới thành công"){
+                    alert(data.message)
+                    location.assign('/admin/rentals/'+ slug + '/listRental')
+                }
+            })
+            .catch((err)=>{
+                const data = err.response.data
+                if(data.message =="Vui lòng chọn hình"){
+                    imageErr[0].innerText = data.message
+                }
+                else if(data.message === "Tập này đã tồn tại")
+                {
+                    episodeErr[0].innerText = data.message
+                }
+            })
+        })
+    })
+</script>
+

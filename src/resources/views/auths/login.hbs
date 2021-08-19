@@ -53,8 +53,6 @@
             const email = form.email.value
             const password = form.password.value
             alertLogin.text('')
-
-            try{
                 // axios
                 axios.post('login',{
                     email: email,
@@ -62,26 +60,18 @@
                 })
                 .then(async (res)=>{
                     const data = await res.data
-                    if(data.errors){
-                        alertLogin.removeClass("fade")
-                        alertLogin.text(data.errors.email)
-                    }
+                    
                     if(data.user){
                         location.assign('/')
                     }
                 })
-                .catch((err)=>{
-
+                .catch(async (err)=>{
+                    const data = await err.response.data
+                    if(data.errors){
+                        alertLogin.removeClass("fade")
+                        alertLogin.text(data.errors.email)
+                    }
                 })
-            }
-            catch(err){
-                console.log(err)
-            }
         })
     })
 </script>
-                {{!-- const res = await fetch('/login',{
-                    method: 'POST',
-                    body: JSON.stringify({ email, password}),
-                    headers: { "Content-Type": "application/json" }
-                }) --}}

@@ -34,6 +34,7 @@
                         <img src="/img/{{this.fileName}}" alt="" class="lazy">
                     {{/each}}
                 </div>
+                {{!-- {{#if post}} --}}
                 <div class="story-detail has-background-white on">
                     <div id="path" class="path-top">
                         <ul class="breadcrumb">
@@ -152,7 +153,6 @@
             if(text.innerText == 0){
                 text.innerText = ""
             }
-            
         })
         // khái báo nó đây
         let arrUrl = window.location.href.split("/");
@@ -261,7 +261,7 @@
             axios.post("/post/" + postIdElement + "/comment", {
                 idUser: userIdElement,
                 content: contentElement,
-            }) 
+            })
             .then(function (res) {
                 commnetCount[0].innerText = res.data.totalCmt
                 var data = res.data.comment
@@ -344,43 +344,43 @@
             console.log(data)
             var data = data.comment
             var html = `
-                    <article class="info-comment comment-main-level">
-                        <div class="outside-comment comment-main-level" style="margin-left: 55px;">
-                            <div>
-                                <div class="outline-content-comment" >
-                                    <div>
-                                        <strong> ${data.idUser.name} </strong>
-                                    </div>
-                                    <div class="content-comment">
-                                        ${data.content}
-                                    </div>
+                <article class="info-comment comment-main-level">
+                    <div class="outside-comment comment-main-level" style="margin-left: 55px;">
+                        <div>
+                            <div class="outline-content-comment" >
+                                <div>
+                                    <strong> ${data.idUser.name} </strong>
                                 </div>
-                                <div class="action-comment">
-                                    <span class="like-comment" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
-                                        <i class="fas fa-thumbs-up" aria-hidden="true"></i>
-                                        <span class="total-like-comment">0</span>
-                                    </span>
-                                    <span class="reply-comment" data-user="${data.idUser.id}" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
-                                        <i class="far fa-comment"></i>
-                                        Trả lời
-                                    </span>
-                                </div>
-                                <div class="list-reply-comment">
+                                <div class="content-comment">
+                                    ${data.content}
                                 </div>
                             </div>
+                            <div class="action-comment">
+                                <span class="like-comment" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                    <i class="fas fa-thumbs-up" aria-hidden="true"></i>
+                                    <span class="total-like-comment">0</span>
+                                </span>
+                                <span class="reply-comment" data-user="${data.idUser.id}" data-id="${data.id}" style="color: #f18121;font-size: 13px;cursor: pointer;">
+                                    <i class="far fa-comment"></i>
+                                    Trả lời
+                                </span>
+                            </div>
+                            <div class="list-reply-comment">
+                            </div>
                         </div>
-                    </article>
-                `
-                let boxParent = $('#listComments').prepend(html);
-                let newCmtAct = boxParent.find(".info-comment:first-child .action-comment");
-                let btnLike = newCmtAct.find(".like-comment");
-                let btnReply = newCmtAct.find(".reply-comment");
-                btnReply.on("click", function() {
-                    FuncRepCmt($(this));
-                });
-                btnLike.on('click', function() {
-                    FunLikeCmt($(this));
-                })
+                    </div>
+                </article>
+            `
+            let boxParent = $('#listComments').prepend(html);
+            let newCmtAct = boxParent.find(".info-comment:first-child .action-comment");
+            let btnLike = newCmtAct.find(".like-comment");
+            let btnReply = newCmtAct.find(".reply-comment");
+            btnReply.on("click", function() {
+                FuncRepCmt($(this));
+            });
+            btnLike.on('click', function() {
+                FunLikeCmt($(this));
+            })
             contentCommentElement.val('')
         })
         socket.on("reply_comment", (data)=>{

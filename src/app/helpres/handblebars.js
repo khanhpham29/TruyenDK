@@ -21,7 +21,7 @@ module.exports = {
         }
         const type = types[sortType]
         const icon = icons[sortType]
-        const href = Handlebars.escapeExpression(`?_sort&column=${field}&type=${type}`)
+        const href = Handlebars.escapeExpression(`?_sort&column=${field}&type=${type}`) 
 
         var output = `<a href="${href}">
                         <span class="${icon}"></span>

@@ -12,11 +12,17 @@ const MangaRentalSchema = new Schema({
         type: String, 
         slug: 'nameManga',
     },
+    image:{ 
+		type: String,
+		required: [true, "Vui lòng chọn hình"]
+	},
     books: [{
         type: Schema.Types.ObjectId,
 		ref: 'book',
 		required: true
-    }]
+    }],
+    author: { type: String}, 
+    publiser: { type: String},
     },
     {
         timestamps : true,

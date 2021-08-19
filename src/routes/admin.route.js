@@ -40,15 +40,19 @@ router.get('/manga', mangaController.manga)
 //-------------------------MANGA-RENTAL------------------------//
 //Search rentals
 router.get('/rentals/searchMangaRental', mangaRentalController.searchMangaRental)
-//Form create manga rental
-router.get('/rentals/createMangaRental', mangaRentalController.formCreateMangaRental)
-// create manga rental
-router.post('/rentals/:slug/',upload.single('avatarMangaRental'), mangaRentalController.createMangaRental)
-// form edit manga rental
+//Form create new book rental
+router.get('/rentals/createBook', mangaRentalController.formCreateBook)
+// create book rental
+router.post('/rentals/:slug',upload.single('avatarMangaRental'), mangaRentalController.createMangaRental)
+// add new book rental
+router.get('/rentals/:slug/addNewBook', mangaRentalController.formAddNewBook)
+// create book rental
+router.post('/rentals/:slug/addNewBook',upload.single('avatarMangaRental'), mangaRentalController.AddNewBook)
+// form edit book rental
 router.get('/rentals/:slug/edit/:episode', mangaRentalController.formUpdateMangaRental)
-// edit manga rental
+// edit book rental
 router.post('/rentals/:slug/edit/:episode',upload.single('avatarMangaRental'), mangaRentalController.EditMangaRental)
-// Detail list manga rental
+// Detail list book rental
 router.get('/rentals/:slug/listRental', mangaRentalController.listMangaRentals)
 
 //List rentals for manga
