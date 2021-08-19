@@ -16,6 +16,27 @@ const bcrypt = require('bcrypt')
 const { multipleMongooseToOject } = require('../../../util/mongoose')
 const { mongooseToOject } = require('../../../util/mongoose')
 
+const handleErrors = (err) => {
+    let errors = { password: '', passwordNew: ''}
+    // sai tài khoản hoặc mật khẩu
+    if(err.message === 'Sai mật khẩu') {
+        errors.password = 'Sai mật khẩu'
+    }
+    if(err.message === 'Vui lòng nhập thông tin'){
+        errors.message = 'Vui lòng nhập thông tin'
+    }
+    if(err.message === 'Mật khẩu mới ít nhất có 8 ký tự'){
+        errors.passwordNew = 'Mật khẩu mới ít nhất có 8 ký tự'
+    }
+    // validation erros
+    if (err.message.includes('user validation failed')){
+        Object.values(err.errors).forEach(({properties}) =>{
+            errors[properties.path] = properties.message
+        })
+    }
+    return errors
+}
+
 class AccountController{
     userAccount(req, res, next){
         user_model.findOne({_id: req.user.id})

@@ -1,4 +1,4 @@
-const Manga = require('../../models/Manga')
+const manga_model = require('../../models/Manga')
 const detailmanga_model = require('../../models/DetailManga')
 const ImageDetail = require('../../models/ImageDetail')
 const categoies_model = require('../../models/CategoryManga')
@@ -45,14 +45,14 @@ class MangaRentalController{
     }
     async listMangaRentals(req, res, next){
         Promise.all([
-            Manga.findOne({ slug: req.params.slug })
+            manga_model.findOne({ slug: req.params.slug })
             .populate('categories')
             .populate('idDetailManga'),
             detailmanga_model.findOne({ slug: req.params.slug }),
             book_model.find({ slug: req.params.slug}),
         ])
         .then(([manga, detail, list])=>{
-            res.render("admins/rentals/mangaRentalList",{
+            res.render("admins/rentals/detailRentalList",{
                 manga: mongooseToOject(manga),
                 detail: mongooseToOject(detail),
                 list: multipleMongooseToOject(list),
@@ -64,10 +64,12 @@ class MangaRentalController{
         })
     }
     // form MangaRental
-    formCreateMangaRental(req, res, next){
-        Manga.find({})
+    formCreateBook(req, res, next){
+        manga_model.find({
+            lease: false
+        })
         .then((mangas) => {
-            res.render('admins/rentals/rentalCreate', { 
+            res.render('admins/rentals/fromCreateBook', { 
                 mangas:  multipleMongooseToOject(mangas),
                 layout: 'admin.hbs'
             })
@@ -75,23 +77,64 @@ class MangaRentalController{
         .catch(err => res.json(err))
     }
     async createMangaRental(req, res, next){
+        try{
+            if( req.file == null){
+                res.status(400).json({message: "Vui lòng chọn hình"})
+            }
+            const formdata = req.body
+            const rentalNew =  new rental_model({
+                nameManga: formdata.nameManga,
+                publiser: formdata.publiser,
+                author: formdata.author,
+                image: req.file.filename,
+            })
+            await rentalNew.save()
+            manga_model.updateOne(
+                { 
+                    _id: formdata.id
+                },
+                {
+                    $set: {
+                        lease: true
+                    }
+                },function(err,data){
+                    console.log(data)
+                }
+            )
+            res.status(200).json({message:"Đã thêm truyện cho thuê thành công"})
+        }
+        catch{
+            next()
+        }
+    }
+    
+    
+    //[GET] /rentals/:slug/edit
+    async formAddNewBook(req, res, next){
+        const rental = await rental_model.findOne({
+            slug: req.params.slug,
+        })
+        .then((rental)=>{
+            // res.json(rental)
+            res.render('admins/rentals/formAddNewBook',{
+                rental: mongooseToOject(rental),
+                layout: 'admin'
+            })
+        })
+        .catch((err)=>{
+            res.status(400).json(err)
+        })
+    }
+    async AddNewBook(req, res, next){
+        console.log(req.body)
         if( req.file == null){
             res.status(400).json({message: "Vui lòng chọn hình"})
         }
         const formdata = req.body
-        Promise.all([
-            Manga.findOne({_id: formdata.id}), 
-            rental_model.findOne({slug: formdata.slug}),
-        ])
-        .then(async ([manga , rental])=>{
-            if(rental == null){
-                const Rental =  new rental_model({
-                    nameManga: manga.nameManga
-                })
-                rental = Rental
-            }
+        const rental = await rental_model.findOne({slug: formdata.slug})
+        .then(async (rental)=>{
             const episodeExists = await book_model.findOne({
-                nameManga: manga.nameManga,
+                nameManga: rental.nameManga,
                 episode: formdata.episode,
             })
             .then(async (episodeExists)=>{
@@ -108,15 +151,13 @@ class MangaRentalController{
                         rentCost: formdata.rentCost,
                         covercost: formdata.coverCost,
                         amount: formdata.amount,
-                        author: formdata.author, 
-                        publiser: formdata.publiser,
                     }
                     const bookNew = new book_model(booksNew)
                     bookNew.save()
                     rental.books.push(bookNew._id)
                     await rental.save()
                     .then((rental)=>{
-                        res.json({message: "Đã thêm truyện cho thuê thành công"})
+                        res.json({message: "Đã thêm cuốn mới thành công"})
                     })
                     .catch((err)=>{
                         const errors = handleErrors(err)
@@ -167,8 +208,6 @@ class MangaRentalController{
                 rentCost: formdata.rentCost,
                 covercost: formdata.coverCost,
                 amount: formdata.amount,
-                author: formdata.author, 
-                publiser: formdata.publiser,
             })
             .then(()=>{
                 res.status(200).json({message: "Sửa thành công"})

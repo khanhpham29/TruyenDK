@@ -224,9 +224,10 @@ class UsersController{
                 }
             }),
         ])
-        .then(([chapter, manga, mangaforPost])=>{
+        .then(async ([chapter, manga, mangaforPost])=>{
             // res.json(mangaforPost)
-            const comments = comment_model.find({postId: manga.idPost})
+            const detailManga = await detailManga_model.findById(manga.idDetailManga)
+            const comments = comment_model.find({idPost: detailManga.idPost})
             .then((comments)=>{
                 res.render('users/chapter',{
                     chapter: mongooseToOject(chapter),

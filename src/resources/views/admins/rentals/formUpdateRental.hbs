@@ -51,20 +51,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-6">
-                    <div  class="form-group">
-                        <label for="author">Tác giả: </label>
-                        <input type="text" id="author" name="author" class="form-control" value="{{author}}">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="publiser">Nhà xuất bản: </label>
-                        <input type="text" id="publiser" name="publiser" class="form-control" value="{{publiser}}">
-                    </div>
-                </div>
-            </div>
             <div >
                 <button type="submit" class="btn btn-outline-info">Sửa truyện</button>
             </div>
@@ -88,8 +74,6 @@
             var cost = form.cost.value
             var rentCost = form.rentCost.value
             var coverCost = form.coverCost.value
-            var author = form.author.value
-            var publiser = form.publiser.value
             let formData = new FormData()
             formData.append("nameManga",nameManga)
             formData.append("id",id)
@@ -100,8 +84,6 @@
             formData.append("cost",cost)
             formData.append("rentCost",rentCost)
             formData.append("coverCost",coverCost)
-            formData.append("author",author)
-            formData.append("publiser",publiser)
             axios.post('../../'+slug+'/edit/'+ episode,formData,{
                 headers: {
                     'Accept': 'application/json',

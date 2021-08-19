@@ -63,10 +63,20 @@ class PostController{
                 const postNew = post_model.updateOne({_id: post._id},{
                     idManga: manga._id
                 })
-                Manga.updateOne({_id: manga._id},{
-                    posted: true,
-                })
-                detailmanga_model.updateOne({idManga: manga._id},{
+                Manga.updateOne(
+                    {
+                        _id: manga._id
+                    },
+                    {
+                        $set: { 
+                            "posted": "true" 
+                        },
+                    },
+                    function(err, data){
+                        console.log(data)
+                    }
+                )
+                    detailmanga_model.updateOne({idManga: manga._id},{
                     idPost: post._id
                 })
                 .then((postNew)=>{

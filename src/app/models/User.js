@@ -109,7 +109,6 @@ userSchema.methods.changePassword = async function(email, password, passwordNew,
     }
     else{
         const auth = await bcrypt.compare(password, this.password)
-        console.log(auth)
         if(auth){
             return auth
         }

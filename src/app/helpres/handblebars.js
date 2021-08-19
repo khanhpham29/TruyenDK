@@ -21,7 +21,7 @@ module.exports = {
         }
         const type = types[sortType]
         const icon = icons[sortType]
-        const href = Handlebars.escapeExpression(`?_sort&column=${field}&type=${type}`)
+        const href = Handlebars.escapeExpression(`?_sort&column=${field}&type=${type}`) 
 
         var output = `<a href="${href}">
                         <span class="${icon}"></span>
@@ -45,6 +45,7 @@ module.exports = {
         }
     },
 
+
     block_unblock_account: function (a) {
         if(a == 'active'){
             return '<a href="#" class="btn btn-danger btn-block-account">Khóa</a>'
@@ -54,7 +55,6 @@ module.exports = {
         }
     },
     
-
     pagination: (currentPage, totalPage, size, options)=>{
         var startPage, endPage, context;
         if (arguments.length === 3) {

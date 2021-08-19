@@ -5,7 +5,7 @@ const socketAPI = {}
 
 io.on("connection", function(socket){
     if (typeof socket.handshake.query["mangas"] != "undefined") {
-        let mangas = socket.handshake.query["mangas"];
+        let mangas = socket.handshake.query["mangas"]; 
         mangas = mangas.split(",");
         socket.join(mangas);
     }

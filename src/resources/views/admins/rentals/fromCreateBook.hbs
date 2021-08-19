@@ -1,0 +1,93 @@
+
+<div class="container content">
+    <div class="row mt-4">
+        <form name="form-create-manga-rental"  method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div>
+                            <label>Tên Truyện: </label>
+                            <select class="form-select cbb-name-manga" name="cbb-name-manga" id="nameManga">
+                                {{#each mangas}}
+                                    <option value="{{this.nameManga}}" data-id="{{this.id}}" data-slug="{{this.slug}}">{{this.nameManga}}</option>
+                                {{/each }}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label >Ảnh bìa:</label>
+                        <input type="file" name="avatarMangaRental" id="avatarMangaRental">
+                        <div class="image error mt-2" style="color:red"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div  class="form-group">
+                        <label for="tacgia">Tác giả: </label>
+                        <input type="text" id="tacgia" name="tacgia" class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="nhaxuatban">Nhà xuất bản: </label>
+                        <input type="text" id="nhaxuatban" name="nhaxuatban" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-outline-success">Thêm truyện</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var form = document.forms['form-create-manga-rental']
+        var episodeErr = $('.error.tapso')
+        var imageErr = $('.error.image')
+        form.addEventListener("submit", function(e){
+            e.preventDefault()
+            console.log(episodeErr)
+            episodeErr.innerText = ""
+            imageErr.innerText = ""
+            var select = document.getElementById('nameManga')
+            var id = select.options[select.selectedIndex].getAttribute('data-id')
+            var slug = select.options[select.selectedIndex].getAttribute('data-slug')
+			var option = select.options[select.selectedIndex]
+            var nameManga = option.value
+            var avatarMangaRental = document.getElementById("avatarMangaRental").files
+            var tacgia = form.tacgia.value
+            var nhaxuatban = form.nhaxuatban.value
+            let formData = new FormData()
+            formData.append("nameManga",nameManga)
+            formData.append("id",id)
+            formData.append("slug",slug)
+            formData.append("avatarMangaRental",avatarMangaRental[0])
+            formData.append("author",tacgia)
+            formData.append("publiser",nhaxuatban)
+            axios.post("../../admin/rentals/"+slug,formData,{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then((res)=>{
+                var data = res.data
+                if(res.data.message === "Đã thêm truyện cho thuê thành công"){
+                    alert(res.data.message)
+                    location.assign('/admin/rentals/'+ slug + '/listRental')
+                }
+            })
+            .catch((err)=>{
+                const data = err.response.data
+                if(data.message =="Vui lòng chọn hình"){
+                    imageErr[0].innerText = data.message
+                }
+            })
+        })
+    })
+</script>
+

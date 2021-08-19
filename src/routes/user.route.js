@@ -36,6 +36,8 @@ router.get('/account/rentals-history/:id/detail', accountController.detailRental
 router.get('/account/change-password', accountController.formChangePassword)
 router.post('/account/change-password', accountController.ChangePassword)
 
+
+//Bài post - comment
 router.post('/post/:idUser/likeCommnet', requireAuth, userPostController.likeComment)
 router.post('/post/:idPost/comment', requireAuth, userPostController.postsComment)
 router.post('/post/:idComment/replyComment', requireAuth , userPostController.replyComment)
@@ -48,6 +50,7 @@ router.post('/cart/minus/:id', userRentalController.decreaseProductCarts)
 router.post('/deleteItem/:id',userRentalController.deleteItemInCart)
 router.get('/rental', userRentalController.rentalOfManga)
 router.post('/rentals', userRentalController.userRentals)
+router.get('/rental/:slug', userRentalController.detailMangaRental)
 router.get('/cart', userRentalController.getCart)
 
 module.exports = router
