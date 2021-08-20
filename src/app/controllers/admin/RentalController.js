@@ -105,7 +105,6 @@ class RentalController {
     }
 
     payBookRentals(req, res, next){
-        console.log(req.body)
         DetailsCart_Model.updateOne({
             idCart: req.params.id
         },{
@@ -116,7 +115,28 @@ class RentalController {
         DetailsCart_Model.findOne({
             idCart: req.params.id
         })
-        .then(cart => {console.log(cart)})
+        .populate('idCart')
+        .then((cart) => {
+            let arrValue = cart.listRentalBooks.items
+            console.log(arrValue)
+            arrValue.forEach((item, i) =>{
+                console.log('status',item.status)
+                if(item.status != 'Đã trả'){
+                    book_model.findOne({_id: item.bookId})
+                    .then((book) => {
+                        book_model.updateOne({_id: item.bookId},{
+                            amount: book.amount + 1
+                        })
+                        .then(() => console.log('update thành công'))
+                        .catch(() => console.log('loi'))
+                        console.log('book', book)
+                    })
+                    .catch((next))
+                }
+            })
+            
+            res.json({message: 'Phiếu thuê dã hoàn thành'})
+        })
 
         // Cart_Model.findOne({_id: req.params.id }).populate('idDetailCart')
         // .then((cart) => {

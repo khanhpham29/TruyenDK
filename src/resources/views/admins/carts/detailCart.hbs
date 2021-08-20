@@ -49,7 +49,7 @@
                     <td class="amountPaid" hidden>{{this.amountPaid}}</td>
                     <td class="statusBook">
                         {{#if this.statusBook}}
-                            {{this.statusBook}}
+                            <div class="statusBookItem">{{this.statusBook}}</div>
                         {{else}}
                             <select class="form-select cbb-status-book" name="cbb-status-book">
                                 <option value="Nguyên vẹn" data-id="1">Nguyên vẹn</option>
@@ -143,30 +143,51 @@
             }
         })
 
-        //Tính tiền phạt 
+        //Tính tiền phạt
+        var statusBookItem = document.querySelectorAll('.statusBookItem')
+        console.log('statusBookItem',statusBookItem)
         var tienphattam = 0
         var abc = []
         for(var i = 0;i<rowData.length;i++){
             abc.push(0)
         }
         var statusPayBooks = this.querySelector('.page-wrapper').querySelector('.manga').querySelector('.form-pay').querySelectorAll('.row-data')
-        console.log(statusPayBooks)
-        
+        //Tiền khi truyện hư hại sau khi trả sách
+        statusBookItem.forEach((status) =>{
+            var rowRentCost = status.parentElement.parentElement.querySelector('.cost').innerText
+            console.log('rowRentCost',rowRentCost)
+            if(status.innerText == "Hư hại nhẹ"){    
+                valueTotalFine +=  parseInt(rowRentCost)*0.5
+                var a = parseInt(rowRentCost)*0.5
+                valueFine.innerText = valueTotalFine
+                valueTotalPricePay -=  a
+                totalPricePay.innerText = valueTotalPricePay
+            }
+            else if(status.innerText == "Hư hại nặng"){
+                valueTotalFine += parseInt(rowRentCost)
+                var a = parseInt(rowRentCost)
+                valueFine.innerText = valueTotalFine
+                valueTotalPricePay -= a
+                totalPricePay.innerText =  valueTotalPricePay
+            }
+            else if(status.innerText == "Mất"){
+                valueTotalFine += parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                var a = parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
+                valueFine.innerText = valueTotalFine
+                valueTotalPricePay -=  a
+                totalPricePay.innerText = valueTotalPricePay
+            } 
+        })
+        //Tính tiền khi thay đổi cbb
         statusPayBooks.forEach((row, i) => {  
             var rowDataStatusPayBooks = row.querySelector('.statusBook').querySelector('.cbb-status-book')//lấy cbb status book
-            console.log('statusPayBooks',rowDataStatusPayBooks)  
-            
-            var rowRentCost = row.querySelector('.cost').innerText
-            //if(rowDataStatusPayBooks != null){
-                
+            var rowRentCost = row.querySelector('.cost').innerText//Lấy tiền quyển truyện ở dòng tương ứng
+            if(rowDataStatusPayBooks != null){
                 rowDataStatusPayBooks.onchange = function(){   
-                    console.log(i) 
                     var valueStatusPayBook = rowDataStatusPayBooks.options[rowDataStatusPayBooks.selectedIndex].value //Lấy giá trị mà nó hiện có 
-                    console.log('a1',valueStatusPayBook)
                     totalPricePay.innerText = parseInt(totalCost.innerText) 
                     if(valueStatusPayBook == "Nguyên vẹn"){
                         valueTotalFine -= abc[i]
-                        console.log('valueTotalFine sau',valueTotalFine)
                         valueFine.innerText = valueTotalFine
                         totalPricePay.innerText -=  parseInt(valueTotalFine)
                         abc[i] = 0
@@ -180,7 +201,6 @@
                         //Lưu tiền phạt tạm
                         tienphattam = a
                         abc[i] = tienphattam
-                        console.log('tien phat tam 1', abc)
                     }
                     else if(valueStatusPayBook == "Hư hại nặng"){
                         valueTotalFine += parseInt(rowRentCost)
@@ -191,7 +211,6 @@
                         //Lưu tiền phạt tạm
                         tienphattam = a
                         abc[i] = tienphattam
-                        console.log('tien phat tam 1', abc)
                     }
                     else if(valueStatusPayBook == "Mất"){
                         valueTotalFine += parseInt(rowRentCost) + parseInt(rowRentCost) * 0.25
@@ -202,10 +221,9 @@
                         //Lưu tiền phạt tạm
                         tienphattam = a
                         abc[i] = tienphattam
-                        console.log('tien phat tam 1', abc)
                     } 
                 }
-            //}    
+            }    
         })
         //Trả 1 cuốn truyện
         btnPaid.forEach(btn => {
@@ -219,7 +237,6 @@
                 console.log(statusPayBooks)
                 var statusBook = rowData.querySelector('.statusBook')  
                 var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
-                console.log('valueStatusPayBook', valueStatusPayBook)
                 var rentCost = rowData.querySelector('.rentCost').innerText
                 var datePayBook = rowData.querySelector('.datePayBook')
                 var amountPaid = 1
@@ -246,17 +263,23 @@
         form.addEventListener("submit", function(e){
             e.preventDefault()
             var rowData = document.querySelectorAll('.row-data')
-            var flag = 0
             rowData.forEach((row) =>{
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
                 //var amount = row.querySelector('.amount').innerText
                 var rentCost = row.querySelector('.rentCost').innerText
                 var statusPayBooks = row.querySelector('.cbb-status-book')
-                var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                var statusBookItem = row.querySelector('.statusBookItem')
+                console.log('statusBookItem',statusBookItem)
                 var datePay = document.getElementById('date').innerText
                 var idCart = document.getElementById('idCart').innerText
-
+                if(statusPayBooks != null){
+                    var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
+                }
+                else{
+                    var valueStatusPayBook = statusBookItem.innerText
+                    console.log(valueStatusPayBook)
+                }
                 datePay = new Date(datePay + ' ' + time)
                 axios.post('/admin/rentals/pay/'+idCart+'/book/',{
                     datePay: datePay,
@@ -265,23 +288,19 @@
                     //amount: amount,
                     statusBook: valueStatusPayBook,
                 })
-                    .then((res)=>{
-                        console.log(res.data.message)
-                        const result = res.data.message
-                        var flag = 1
-                        
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                    })
+                .then((res)=>{
+                    console.log(res.data)
+                    const result = res.data.message
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+                
             })
-            if(flag == 1){
-                if(result == 'Phiếu thuê dã hoàn thành'){
-                    alert(result)
-                    location.assign('/admin/rentals/pay/')
-                }
+            if(result == 'Phiếu thuê dã hoàn thành'){
+                alert(result)
+                location.assign('/admin/rentals/pay/')
             }
-            
         })
 
 
