@@ -79,7 +79,7 @@ class UserRentalController{
                 totalItem: req.user.cart.totalItem,
                 totalPrice: req.user.cart.totalPrice,
             })
-            detailCart.save()
+            .save()
             .then((detailCart)=>{  
                 cartUser.forEach((item, i) =>{
                     detailCart.listRentalBooks.items.push({bookId: item.bookId, amount: item.amount})
@@ -117,7 +117,19 @@ class UserRentalController{
                         totalPrice: 0,
                     }
                 })
-                .then(() => res.json({messge: 'Tạo đơn hàng thành công'}))
+                .then(() => {
+                    console.log('chi tiet',detailCart)
+                    cart_model.findOne({
+                        _id: cart._id
+                    })
+                    .populate('idDetailCart')
+                    .then((cartEl) => {
+                        res.json({
+                            message: 'Tạo đơn hàng thành công',
+                            cartEl: mongooseToOject(cartEl),
+                        })
+                    })
+                })
                 .catch(next)
             })
         })

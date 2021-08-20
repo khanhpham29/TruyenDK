@@ -53,25 +53,34 @@
             const email = form.email.value
             const password = form.password.value
             alertLogin.text('')
+            try{
                 // axios
                 axios.post('login',{
                     email: email,
                     password: password
                 })
                 .then(async (res)=>{
-                    const data = await res.data
-                    
+                    console.log("đây là res:", res.data)
+                    const data = await res.data.errors
+                    if(data.status != ''){
+                        alertLogin.removeClass("fade")
+                        alertLogin.text(data.status)
+                    }
                     if(data.user){
                         location.assign('/')
                     }
                 })
-                .catch(async (err)=>{
-                    const data = await err.response.data
-                    if(data.errors){
-                        alertLogin.removeClass("fade")
-                        alertLogin.text(data.errors.email)
+                .catch((err)=>{
+                    console.log("đây là err", err.response.data)
+                    const data = err.response.data.errors
+                    if(data.status != ''){
+                        alert(data.status)
                     }
                 })
+            }
+            catch(err){
+                console.log(err)
+            }
         })
     })
 </script>

@@ -3,12 +3,14 @@ const jwt = require('jsonwebtoken')
 
 // handle errors
 const handleErrors = (err) => {
-    let errors = { email: '', password: '', name: '', phone: ''}
+    let errors = { email: '', password: '', name: '', phone: '', status: ''}
     // sai tài khoản hoặc mật khẩu
     if(err.message === 'Sai tài khoản hoặc mật khẩu') {
         errors.email = 'Sai tài khoản hoặc mật khẩu'
     }
-
+    if(err.message === 'Tài khoản đã bị khóa!') {
+        errors.status = 'Tài khoản đã bị khóa!'
+    }
     // duplicate error code-point
     if( err.code === 11000){
         errors.email = 'Email này đã tồn tại'

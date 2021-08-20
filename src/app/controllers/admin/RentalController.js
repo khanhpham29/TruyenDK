@@ -105,6 +105,7 @@ class RentalController {
     }
 
     payBookRentals(req, res, next){
+        console.log(req.body)
         DetailsCart_Model.updateOne({
             idCart: req.params.id
         },{
@@ -127,17 +128,18 @@ class RentalController {
 
     userRentalsList(req, res, next){
         Cart_Model.find({}).sort({ createAt: -1 })
-            .then((cart) => {
-                res.render('admins/carts/cart-list', {
-                    cart: multipleMongooseToOject(cart),
-                    layout: 'admin'
-                })
+        .then((cart) => {
+            res.render('admins/carts/cart-list', {
+                cart: multipleMongooseToOject(cart),
+                layout: 'admin'
             })
-            .catch(next)
+        })
+        .catch(next)
     }
 
     paidOneBook(req, res, next){    
         const idRentalBook = req.params.id
+        console.log('pay 1 book', req.body)
         DetailsCart_Model.findOne({idCart: req.body.idCart})
         .then(async (detailCart) => {
             const indexItems = detailCart.listRentalBooks.items.findIndex(objInItems =>{
@@ -151,17 +153,18 @@ class RentalController {
                 detailCart.listRentalBooks.items[indexItems].datePayBook = req.body.datePayBook
                 detailCart.listRentalBooks.items[indexItems].statusBook = req.body.statusBook
                 detailCart.save()
-                console.log(detailCart.listRentalBooks.items[indexItems]._id)
-                book_model.findOne({_id: detailCart.listRentalBooks.items[indexItems].bookId})
-                .then((book) => {
-                    book_model.updateOne({_id: detailCart.listRentalBooks.items[indexItems].bookId},{
-                        amount: book.amount + 1
+                if(req.body.statusBook == 'Nguyên vẹn' || req.body.statusBook == 'Hư hại nhẹ'){
+                    console.log('cộng số lượng')
+                    book_model.findOne({_id: detailCart.listRentalBooks.items[indexItems].bookId})
+                    .then((book) => {
+                        book_model.updateOne({_id: detailCart.listRentalBooks.items[indexItems].bookId},{
+                            amount: book.amount + 1
+                        })
+                        .then(() => console.log('update thành công'))
+                        .catch(() => console.log('loi'))
                     })
-                    .then(() => console.log('update thành công'))
-                    .catch(() => console.log('loi'))
-                })
-                .catch((next))     
-                
+                    .catch((next))
+                }
             }           
         })
     }

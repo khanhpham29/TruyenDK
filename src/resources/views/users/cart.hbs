@@ -1,7 +1,6 @@
 <div class="container">
     <div class="row">
-        <table class="table" id="table">
-            
+        <table class="table" id="table"> 
             <thead>
                 <tr>
                     <th>#</th>
@@ -41,29 +40,28 @@
                     
                 <tr>
                     <td colspan="2">Số ngày thuê: 7 ngày/1 lần</td>  
-                    <td colspan="3">
-                        Tiền % thuê truyện: <span id="discount"></span>đ
-                    </td>   
-                </tr>
-                <tr>
                     <td colspan="4" style="text-align: right;">
-                        Tiền cọc: <span id="totalCost"></span>đ
+                        <b>Tiền cọc:</b>
+                        <span id="totalCost"></span>đ
+                    </td>  
+                
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align: right;">
+                        <b>Tiền thuê truyện: </b>
+                        <span id="totalRentCost"></span>đ
                     </td>   
                 </tr>
                 <tr>
-                    <td colspan="4" style="text-align: right;">
-                        Tiền thuê truyện: <span id="totalRentCost"></span>đ
-                    </td>   
-                </tr>
-                <tr>
-                    <td colspan="4" style="text-align: right;">Tổng tiền:
+                    <td colspan="6" style="text-align: right;">
+                        <b> Tổng tiền:</b>
                         <span class="tong-tien">{{cart.totalPrice}}</span>đ
                     </td>
                 </tr>
             </tbody>
                 
         </table>
-        <form name="form-rentals"  method="POST">
+        <form name="form-rentals" class="ml-auto mr-5"method="POST">
             <input type="hidden" name="totalPrice" value="{{cart.totalPrice}}">
             <button type="submit" class="btn btn-success submitForm disabled" id="submitForm">Xác nhận</button>
         </form>
@@ -78,24 +76,52 @@
         var form = document.forms['form-rentals']
         var submitForm = $('.submitForm')
         //var minusEl = $('.amountMinus')
-        var tongtienEl = document.querySelector('.tong-tien')
+        var tongtienEl = document.querySelector('.tong-tien')   
         var discountEl = document.getElementById('discount')
-        console.log('discount', discountEl)
         //var amountPlus = document.querySelectorAll('.amountPlus')
         //var amountMinus = document.querySelectorAll('.amountMinus')
         var valueAmount = document.getElementsByClassName('valueAmount')
         var elTable = document.getElementById('table')
+        var totalRentCost = document.getElementById('totalRentCost')
+        var totalCost = document.getElementById('totalCost')
+        //Biến tiền
+        var valueTotalCost = 0//biến tổng tiền cọc
+        var valueTotalRentCost = 0//biến tông tiền thuê
+
+        //Hàm format tiền --- https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-strings
+        Number.prototype.format = function(n =0, x=3, s='.', c =',') {
+            var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+                num = this.toFixed(Math.max(0, ~~n));
+
+            return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+        };
+        
 
         {{!-- Hàm kiểm tra nút xác nhận --}}
         function checkRowData(table){
             var checkedLength = table.rows.length
-            if (checkedLength > 2){
+            if (checkedLength > 4){
                 submitForm.removeClass('disabled')
             }else{
                 submitForm.addClass('disabled')
             }
         }
+
         checkRowData(elTable)
+
+        //Tổng tiền thuê
+        rowData.forEach((row, i) => {
+            var rowRentCost = row.querySelector('.rentCost').innerText
+            valueTotalRentCost += rowRentCost * 1
+            totalRentCost.innerText =  valueTotalRentCost
+        })
+
+        //Tông tiền cọc
+        rowData.forEach((row) => {
+            var rowCost = row.querySelector('.cost').innerText
+            valueTotalCost += rowCost * 1 + rowCost * 0.25//Tổng tiền cọc
+            totalCost.innerText =  valueTotalCost
+        })
 
         {{!-- Hàm tăng số lượng lên 1 --}}
         //amountPlus.forEach((plus, i) => {
@@ -148,8 +174,12 @@
         {{!-- Hàm xóa truyện ra khỏi giỏ hàng --}}
         btnDeleteItem.forEach(btn =>{
             btn.onclick = function (){
-                tongtienEl.innerText = ""
+                var tempCost = this.parentElement.parentElement.querySelector('.cost').innerText
+                var tempRentCost = this.parentElement.parentElement.querySelector('.rentCost').innerText
+                //tongtienEl.innerText = 0
                 cartItem.innerText = ""
+                totalRentCost.innerText -= parseInt(tempRentCost)
+                totalCost.innerText -= parseInt(tempCost) + parseInt(tempCost) * 0.25
                 var idItem = this.getAttribute("data-id")
                 let table = this.parentElement.parentElement.parentElement.parentElement
                 this.parentElement.parentElement.remove()
@@ -160,6 +190,7 @@
                     const totalItem = res.data.cart.totalItem
                     tongtienEl.innerText = totalPrice
                     cartItem.innerText = totalItem
+                    
                 })
                 .catch((err)=>{
                     console.log(err)
@@ -173,7 +204,7 @@
             const items = []
             //var numberRental = form.numberRental.value
             var totalPrice = tongtienEl.innerText
-            console.log(totalPrice)
+            let socket = io({path: "/socket.io/rental"});
             var flag = 1
             var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-data')
             rowData.forEach((row, i) => {
@@ -196,6 +227,8 @@
                     })
                 }  
             })
+                          
+
             if(flag == 0){
                 alert('Số lượng ko đủ!')
             }
@@ -204,10 +237,12 @@
                 items: items,
                 totalPrice: parseInt(totalPrice),
                 //numberRental: numberRental,
-            })
+                })
                 .then(async (res)=>{
-                    console.log(res.data)
-                    var success  = await res.data.messge
+                    console.log('res 1', res.data.cartEl)
+                    let data = res.data.cartEl
+                    socket.emit('cart', data)   
+                    var success  = await res.data.message
                     alert(success)
                     if(success == 'Tạo đơn hàng thành công'){
                         location.assign('/')
