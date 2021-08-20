@@ -28,7 +28,7 @@ class MemberController{
         User_Model.findOne({_id: req.params.id})
         .populate('idCart')
         .then((user) => {
-            res.render('admin/users/view-list-rentals-user', {
+            res.render('admins/users/view-list-rentals-user', {
                 user: mongooseToOject(user)
             })
         })

@@ -8,18 +8,6 @@
             <div class="txt">
                 <span class="info-item">Tên khác: {{manga.otherName}}</span>
                 <p class="info-item">Tình trạng: {{manga.idDetailManga.status}}</p>
-                <div>
-                    <span>Thống kê</span>
-                    <span class="sp01">
-                        <i class="fas fa-thumbs-up"></i> <span class="sp02 number-like">{{detail.idFavourite.arrIdUser.length}}</span>
-                    </span>
-                    <span class="sp01">
-                        <i class="fas fa-heart"></i> <span class="sp02">{{manga.idDetailManga.arrIdFollow.length}}</span>
-                    </span>
-                    <span class="sp01">
-                        <i class="fas fa-eye"></i> <span class="sp02">99</span> 
-                    </span>
-                </div>
             </div>
             <ul class="list01">
                 {{#each manga.categories}}
@@ -27,32 +15,6 @@
                         <a href="#">{{this.nameCategory}}</a>
                     </li>
                 {{/each}}
-            </ul>
-            <ul class="story-detail-menu">
-                <li class="li01">
-                    
-                        <a href="/manga/{{manga.slug}}/1" class="button is-danger is-rounded">
-                            <span class="btn-read"></span>Đọc từ đầu
-                        </a>
-                </li>
-                <li class="li02">
-                    <form name="form-follow-manga" class="{{#if checkFollow}}cancel-follow{{/if}}">
-                        <input type="hidden" name="idUser" value="{{user._id}}">
-                        <input type="hidden" name="idManga" value="{{manga._id}}">
-                        <a href="#" class="button is-danger is-rounded btn-subscribe subscribeBook" data-page="index" data-id="11004">
-                            <span class="fas fa-heart"></span>
-                        </a>
-                    </form>
-                </li>
-                <li class="li03">
-                    <form name="form-favourite">
-                        <a href="#" class="button is-danger is-rounded btn-like" data-id="11004">
-                            <input type="hidden" name="idUser" value="{{user._id}}">
-                            <input type="hidden" name="idManga" value="{{manga._id}}">
-                            <span class="fas fa-thumbs-up"></span>Thích
-                        </a>
-                    </form>
-                </li>
             </ul>
             {{#if detail.description}}
             <div class="txt txt01 story-detail-info readmore-js-section readmore-js-collapsed" itemprop="description" style="height: 60px;">

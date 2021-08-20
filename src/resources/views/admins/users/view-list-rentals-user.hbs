@@ -1,1 +1,33 @@
-{{user}}
+<div class="container">
+    <h2>Lịch sử thuê truyện</h2>
+        {{#if user.idCart}}
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>#</th>  
+                        <th>Ngày thuê</th>  
+                        <th>Trạng thái</th>  
+                        <th>Tổng giá</th>
+                        <th></th>
+                    </tr>          
+                </thead>
+                <tbody>
+                    
+                    {{#each user.idCart}}
+                        <tr>
+                            <td>{{sum @index 1}}</td>
+                            <td>{{dateFormat this.createAt}}</td>
+                            <td>{{this.status}}</td>
+                            <td>{{this.totalPrice}}</td>
+                            <td>
+                                <a href="/account/rentals-history/{{this._id}}/detail"> Xem chi tiết</a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <h3>Khách hàng chưa có lịch sử thuê truyện.</h3>
+        {{/if}}
+   
+</div>

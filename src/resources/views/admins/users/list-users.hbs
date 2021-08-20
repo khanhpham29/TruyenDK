@@ -43,7 +43,7 @@
                                 <td>{{this.idCart.length}}</td>
                                 <td class="reason">{{this.reason}}</td>
                                 <td>
-                                    <a href="#" class="btn btn-purple">Phiếu thuê</a>
+                                    <a href="/admin/users/{{this._id}}/view-list-rental" class="btn btn-purple">Phiếu thuê</a>
                                     <span class="" data-id="{{this._id}}">
                                         {{#block_unblock_account this.status}}
                                         {{/block_unblock_account}}
@@ -78,9 +78,9 @@
                 const users = res.data.users
                 let matches = users.filter(user =>{
                     console.log(user.phone)
-                    //const regex = new RegExp(`${searchText}`, 'giu')
-                    //return user.phone.replace(/\s/gis, "").match(regex) 
-                    return user.phone
+                    const regex = new RegExp(`${searchText}`, 'giu')
+                    return user.phone.replace(/\s/gis, "").match(regex)
+                    
                 })
                 if(matches.length === 0){
                     searchWrapper.classList.remove("active")
@@ -91,9 +91,9 @@
             })
         }
         const outputHtml = matches =>{
-            if(matches.length >0){
+            if(matches.length > 0){
                 const html = matches.map(match =>`
-                    <a href="#" target="_blank"><li>${match.name}</li></a>
+                    <a href="#" target="_blank"><li>${match.phone}</li></a>
                 `)
                 .join('');
                 searchWrapper.classList.add("active")
