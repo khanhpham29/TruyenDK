@@ -1,0 +1,94 @@
+<div class="container has-background-white story-detail mt-4">
+    <div class="block01 mt-2">
+        <div class="left">
+            <img src="/img/{{manga.image}}" alt="">
+        </div>
+        <div class="center">
+            <h1>{{manga.nameManga}}</h1>
+            <div class="txt">
+                <span class="info-item">Tên khác: {{manga.otherName}}</span>
+                <p class="info-item">Tình trạng: {{manga.idDetailManga.status}}</p>
+            </div>
+            <ul class="list01">
+                {{#each manga.categories}}
+                    <li class="li03">
+                        <a href="#">{{this.nameCategory}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+            {{#if detail.description}}
+            <div class="txt txt01 story-detail-info readmore-js-section readmore-js-collapsed" itemprop="description" style="height: 60px;">
+                <p>{{detail.description}}</p>
+            </div>
+            <p class="readmore readmore-js-toggle" ><a href="#">Xem Thêm</a></p>
+            {{/if}}
+        </div>
+    </div>
+    <div class="block02">
+        <div class="title">
+            <h2 class="story-detail-title">Danh sách tập truyện</h2>
+        </div>
+        <div class="box">
+            <div class="works-chapter-list row">
+                {{#each rentals}}
+                    <div class="list-manga grid-6">
+                        {{#each this.books}}
+                            <div class="manga-item">
+                                <img src="/img/{{this.image}}"alt="#">
+                                <h4 class="title-book">
+                                    <p>Tên Truyện: {{this.nameManga}}</p>   
+                                </h4>
+                                <p>Tập số: {{this.episode}}, Số lượng <span class="amount">{{this.amount}}</span>  </p>
+                                <p>Giá thuê {{this.rentCost}}</p>
+                                <div class="chapter-book" data-id="{{this._id}}">
+                                    {{!-- handlebars helper --}}
+                                    {{!-- nếu số lượng = 0 => hết hàng, ngược lại => addToCart --}}
+                                    {{#if_eq this.amount}}
+                                    {{/if_eq}}
+                                </div>
+                                <div class="more-info"></div>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        var btnAddToCarts = document.querySelectorAll(".btn-add-to-cart")
+        var cartItem = document.querySelector('.cart-item')
+        var amount = document.querySelectorAll('.amount')
+        var flag = 1
+        btnAddToCarts.forEach((btn, i) => {
+            btn.onclick = function(e) {
+                e.preventDefault();
+                var idBook = this.parentElement.getAttribute("data-id")
+                console.log(idBook)
+                console.log("amount : ",amount[i].innerText)
+                if(amount[i].innerText <= 0){
+                    alert("Hết hàng!")
+                    flag = 0
+                }
+                if(flag == 1){    
+                    axios.post('/addToCart/'+ idBook)
+                    .then((res)=>{
+                        console.log(res.data)
+                        if(res.data.message == 'Tập truyện này đã có trong giỏ hàng!'){
+                            alert(res.data.message)
+                        }
+                        if(res.data.message == 'Thêm vào giỏ hàng thành công'){
+                            alert(res.data.message)
+                            const totalItem = res.data.user.cart.totalItem
+                            cartItem.innerText = totalItem
+                        }
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                }
+            }
+        })
+    })
+</script>

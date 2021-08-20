@@ -1189,36 +1189,169 @@ strong {
       color: #209cee; }
     .story-detail .block02 .box .works-chapter-list .works-chapter-item a:focus {
       color: #209cee; }
+  .story-detail .block02 .list-manga {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-bottom: 10px; }
+    .story-detail .block02 .list-manga .manga-item:before {
+      content: "";
+      width: 10px;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: -10px; }
+    .story-detail .block02 .list-manga .manga-item.open .more-info {
+      opacity: 1;
+      visibility: visible;
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px); }
+    .story-detail .block02 .list-manga .manga-item.open.show-left .more-info {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px); }
+    .story-detail .block02 .list-manga .manga-item.show-left .more-info {
+      left: initial;
+      right: 100%;
+      -webkit-transform: translateX(-40px);
+      transform: translateX(-40px); }
+    .story-detail .block02 .list-manga .manga-item {
+      text-align: center;
+      position: relative; }
+      .story-detail .block02 .list-manga .manga-item .top-notice {
+        position: absolute;
+        top: 9px;
+        left: 8px;
+        font-size: 1; }
+        .story-detail .block02 .list-manga .manga-item .top-notice span {
+          font-size: 13px;
+          font-weight: 500;
+          color: #fff;
+          padding: 2px 6px 3px; }
+        .story-detail .block02 .list-manga .manga-item .top-notice .time-ago {
+          border-radius: 5px;
+          background-color: #56ccf2;
+          margin-right: 5px; }
+      .story-detail .block02 .list-manga .manga-item .story-cover {
+        -o-object-fit: cover;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ccc; }
+      .story-detail .block02 .list-manga .manga-item img {
+        width: 180px;
+        height: 240px; }
+      .story-detail .block02 .list-manga .manga-item .manga-cover {
+        -o-object-fit: cover;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ccc; }
+      .story-detail .block02 .list-manga .manga-item .title-book {
+        font-weight: 500;
+        letter-spacing: -.5px;
+        margin-top: 3px; }
+        .story-detail .block02 .list-manga .manga-item .title-book a {
+          color: #000; }
+      .story-detail .block02 .list-manga .manga-item .chapter-book {
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: -.4px;
+        color: #000; }
+        .story-detail .block02 .list-manga .manga-item .chapter-book a {
+          line-height: 1.4;
+          letter-spacing: -.5px;
+          text-align: justify;
+          color: #000; }
+      .story-detail .block02 .list-manga .manga-item .more-info {
+        width: 310px;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .3s;
+        border-radius: 6px;
+        background-color: #fff;
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        -webkit-transform: translateX(40px);
+        transform: translateX(40px);
+        z-index: 100; }
+        .story-detail .block02 .list-manga .manga-item .more-info .title-more {
+          font-size: 13px;
+          font-weight: 700;
+          color: #f18121;
+          letter-spacing: normal;
+          margin-top: 0; }
+        .story-detail .block02 .list-manga .manga-item .more-info .title-more-other {
+          font-weight: 500;
+          letter-spacing: normal;
+          color: #757575;
+          line-height: 1;
+          margin-top: 5px;
+          margin-bottom: 10px; }
+        .story-detail .block02 .list-manga .manga-item .more-info .info {
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1.5;
+          color: #000; }
+        .story-detail .block02 .list-manga .manga-item .more-info .list-tags {
+          margin: 10px 0;
+          font-size: 0; }
+          .story-detail .block02 .list-manga .manga-item .more-info .list-tags a {
+            display: inline-block;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #fff;
+            padding: 3px 7px 2px;
+            margin-right: 2px;
+            margin-bottom: 2px; }
+          .story-detail .block02 .list-manga .manga-item .more-info .list-tags a.blue {
+            background-color: #56ccf2; }
+        .story-detail .block02 .list-manga .manga-item .more-info .excerpt {
+          font-size: 13px;
+          font-weight: 500;
+          color: #000; }
+      .story-detail .block02 .list-manga .manga-item .more-info:before {
+        position: absolute;
+        top: 25px;
+        left: -9px;
+        content: "";
+        width: 0;
+        height: 0;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 9px solid #fff; }
 
-.readmore {
+.story-detail .readmore {
   text-align: center;
   padding-top: 7px;
   border-top: 1px solid #ccc; }
-  .readmore a {
+  .story-detail .readmore a {
     background-color: #fba026;
     color: #fff;
     font-size: 13px;
     padding: 7px;
     border-radius: 15px; }
-  .readmore a:hover {
+  .story-detail .readmore a:hover {
     color: #fff !important;
     opacity: .6; }
 
-.readmore-js-toggle, .readmore-js-section {
+.story-detail .readmore-js-toggle, .story-detail .readmore-js-section {
   display: block;
   width: 100%; }
 
-.readmore-js-section {
+.story-detail .readmore-js-section {
   overflow: hidden; }
 
-.readmore-js-expanded {
+.story-detail .readmore-js-expanded {
   height: auto !important; }
 
-.main-content.on {
+.story-detail .main-content.on {
   background-color: #424242; }
-  .main-content.on .story-see {
+  .story-detail .main-content.on .story-see {
     overflow: hidden; }
-    .main-content.on .story-see .nav {
+    .story-detail .main-content.on .story-see .nav {
       background: #e6e6e6;
       width: 160px;
       padding: 10px 20px;
@@ -1228,215 +1361,215 @@ strong {
       left: 0;
       transition: .3s;
       overflow-x: hidden; }
-      .main-content.on .story-see .nav h2 {
+      .story-detail .main-content.on .story-see .nav h2 {
         color: #f18121;
         padding-bottom: 15px;
         font-weight: 700; }
-      .main-content.on .story-see .nav .item {
+      .story-detail .main-content.on .story-see .nav .item {
         padding-bottom: 15px; }
-    .main-content.on .story-see .story-see-main .block {
+    .story-detail .main-content.on .story-see .story-see-main .block {
       margin: 0 auto; }
-      .main-content.on .story-see .story-see-main .block .story-see-content {
+      .story-detail .main-content.on .story-see .story-see-main .block .story-see-content {
         text-align: center;
         padding: 30px;
         margin-bottom: 30px; }
-      .main-content.on .story-see .story-see-main .block .story-detail {
+      .story-detail .main-content.on .story-see .story-see-main .block .story-detail {
         border-radius: 6px;
         padding: 10px 30px;
         margin-bottom: 30px; }
-        .main-content.on .story-see .story-see-main .block .story-detail .w225 {
+        .story-detail .main-content.on .story-see .story-see-main .block .story-detail .w225 {
           width: 225px; }
-        .main-content.on .story-see .story-see-main .block .story-detail .mess-input {
+        .story-detail .main-content.on .story-see .story-see-main .block .story-detail .mess-input {
           margin-bottom: 0; }
 
-.edit-manga .form-group .cbb-status {
+.story-detail .edit-manga .form-group .cbb-status {
   width: 300px; }
 
-.account {
+.story-detail .account {
   width: 100%;
   height: 100%; }
-  .account .avatar {
+  .story-detail .account .avatar {
     width: 150px;
     height: 150px;
     margin-bottom: 50px; }
-    .account .avatar img {
+    .story-detail .account .avatar img {
       width: 100%;
       height: 100%; }
-  .account label {
+  .story-detail .account label {
     font-weight: 400 !important;
     padding-right: 10px; }
-  .account button {
+  .story-detail .account button {
     margin-bottom: 40px; }
 
-.user-detail-rentals .info {
+.story-detail .user-detail-rentals .info {
   width: 300px; }
 
-.user-manager-avatar {
+.story-detail .user-manager-avatar {
   width: 60px;
   height: 100%;
   background-color: #fff !important; }
-  .user-manager-avatar img {
+  .story-detail .user-manager-avatar img {
     width: 100%;
     height: 100%;
     border-radius: inherit; }
 
-.messages .form-group .mab-jquery-taginput span.label, .messages table input:checked + label, .story-detail .block02 .title .sort li a.active, .story-detail .block02 .title .sort li a:hover, .story-list .story-list-bl01 .select2-selection.select2-selection--multiple .select2-selection__choice, .story-list .story-list-bl01 table td ul li a.active, .story-list .story-list-bl01 table td ul li a:active, .story-list .story-list-bl01 table td ul li a:hover {
+.story-detail .messages .form-group .mab-jquery-taginput span.label, .story-detail .messages table input:checked + label, .story-detail .story-detail .block02 .title .sort li a.active, .story-detail .story-detail .block02 .title .sort li a:hover, .story-detail .story-list .story-list-bl01 .select2-selection.select2-selection--multiple .select2-selection__choice, .story-detail .story-list .story-list-bl01 table td ul li a.active, .story-detail .story-list .story-list-bl01 table td ul li a:active, .story-detail .story-list .story-list-bl01 table td ul li a:hover {
   color: #fff !important;
   background: #f18121; }
 
 @media screen and (min-width: 769px), print {
-  .column.is-narrow, .column.is-narrow-tablet {
+  .story-detail .column.is-narrow, .story-detail .column.is-narrow-tablet {
     flex: none; }
-  .column.is-full, .column.is-full-tablet {
+  .story-detail .column.is-full, .story-detail .column.is-full-tablet {
     flex: none;
     width: 100%; }
-  .column.is-three-quarters, .column.is-three-quarters-tablet {
+  .story-detail .column.is-three-quarters, .story-detail .column.is-three-quarters-tablet {
     flex: none;
     width: 75%; }
-  .column.is-two-thirds, .column.is-two-thirds-tablet {
+  .story-detail .column.is-two-thirds, .story-detail .column.is-two-thirds-tablet {
     flex: none;
     width: 66.6666%; }
-  .column.is-half, .column.is-half-tablet {
+  .story-detail .column.is-half, .story-detail .column.is-half-tablet {
     flex: none;
     width: 50%; }
-  .column.is-one-third, .column.is-one-third-tablet {
+  .story-detail .column.is-one-third, .story-detail .column.is-one-third-tablet {
     flex: none;
     width: 33.3333%; }
-  .column.is-one-quarter, .column.is-one-quarter-tablet {
+  .story-detail .column.is-one-quarter, .story-detail .column.is-one-quarter-tablet {
     flex: none;
     width: 25%; }
-  .column.is-one-fifth, .column.is-one-fifth-tablet {
+  .story-detail .column.is-one-fifth, .story-detail .column.is-one-fifth-tablet {
     flex: none;
     width: 20%; }
-  .column.is-two-fifths, .column.is-two-fifths-tablet {
+  .story-detail .column.is-two-fifths, .story-detail .column.is-two-fifths-tablet {
     flex: none;
     width: 40%; }
-  .column.is-three-fifths, .column.is-three-fifths-tablet {
+  .story-detail .column.is-three-fifths, .story-detail .column.is-three-fifths-tablet {
     flex: none;
     width: 60%; }
-  .column.is-four-fifths, .column.is-four-fifths-tablet {
+  .story-detail .column.is-four-fifths, .story-detail .column.is-four-fifths-tablet {
     flex: none;
     width: 80%; }
-  .column.is-offset-three-quarters, .column.is-offset-three-quarters-tablet {
+  .story-detail .column.is-offset-three-quarters, .story-detail .column.is-offset-three-quarters-tablet {
     margin-left: 75%; }
-  .column.is-offset-two-thirds, .column.is-offset-two-thirds-tablet {
+  .story-detail .column.is-offset-two-thirds, .story-detail .column.is-offset-two-thirds-tablet {
     margin-left: 66.6666%; }
-  .column.is-offset-half, .column.is-offset-half-tablet {
+  .story-detail .column.is-offset-half, .story-detail .column.is-offset-half-tablet {
     margin-left: 50%; }
-  .column.is-offset-one-third, .column.is-offset-one-third-tablet {
+  .story-detail .column.is-offset-one-third, .story-detail .column.is-offset-one-third-tablet {
     margin-left: 33.3333%; }
-  .column.is-offset-one-quarter, .column.is-offset-one-quarter-tablet {
+  .story-detail .column.is-offset-one-quarter, .story-detail .column.is-offset-one-quarter-tablet {
     margin-left: 25%; }
-  .column.is-offset-one-fifth, .column.is-offset-one-fifth-tablet {
+  .story-detail .column.is-offset-one-fifth, .story-detail .column.is-offset-one-fifth-tablet {
     margin-left: 20%; }
-  .column.is-offset-two-fifths, .column.is-offset-two-fifths-tablet {
+  .story-detail .column.is-offset-two-fifths, .story-detail .column.is-offset-two-fifths-tablet {
     margin-left: 40%; }
-  .column.is-offset-three-fifths, .column.is-offset-three-fifths-tablet {
+  .story-detail .column.is-offset-three-fifths, .story-detail .column.is-offset-three-fifths-tablet {
     margin-left: 60%; }
-  .column.is-offset-four-fifths, .column.is-offset-four-fifths-tablet {
+  .story-detail .column.is-offset-four-fifths, .story-detail .column.is-offset-four-fifths-tablet {
     margin-left: 80%; }
-  .column.is-1, .column.is-1-tablet {
+  .story-detail .column.is-1, .story-detail .column.is-1-tablet {
     flex: none;
     width: 8.33333%; }
-  .column.is-offset-1, .column.is-offset-1-tablet {
+  .story-detail .column.is-offset-1, .story-detail .column.is-offset-1-tablet {
     margin-left: 8.33333%; }
-  .column.is-2, .column.is-2-tablet {
+  .story-detail .column.is-2, .story-detail .column.is-2-tablet {
     flex: none;
     width: 16.66667%; }
-  .column.is-offset-2, .column.is-offset-2-tablet {
+  .story-detail .column.is-offset-2, .story-detail .column.is-offset-2-tablet {
     margin-left: 16.66667%; }
-  .column.is-3, .column.is-3-tablet {
+  .story-detail .column.is-3, .story-detail .column.is-3-tablet {
     flex: none;
     width: 25%; }
-  .column.is-offset-3, .column.is-offset-3-tablet {
+  .story-detail .column.is-offset-3, .story-detail .column.is-offset-3-tablet {
     margin-left: 25%; }
-  .column.is-4, .column.is-4-tablet {
+  .story-detail .column.is-4, .story-detail .column.is-4-tablet {
     flex: none;
     width: 33.33333%; }
-  .column.is-offset-4, .column.is-offset-4-tablet {
+  .story-detail .column.is-offset-4, .story-detail .column.is-offset-4-tablet {
     margin-left: 33.33333%; }
-  .column.is-5, .column.is-5-tablet {
+  .story-detail .column.is-5, .story-detail .column.is-5-tablet {
     flex: none;
     width: 41.66667%; }
-  .column.is-offset-5, .column.is-offset-5-tablet {
+  .story-detail .column.is-offset-5, .story-detail .column.is-offset-5-tablet {
     margin-left: 41.66667%; }
-  .column.is-6, .column.is-6-tablet {
+  .story-detail .column.is-6, .story-detail .column.is-6-tablet {
     flex: none;
     width: 50%; }
-  .column.is-offset-6, .column.is-offset-6-tablet {
+  .story-detail .column.is-offset-6, .story-detail .column.is-offset-6-tablet {
     margin-left: 50%; }
-  .column.is-7, .column.is-7-tablet {
+  .story-detail .column.is-7, .story-detail .column.is-7-tablet {
     flex: none;
     width: 58.33333%; }
-  .column.is-offset-7, .column.is-offset-7-tablet {
+  .story-detail .column.is-offset-7, .story-detail .column.is-offset-7-tablet {
     margin-left: 58.33333%; }
-  .column.is-8, .column.is-8-tablet {
+  .story-detail .column.is-8, .story-detail .column.is-8-tablet {
     flex: none;
     width: 66.66667%; }
-  .column.is-offset-8, .column.is-offset-8-tablet {
+  .story-detail .column.is-offset-8, .story-detail .column.is-offset-8-tablet {
     margin-left: 66.66667%; }
-  .column.is-9, .column.is-9-tablet {
+  .story-detail .column.is-9, .story-detail .column.is-9-tablet {
     flex: none;
     width: 75%; }
-  .column.is-offset-9, .column.is-offset-9-tablet {
+  .story-detail .column.is-offset-9, .story-detail .column.is-offset-9-tablet {
     margin-left: 75%; }
-  .column.is-10, .column.is-10-tablet {
+  .story-detail .column.is-10, .story-detail .column.is-10-tablet {
     flex: none;
     width: 83.33333%; }
-  .column.is-offset-10, .column.is-offset-10-tablet {
+  .story-detail .column.is-offset-10, .story-detail .column.is-offset-10-tablet {
     margin-left: 83.33333%; }
-  .column.is-11, .column.is-11-tablet {
+  .story-detail .column.is-11, .story-detail .column.is-11-tablet {
     flex: none;
     width: 91.66667%; }
-  .column.is-offset-11, .column.is-offset-11-tablet {
+  .story-detail .column.is-offset-11, .story-detail .column.is-offset-11-tablet {
     margin-left: 91.66667%; }
-  .column.is-12, .column.is-12-tablet {
+  .story-detail .column.is-12, .story-detail .column.is-12-tablet {
     flex: none;
     width: 100%; }
-  .column.is-offset-12, .column.is-offset-12-tablet {
+  .story-detail .column.is-offset-12, .story-detail .column.is-offset-12-tablet {
     margin-left: 100%; } }
 
 @media screen and (min-width: 769px), print {
-  .columns:not(.is-desktop) {
+  .story-detail .columns:not(.is-desktop) {
     display: flex; } }
 
-.columns:last-child {
+.story-detail .columns:last-child {
   margin-bottom: -.75rem; }
 
-.columns:not(:last-child) {
+.story-detail .columns:not(:last-child) {
   margin-bottom: calc(1.5rem - .75rem); }
 
-.columns.is-centered {
+.story-detail .columns.is-centered {
   justify-content: center; }
 
-.columns {
+.story-detail .columns {
   margin-left: -.75rem;
   margin-right: -.75rem;
   margin-top: -.75rem; }
 
-.column {
+.story-detail .column {
   display: block;
   flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
   padding: .75rem; }
 
-.messages {
+.story-detail .messages {
   background: #fff;
   overflow: hidden;
   padding-top: 20px; }
-  .messages .columns {
+  .story-detail .messages .columns {
     margin-left: -.75rem;
     margin-right: -.75rem;
     margin-top: -.75rem; }
-  .messages .nav-user {
+  .story-detail .messages .nav-user {
     width: 370px;
     border-right: 1px solid #eee;
     height: 100%; }
-    .messages .nav-user li {
+    .story-detail .messages .nav-user li {
       width: 300px;
       margin: 0 auto; }
-      .messages .nav-user li a {
+      .story-detail .messages .nav-user li a {
         display: block;
         font-size: 16px;
         color: #000;
@@ -1445,31 +1578,31 @@ strong {
         background-size: 26px 26px;
         background-position: 10px center;
         background-repeat: no-repeat; }
-      .messages .nav-user li a.is-active {
+      .story-detail .messages .nav-user li a.is-active {
         color: #f18121; }
-  .messages .user-right {
+  .story-detail .messages .user-right {
     width: 100px !important;
     text-align: center;
     order: 2; }
-    .messages .user-right .img {
+    .story-detail .messages .user-right .img {
       width: 100px;
       margin: 0 auto 8px; }
-    .messages .user-right button {
+    .story-detail .messages .user-right button {
       width: 100px;
       margin: 0 auto; }
-  .messages .user-main {
+  .story-detail .messages .user-main {
     width: 500px !important; }
-  .messages .user-main input[type=email] {
+  .story-detail .messages .user-main input[type=email] {
     border: 1px solid #e0e0e0;
     background: #ebebeb; }
-    .messages .user-main input[type=email] .user-title {
+    .story-detail .messages .user-main input[type=email] .user-title {
       margin-top: 20px; }
-    .messages .user-main input[type=email] .user-field {
+    .story-detail .messages .user-main input[type=email] .user-field {
       margin-top: 20px; }
-      .messages .user-main input[type=email] .user-field .txt {
+      .story-detail .messages .user-main input[type=email] .user-field .txt {
         padding-right: 20px; }
-    .messages .user-main input[type=email] label {
+    .story-detail .messages .user-main input[type=email] label {
       font-weight: 400 !important;
       padding-right: 10px; }
-    .messages .user-main input[type=email] button {
+    .story-detail .messages .user-main input[type=email] button {
       margin-bottom: 40px; }

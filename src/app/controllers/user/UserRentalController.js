@@ -153,5 +153,30 @@ class UserRentalController{
             })
             .catch( err => console.error(err))
     }
+
+    async detailMangaRental(req, res, next){
+        Promise.all([
+            rental_model.find({ slug: req.params.slug }).populate('books'),
+            manga_model.findOne({ slug: req.params.slug }).populate('categories').populate('idDetailManga'),
+            detailManga_model.findOne({ slug: req.params.slug })
+            .populate({
+                path:"imgDetails",
+                options: { sort: { createAt: -1 } },
+                
+            })
+            .populate({ 
+                path: "idFavourite"
+            }),
+        ])
+        .then(([rentals, manga, detailManga]) => {
+            //res.json(rental)
+            res.render('users/detailMangaRental', {
+                rentals: multipleMongooseToOject(rentals),
+                manga: mongooseToOject(manga),
+                detail: mongooseToOject(detailManga),
+                layout: 'user.hbs'
+            })
+        })
+    }
 }
 module.exports = new UserRentalController
