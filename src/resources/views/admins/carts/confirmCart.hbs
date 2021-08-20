@@ -13,7 +13,7 @@
                 <tr class="row-data">
                     <td>{{sum @index 1}}</td>
                     <td>{{this.phone}}</td>
-                    <td class="dateCreateAt">{{dateFormat this.createAt format="MM/DD/YYYY hh:mm:ss"}}</td>
+                    <td class="dateCreateAt">{{dateFormat this.createAt format="MM/DD/YYYY"}}</td>
                     <td>{{this.status}}</td>
                     <td>
                         <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info btn-detail">Xem chi tiết</a>
@@ -43,7 +43,7 @@
             var d= today.setDate(today.getDate() - ngay)
             d = new Date(d)
             console.log('ngày chênh lệch',d.getDate())
-            if(d.getDate() > 1){
+            if(d.getDate() -30 > 1){
                 var idItem = row.querySelector('.btn-reject').getAttribute("data-id")
                 row.remove()
                 var reason = 'Khách không đến lấy truyện'
