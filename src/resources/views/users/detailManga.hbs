@@ -68,11 +68,13 @@
         </div>
         <div class="box">
             <div class="works-chapter-list">
+                <input type="hidden" class="id-User" value="{{user._id}}">
+                <input type="hidden" class="id-Manga" value="{{manga._id}}">
                 {{#with detail}}
                     {{#imgDetails}}
                     <div class="works-chapter-item row">
                         <div class="col-md-10 col-sm-10 col-xs-8">
-                            <a target="_blank" href="/manga/{{slug}}/{{chapter}}">Chương {{chapter}}</a>
+                            <a target="_blank" data-id="{{_id}}" class="chapter" href="/manga/{{slug}}/{{chapter}}">Chương {{chapter}}</a>
                         </div>
                         <div class="col-md-2 col-sm-2 col-xs-4 text-right">
                             {{dateFormat createAt format='DD/MM/YYYY'}}
@@ -94,9 +96,29 @@
         var formFavourite = document.forms['form-favourite']
         var btnLike = $('.btn-like')
         var numberLike = $('.number-like')
-        console.log(numberLike)
+        var idManga = $('.id-Manga').val()
+        var idUser = $('.id-User').val()
+        var chapters = $('.chapter')
         // hàm xử lý
 
+
+        // Lịch sử
+        chapters.each((index,chapter)=>{
+            chapter.addEventListener("click", function(e){
+                e.preventDefault()
+                idChapter = chapter.getAttribute("data-id")
+                axios.post("/history/"+ idManga,{
+                    idChapter: idChapter,
+                    idUser: idUser
+                })
+                .then((res)=>{
+                    console.log(res)
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            })
+        })
         // Yêu thích
         btnLike.on('click', (e)=>{
             let idUser = formFavourite.idUser.value
