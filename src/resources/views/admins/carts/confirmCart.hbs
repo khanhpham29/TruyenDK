@@ -10,10 +10,10 @@
         </thead>
         <tbody>
             {{#each cart}}
-                <tr>
+                <tr class="row-data">
                     <td>{{sum @index 1}}</td>
                     <td>{{this.phone}}</td>
-                    <td>{{dateFormat this.createAt}}</td>
+                    <td class="dateCreateAt">{{dateFormat this.createAt format="MM/DD/YYYY hh:mm:ss"}}</td>
                     <td>{{this.status}}</td>
                     <td>
                         <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info btn-detail">Xem chi tiết</a>
@@ -30,7 +30,36 @@
     document.addEventListener("DOMContentLoaded",function(){
         var btnConfirm = document.querySelectorAll('.btn-confirm')
         var reject = document.querySelectorAll('.btn-reject')
-        console.log(reject)
+        var dateCreateAt = document.querySelectorAll('.dateCreateAt')
+        var dateCreateAtTest = document.querySelector('.dateCreateAtTest')
+        console.log('dateCreateAtTest',dateCreateAtTest)
+
+        dateCreateAt.forEach((date) => {
+            var row = this.querySelector('.table').querySelector('.row-data')
+            var string = date.innerText//Tạo biến lưu giá trị thời gian từu db
+            var ngay = string.substr(3,2)//lấy ngày từ biến trên
+            var today = new Date();//Lấy ngày hiện tại
+            var dateNow = (today.getMonth()+1) +'/'+ today.getDate()+'/'+ today.getFullYear();//lấy ngày hiện tại
+            var d= today.setDate(today.getDate() - ngay)
+            d = new Date(d)
+            console.log('ngày chênh lệch',d.getDate())
+            if(d.getDate() > 1){
+                var idItem = row.querySelector('.btn-reject').getAttribute("data-id")
+                row.remove()
+                var reason = 'Khách không đến lấy truyện'
+                axios.post('/admin/rentals/' + idItem +'/reject',{
+                    reasonReject: reason
+                })
+                .then((res)=>{      
+                    console.log(res.data.resonReject)
+                    var data = res.data
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+            }
+        })
+
         btnConfirm.forEach((btn) => {
             btn.onclick = function(){
                 var idItem = this.getAttribute("data-id")

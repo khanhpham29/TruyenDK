@@ -101,7 +101,8 @@ router.get('/rentals/list', rentalController.userRentalsList)
 router.get('/users', memberController.listUsers)
 router.get('/users/search', memberController.searchUsers)
 router.post('/users/block/:id', memberController.blockAccount)
-router.get('/users/history-rentals', memberController.searchUsers)
+router.get('/users/:id/view-list-rental/', memberController.viewListRentalsOfUser)
+
 
 //-----------------------POSTS--------------------//
 router.get('/formPosts', postController.formPostsPost)

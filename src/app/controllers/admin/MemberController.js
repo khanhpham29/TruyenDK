@@ -24,6 +24,15 @@ class MemberController{
         .catch(next)
     }
 
+    viewListRentalsOfUser(req, res, next){
+        User_Model.findOne({_id: req.params.id})
+        .populate('idCart')
+        .then((user) => {
+            res.render('admin/users/view-list-rentals-user', {
+                user: mongooseToOject(user)
+            })
+        })
+    }
 
     async searchUsers(req, res, next){
         const users = await User_Model.find({})
