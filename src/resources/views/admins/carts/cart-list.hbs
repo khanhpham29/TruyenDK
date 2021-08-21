@@ -14,7 +14,7 @@
             <tbody>
                 {{#each cart}}
                     <tr class="row-data">
-                        <th>{{sum @index 1}}</th>
+                        {{!-- <th>{{sum @index 1}}</th> --}}
                         <th>{{this.phone}}</th>
                         <th class="id-status" data-id="{{this._id}}" id="{{this._id}}">{{this.status}} </th>
                         <th class="reason-reject" >{{this.reason}}</th>
@@ -26,11 +26,6 @@
                 {{/each}}    
             </tbody>
         </table>
-        <div id="valueData"></div>
-        <form id="form-test">
-            <input type="text" id="input-test">
-            <button id='submit'>Submit</button>
-        </form>
     </div>
 </div>
 
@@ -38,35 +33,20 @@
     var inputTest = document.getElementById('input-test')
     var formTest = document.getElementById('form-test')
     var valueData = document.getElementById('valueData')
-
     var rowData = document.querySelector('.row-data')
-    console.log(rowData)
-
-    
-
-
+    var statusEl = document.querySelectorAll('.id-status')
+    statusEl.forEach((status) => {
+        console.log(status.innerText)
+        if(status.innerText == 'Hủy'){
+            console.log('abc')
+            status.style.color = "red";
+        }
+    })
     const socket = io({
         path: "/socket.io/rental"
     })
-    {{!-- formTest.addEventListener('submit', function(e){
-        e.preventDefault()
-        const mess = inputTest.value
-        socket.emit('test',{
-            message: mess
-        })
-        inputTest.value = ''
-    })
-
-    socket.on('chat-test',(mess)=>{
-        var item = document.createElement('div')
-        item.innerHTML = mess.message
-        valueData.appendChild(item)
-    }) --}}
-
 
     socket.on("cart-list", (data) => {
-        console.log('data bên cart list', data)
-        console.log('data phone bên cart list', data.phone)
         var newRow = document.createElement('tr');
         var td1 = document.createElement('td')
         var td2 = document.createElement('td')
