@@ -1543,7 +1543,6 @@ strong {
 			max-height: 500px;
 			// overflow-y: auto;
 			.works-chapter-list{
-
 				.works-chapter-item {
 					border-bottom: 1px solid #eee;
 					padding: 5px 0;
@@ -1795,14 +1794,14 @@ strong {
 		}
 	}
 }
-.edit-manga{
-	.form-group{
-		.cbb-status{
-			width: 300px;
+	.edit-manga{
+		.form-group{
+			.cbb-status{
+				width: 300px;
+			}
 		}
 	}
 }
-
 .account{
 	width: 100%;
 	height: 100%;
@@ -2144,5 +2143,4 @@ strong {
 		}
 	}
 
-}
 }
