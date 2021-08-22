@@ -1413,6 +1413,9 @@ strong {
     height: 100%;
     border-radius: inherit; }
 
+.table .row-data .font-color-reject {
+  color: red; }
+
 .messages .form-group .mab-jquery-taginput span.label, .messages table input:checked + label, .story-detail .block02 .title .sort li a.active, .story-detail .block02 .title .sort li a:hover, .story-list .story-list-bl01 .select2-selection.select2-selection--multiple .select2-selection__choice, .story-list .story-list-bl01 table td ul li a.active, .story-list .story-list-bl01 table td ul li a:active, .story-list .story-list-bl01 table td ul li a:hover {
   color: #fff !important;
   background: #f18121; }

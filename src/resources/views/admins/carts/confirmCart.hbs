@@ -14,6 +14,7 @@
                     <td>{{sum @index 1}}</td>
                     <td>{{this.phone}}</td>
                     <td class="dateCreateAt">{{dateFormat this.createAt format="MM/DD/YYYY"}}</td>
+                    <td class="dateCreateAtData">{{ this.createAt }}</td>
                     <td>{{this.status}}</td>
                     <td>
                         <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info btn-detail">Xem chi tiết</a>
@@ -30,25 +31,15 @@
     document.addEventListener("DOMContentLoaded",function(){
         var btnConfirm = document.querySelectorAll('.btn-confirm')
         var reject = document.querySelectorAll('.btn-reject')
-        var dateCreateAt = document.querySelectorAll('.dateCreateAt')
-        var dateCreateAtTest = document.querySelector('.dateCreateAtTest')
-        console.log('dateCreateAtTest',dateCreateAtTest)
-
-        dateCreateAt.forEach((date) => {
+        var dateCreateAtData = document.querySelectorAll('.dateCreateAtData')
+        //Tựu dộng xóa 
+        dateCreateAtData.forEach((date) => {
             var row = this.querySelector('.table').querySelector('.row-data')
-            var string = date.innerText//Tạo biến lưu giá trị thời gian từu db
-            console.log("đây là ngày dặt",string)
-            console.log("đây là ngày hủy 08/22/2021")
-            var ngay = string.substr(3,2)//lấy ngày từ biến trên
-            var today = new Date();//Lấy ngày hiện tại
-            console.log("ngay = ",typeof(ngay))
-            console.log("today.getdate = ",today.getDate())
-            var d= today.setDate(today.getDate() - parseInt(ngay))
-            console.log("ngay = ",typeof(ngay))
-            console.log("today.getdate = ",today.getDate())
-            d = new Date(d)
-            console.log('ngày chênh lệch',d.getDate())
-            if(d.getDate() -30 > 1){
+            var dateConfirm = new Date(date.innerText)
+            var today = new Date().getTime();//Lấy ngày hiện tại
+            var d = Math.floor((today - dateConfirm.getTime())/1000);
+            console.log('ngày chênh lệch',d/(60*60*24))
+            if(d/(60*60*24) > 1){
                 var idItem = row.querySelector('.btn-reject').getAttribute("data-id")
                 row.remove()
                 var reason = 'Khách không đến lấy truyện'

@@ -10,7 +10,7 @@
                             type="text"
                             name="email"
                             >
-                    <div class="email error mt-2" style="color:red"></div>
+                    <div class="email error " style="color:red"></div>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -18,7 +18,7 @@
                             type="password"
                             name="password"
                             >
-                    <div class="password error mt-2" style="color:red"></div>
+                    <div class="password error " style="color:red"></div>
                 </div>
                 {{!-- <div class="form-group">
                     <label>Repeat Password</label>
@@ -30,7 +30,7 @@
                             type="text" 
                             name="phone" 
                             >
-                    <div class="phone error mt-2" style="color:red"></div>
+                    <div class="phone error " style="color:red"></div>
                 </div>
                 <div class="form-group">
                     <label>Name</label>
@@ -39,10 +39,15 @@
                             name="name" 
                             value=""
                             >
-                    <div class="name error mt-2" style="color:red"></div>
+                    <div class="name error " style="color:red"></div>
+                </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LcotRYcAAAAAI5Ga8cvKiGYpRfPaIbtNWsfeSko"></div>
                 </div>
                 <div class="form-group text-center">
-                    <button class="btn btn-primary account-btn" type="submit">Register</button>
+                    <button class="btn btn-primary account-btn"  type="submit">Register</button>
+                    {{!-- <input type="button" onclick="checkRecaptcha();" value="submit"></input> --}}
+                    
                 </div>
                 <div class="account-footer">
                     <p>Already have an account? <a href="/login">Login</a></p>
@@ -56,51 +61,59 @@
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         var form = document.forms['formSignUp']
-        console.log(form)
         var emailError = $('.email.error')
         var passwordError = $('.password.error')
         var nameError = $('.name.error')
         var phoneError = $('.phone.error')
+        var messageRecaptcha = document.querySelector('.message-recaptcha')
+        console.log(emailError)
         form.addEventListener("submit", async (e)=>{
             e.preventDefault()
-            //reset error
-            emailError.text('')
-            passwordError.text('')
-            nameError.text('')
-            phoneError.text('')
-            // get the values
-            const email = form.email.value
-            const password = form.password.value
-            const name = form.name.value
-            const phone = form.phone.value
-            
-            axios.post('../register',{
-                email: email,
-                password: password,
-                name: name,
-                phone: phone
-            })
-            .then( async (res) =>{
-                const user = await res.data.user
-                if(user){
-                    location.assign('/login')
-                }
-            })
-            .catch(function (err){
-                console.error(err.response)
-                if(err.response){
-                    const data = err.response.data
-                    console.error(data)
-                    const emailErr = data.errors.email
-                    const passwordErr = data.errors.password
-                    const nameErr = data.errors.name
-                    const phoneErr = data.errors.phone
-                    emailError.text(emailErr)
-                    passwordError.text(passwordErr)
-                    nameError.text(nameErr)
-                    phoneError.text(phoneErr)
-                }
-            })
+            var response = grecaptcha.getResponse();
+            if(response.length == 0) { 
+                //reCaptcha not verified
+                alert('Vui lòng xác nhận bạn không phải là người máy.')
+            }
+            else { 
+                //reCaptch verified
+                emailError.text('')
+                passwordError.text('')
+                nameError.text('')
+                phoneError.text('')
+                // get the values
+                const email = form.email.value
+                const password = form.password.value
+                const name = form.name.value
+                const phone = form.phone.value
+                axios.post('../register',{
+                    email: email,
+                    password: password,
+                    name: name,
+                    phone: phone
+                })
+                .then( async (res) =>{
+                    console.log(res.data)
+                    const user = await res.data.user
+                    if(user){
+                        location.assign('/login')
+                    }
+                })
+                .catch(function (err){
+                    console.log(err.response.data)
+                    if(err.response){
+                        const data = err.response.data
+                        console.error(data)
+                        const emailErr = data.errors.email
+                        const passwordErr = data.errors.password
+                        const nameErr = data.errors.name
+                        const phoneErr = data.errors.phone
+                        emailError.text(emailErr)
+                        passwordError.text(passwordErr)
+                        nameError.text(nameErr)
+                        phoneError.text(phoneErr)
+                    }
+                })
+            }
         })
     })
 </script>
