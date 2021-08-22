@@ -37,10 +37,15 @@
         dateCreateAt.forEach((date) => {
             var row = this.querySelector('.table').querySelector('.row-data')
             var string = date.innerText//Tạo biến lưu giá trị thời gian từu db
+            console.log("đây là ngày dặt",string)
+            console.log("đây là ngày hủy 08/22/2021")
             var ngay = string.substr(3,2)//lấy ngày từ biến trên
             var today = new Date();//Lấy ngày hiện tại
-            var dateNow = (today.getMonth()+1) +'/'+ today.getDate()+'/'+ today.getFullYear();//lấy ngày hiện tại
-            var d= today.setDate(today.getDate() - ngay)
+            console.log("ngay = ",typeof(ngay))
+            console.log("today.getdate = ",today.getDate())
+            var d= today.setDate(today.getDate() - parseInt(ngay))
+            console.log("ngay = ",typeof(ngay))
+            console.log("today.getdate = ",today.getDate())
             d = new Date(d)
             console.log('ngày chênh lệch',d.getDate())
             if(d.getDate() -30 > 1){

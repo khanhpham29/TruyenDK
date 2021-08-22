@@ -73,11 +73,11 @@ const userSchema =  new Schema({
 })
 
 // kích hoạt một chức năng trước khi dữ liệu được lưu vào db
-userSchema.pre('save', async function (next){
-    const salt = await bcrypt.genSalt()
-    this.password  = await bcrypt.hash(this.password, salt)
-    next()
-})
+// userSchema.pre('save', async function (next){
+//     const salt = await bcrypt.genSalt()
+//     this.password  = await bcrypt.hash(this.password, salt)
+//     next()
+// })
 
 
 // phương thức tĩnh để đăng nhập người dùng

@@ -13,7 +13,7 @@ const historyMangaSchema =  new Schema({
         categories: Array,
         slug: String,
         createdAt:{ type: Date, default: Date.now},
-        updatedAt:{ type: Date, default: Date.now()},
+        updatedAt:{ type: Date, default: Date.now},
     }] ,
     idUser: { 
         type: Schema.Types.ObjectId,
@@ -26,7 +26,6 @@ const historyMangaSchema =  new Schema({
 },{
     collection: 'histories'
 })
-
 
 
 module.exports = mongoose.model('histories', historyMangaSchema)
