@@ -263,6 +263,7 @@
         form.addEventListener("submit", function(e){
             e.preventDefault()
             var rowData = document.querySelectorAll('.row-data')
+            
             rowData.forEach((row) =>{
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
