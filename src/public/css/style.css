@@ -1635,8 +1635,14 @@ strong {
   pointer-events: none;
   color: gray !important; }
 
-.list {
-  width: 30px;
-  height: 100%;
+.list-chap {
   background-color: #000;
-  z-index: 10; }
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 380px;
+  padding: 18px 0;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: linear 0.3s; }
