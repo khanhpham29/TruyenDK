@@ -1634,3 +1634,13 @@ strong {
       padding-right: 10px; }
     .messages .user-main input[type=email] button {
       margin-bottom: 40px; }
+
+.disabled {
+  pointer-events: none;
+  color: gray !important; }
+
+.list {
+  width: 30px;
+  height: 100%;
+  background-color: #000;
+  z-index: 10; }

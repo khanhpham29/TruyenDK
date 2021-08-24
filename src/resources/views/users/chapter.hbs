@@ -1,7 +1,11 @@
 <div class="main-content on">
     <div class="story-see container">
         <div class="story-see-main mt-2">
+            
             <div class="block">
+                <div class="list">
+                
+            </div> 
                 <div class="box">
                     <div id="path" class="path-top">
                         <ul class="breadcrumb">
@@ -17,7 +21,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span>{{chapter.chapter}}</span>
+                                    <span class="numberChapter">{{chapter.chapter}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -29,6 +33,28 @@
                         <time datetime="">(cập nhật lúc: {{dateFormat chapter.createAt format="HH:mm DD/MM/YYYY "}} )</time>
                     </div>
                 </div>
+                <div class="story-detail has-background-white on">
+                    <div class="controller row">
+                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}" class="pre-chap">
+                            <i class="fas fa-backward"></i>
+                        </a>
+                        <div class="list-chapter">
+                            <i class="fas fa-bars"></i>
+                            <ul class="list-chapter-ul">
+                                {{#each detail.imgDetails}}
+                                    <li>
+                                        <a data-id="{{_id}}" class="chapter" href="/manga/{{slug}}/{{this.chapter}}">Chương {{this.chapter}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul> 
+                        </div>
+                            
+                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}" class="next-chap">
+                            <i class="fas fa-forward"></i>
+                        </a>
+                    </div>
+                </div>
+                
                 <div class="story-see-content">
                     {{#each chapter.imgManga}}
                         <img src="/img/{{this.fileName}}" alt="" class="lazy">
@@ -57,7 +83,8 @@
                     </div>
                     {{!-- Pre chap or next chap --}}
                     <div class="controller row">
-                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}">
+                        <div class="chapNew" hidden>{{chapNew.chapter}}</div>
+                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}" class="pre-chap">
                             <i class="fas fa-backward"></i>
                         </a>
                         <div class="list-chapter">
@@ -71,7 +98,7 @@
                             </ul> 
                         </div>
                             
-                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}">
+                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}" class="next-chap">
                             <i class="fas fa-forward"></i>
                         </a>
 
@@ -171,7 +198,26 @@
         var commnetCount = $('.comment-count')
         var likeComment = $('.like-comment')
         var listChapter = document.querySelector('.list-chapter')
-        console.log('list chapterr',listChapter)
+        var numberChapter = document.querySelector('.numberChapter')
+        var iconPre = document.querySelector('.fa-bars')
+        var preChap = document.querySelectorAll('.pre-chap')
+        var nextChap = document.querySelectorAll('.next-chap')
+        var chapNew = document.querySelector('.chapNew')
+        console.log(chapNew.innerText)
+        console.log(numberChapter.innerText)
+
+        if(numberChapter.innerText == 1){
+            preChap.forEach((pre) =>{
+                pre.classList.add('disabled')
+            })
+        }
+
+        if(numberChapter.innerText == chapNew.innerText){
+            nextChap.forEach((next) =>{
+                next.classList.add('disabled')
+            })
+        }
+
         likeComment.each((index, like)=>{
             var text = like.parentElement.getElementsByClassName('total-like-comment')[0]
             if(text.innerText == 0){
