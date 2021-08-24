@@ -105,13 +105,18 @@ class RentalController {
     }
 
     payBookRentals(req, res, next){
+        console.log(req.body)
+        console.log('id', req.params.id)
         DetailsCart_Model.updateOne({
             idCart: req.params.id
         },{
             datePay: req.body.datePay
         })
+        .then(() => {console.log('update detail cart')})
+        .catch(next)
         Cart_Model.updateOne({_id: req.params.id },{ status: 'Đã hoàn thành' })
         .then((cartUp) => console.log(cartUp))
+        .catch(next)
         DetailsCart_Model.findOne({
             idCart: req.params.id
         })
@@ -137,12 +142,6 @@ class RentalController {
             
             res.json({message: 'Phiếu thuê dã hoàn thành'})
         })
-
-        // Cart_Model.findOne({_id: req.params.id }).populate('idDetailCart')
-        // .then((cart) => {
-        //     idDetailCart
-        //     res.json({message: 'Phiếu thuê dã hoàn thành'})
-        // })  
         .catch(err => console.log("loi"))    
     }
 

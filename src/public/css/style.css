@@ -1365,35 +1365,35 @@ strong {
         border-bottom: 9px solid transparent;
         border-right: 9px solid #fff; }
 
-.story-detail .readmore {
+.readmore {
   text-align: center;
   padding-top: 7px;
   border-top: 1px solid #ccc; }
-  .story-detail .readmore a {
+  .readmore a {
     background-color: #fba026;
     color: #fff;
     font-size: 13px;
     padding: 7px;
     border-radius: 15px; }
-  .story-detail .readmore a:hover {
+  .readmore a:hover {
     color: #fff !important;
     opacity: .6; }
 
-.story-detail .readmore-js-toggle, .story-detail .readmore-js-section {
+.readmore-js-toggle, .readmore-js-section {
   display: block;
   width: 100%; }
 
-.story-detail .readmore-js-section {
+.readmore-js-section {
   overflow: hidden; }
 
-.story-detail .readmore-js-expanded {
+.readmore-js-expanded {
   height: auto !important; }
 
-.story-detail .main-content.on {
+.main-content.on {
   background-color: #424242; }
-  .story-detail .main-content.on .story-see {
+  .main-content.on .story-see {
     overflow: hidden; }
-    .story-detail .main-content.on .story-see .nav {
+    .main-content.on .story-see .nav {
       background: #e6e6e6;
       width: 160px;
       padding: 10px 20px;
@@ -1403,29 +1403,47 @@ strong {
       left: 0;
       transition: .3s;
       overflow-x: hidden; }
-      .story-detail .main-content.on .story-see .nav h2 {
+      .main-content.on .story-see .nav h2 {
         color: #f18121;
         padding-bottom: 15px;
         font-weight: 700; }
-      .story-detail .main-content.on .story-see .nav .item {
+      .main-content.on .story-see .nav .item {
         padding-bottom: 15px; }
-    .story-detail .main-content.on .story-see .story-see-main .block {
+    .main-content.on .story-see .story-see-main .block {
       margin: 0 auto; }
-      .story-detail .main-content.on .story-see .story-see-main .block .story-see-content {
-        text-align: center;
-        padding: 30px;
-        margin-bottom: 30px; }
-      .story-detail .main-content.on .story-see .story-see-main .block .story-detail {
+      .main-content.on .story-see .story-see-main .block .story-detail {
         border-radius: 6px;
         padding: 10px 30px;
         margin-bottom: 30px; }
-        .story-detail .main-content.on .story-see .story-see-main .block .story-detail .w225 {
+        .main-content.on .story-see .story-see-main .block .story-detail .w225 {
           width: 225px; }
-        .story-detail .main-content.on .story-see .story-see-main .block .story-detail .mess-input {
+        .main-content.on .story-see .story-see-main .block .story-detail .mess-input {
           margin-bottom: 0; }
 
-.story-detail .edit-manga .form-group .cbb-status {
-  width: 300px; }
+.story-see .story-detail .controller {
+  margin: 0 auto;
+  width: 500px;
+  height: 100%;
+  color: red;
+  display: flex;
+  justify-content: space-between; }
+  .story-see .story-detail .controller a {
+    color: #333;
+    font-size: 24px;
+    margin-left: 20px;
+    margin-right: 20px; }
+  .story-see .story-detail .controller .fas .fa-backward, .story-see .story-detail .controller .fas .fa-forward {
+    font-size: 24px; }
+  .story-see .story-detail .controller .list-chapter {
+    font-size: 24px;
+    color: #333;
+    margin-left: 20px;
+    margin-right: 20px; }
+    .story-see .story-detail .controller .list-chapter li a {
+      color: #fff !important; }
+    .story-see .story-detail .controller .list-chapter .list-chapter-ul {
+      display: none;
+      background-color: #333; }
 
 .account {
   width: 100%;
@@ -1651,3 +1669,19 @@ strong {
       padding-right: 10px; }
     .messages .user-main input[type=email] button {
       margin-bottom: 40px; }
+
+.disabled {
+  pointer-events: none;
+  color: gray !important; }
+
+.list-chap {
+  background-color: #000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 380px;
+  padding: 18px 0;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: linear 0.3s; }

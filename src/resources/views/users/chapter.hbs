@@ -17,7 +17,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span>{{chapter.chapter}}</span>
+                                    <span class="numberChapter">{{chapter.chapter}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -28,8 +28,32 @@
                         </div>
                         <time datetime="">(cập nhật lúc: {{dateFormat chapter.createAt format="HH:mm DD/MM/YYYY "}} )</time>
                     </div>
+                    
                 </div>
-                <div class="story-see-content">
+                <div class="story-detail has-background-white on">
+                    <div class="controller row">
+                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}" class="pre-chap">
+                            <i class="fas fa-backward"></i>
+                        </a>
+                        <div class="list-chapter">
+                            
+                            <i class="fas fa-bars"></i>
+                            <ul class="list-chapter-ul">
+                                {{#each detail.imgDetails}}
+                                    <li>
+                                        <a data-id="{{_id}}" class="chapter" href="/manga/{{slug}}/{{this.chapter}}">Chương {{this.chapter}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul> 
+                        </div>
+                            
+                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}" class="next-chap">
+                            <i class="fas fa-forward"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="story-see-content" style="text-align: center;padding: 30px;margin-bottom: 30px">
                     {{#each chapter.imgManga}}
                         <img src="/img/{{this.fileName}}" alt="" class="lazy">
                     {{/each}}
@@ -55,6 +79,28 @@
                             </li>
                         </ul>
                     </div>
+                    {{!-- Pre chap or next chap --}}
+                    <div class="controller row">
+                        <div class="chapNew" hidden>{{chapNew.chapter}}</div>
+                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}" class="pre-chap">
+                            <i class="fas fa-backward"></i>
+                        </a>
+                        <div class="list-chapter">
+                            <i class="fas fa-bars"></i>
+                            <ul class="list-chapter-ul">
+                                {{#each detail.imgDetails}}
+                                    <li>
+                                        <a data-id="{{_id}}" class="chapter" href="/manga/{{slug}}/{{this.chapter}}">Chương {{this.chapter}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul> 
+                        </div>
+                            
+                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}" class="next-chap">
+                            <i class="fas fa-forward"></i>
+                        </a>
+                    </div>
+                    {{!-- Comment manga --}}
                     <div class="comment-container">
                         <span class="story-detail-title">
                             <i class="fa fa-comments"></i>
@@ -148,6 +194,27 @@
         var replyComment = $('.reply-comment')
         var commnetCount = $('.comment-count')
         var likeComment = $('.like-comment')
+        var listChapter = document.querySelector('.list-chapter')
+        var numberChapter = document.querySelector('.numberChapter')
+        var iconPre = document.querySelector('.fa-bars')
+        var preChap = document.querySelectorAll('.pre-chap')
+        var nextChap = document.querySelectorAll('.next-chap')
+        var chapNew = document.querySelector('.chapNew')
+        console.log(chapNew.innerText)
+        console.log(numberChapter.innerText)
+
+        if(numberChapter.innerText == 1){
+            preChap.forEach((pre) =>{
+                pre.classList.add('disabled')
+            })
+        }
+
+        if(numberChapter.innerText == chapNew.innerText){
+            nextChap.forEach((next) =>{
+                next.classList.add('disabled')
+            })
+        }
+
         likeComment.each((index, like)=>{
             var text = like.parentElement.getElementsByClassName('total-like-comment')[0]
             if(text.innerText == 0){
@@ -163,6 +230,13 @@
             },
             path: "/socket.io/manga"
         });
+        //Hiện danh sách chương truyện
+        listChapter.onclick = function(){
+            var icon = document.querySelector('.fa-bars')
+            var listChapter = document.querySelector('.list-chapter-ul')
+            icon.setAttribute("style", "display: none;");
+            listChapter.setAttribute("style", "display: block;");
+        }
         function FunLikeCmt(btnLike){
             console.log("btnLike", btnLike);
             var idUser = userIdElement
