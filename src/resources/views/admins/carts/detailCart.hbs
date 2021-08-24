@@ -64,7 +64,7 @@
                 {{/each}}
         </tbody>
         </table>
-        <button type="submit" class="btn btn-success btn-submit mb-2" id="btn-submit">xác nhận</button>
+        <button type="submit" class="btn btn-success btn-submit mb-2" data-id="{{cart._id}}" id="btn-submit">xác nhận</button>
     </form>
 
     
@@ -259,11 +259,12 @@
                 }
             }
         })
-
+        //Hoàn thành
         form.addEventListener("submit", function(e){
             e.preventDefault()
+            var arrData = []
             var rowData = document.querySelectorAll('.row-data')
-            
+            var idCart = this.querySelector('#btn-submit').getAttribute('data-id')
             rowData.forEach((row) =>{
                 var nameManga = row.querySelector('.nameManga').innerText
                 var episode = row.querySelector('.episode').innerText
@@ -273,7 +274,6 @@
                 var statusBookItem = row.querySelector('.statusBookItem')
                 console.log('statusBookItem',statusBookItem)
                 var datePay = document.getElementById('date').innerText
-                var idCart = document.getElementById('idCart').innerText
                 if(statusPayBooks != null){
                     var valueStatusPayBook = statusPayBooks.options[statusPayBooks.selectedIndex].value//Lấy giá trị mà nó hiện có
                 }
@@ -282,28 +282,29 @@
                     console.log(valueStatusPayBook)
                 }
                 datePay = new Date(datePay + ' ' + time)
-                axios.post('/admin/rentals/pay/'+idCart+'/book/',{
+                arrData.push({
                     datePay: datePay,
                     nameManga: nameManga,
                     episode: episode,
                     //amount: amount,
                     statusBook: valueStatusPayBook,
                 })
-                .then((res)=>{
-                    console.log(res.data)
-                    const result = res.data.message
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
-                
             })
-            if(result == 'Phiếu thuê dã hoàn thành'){
+            axios.post('/admin/rentals/pay/'+idCart+'/book',{
+                arrData: arrData,
+            })
+            .then((res)=>{
+                console.log(res.data)
+                const result = res.data.message
+                if(result == 'Phiếu thuê dã hoàn thành'){
                 alert(result)
                 location.assign('/admin/rentals/pay/')
             }
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+            
         })
-
-
     })
 </script>

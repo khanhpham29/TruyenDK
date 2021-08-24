@@ -14,7 +14,7 @@
                     <td>{{sum @index 1}}</td>
                     <td>{{this.phone}}</td>
                     <td class="dateCreateAt">{{dateFormat this.createAt format="MM/DD/YYYY"}}</td>
-                    <td class="dateCreateAtData">{{ this.createAt }}</td>
+                    <td class="dateCreateAtData"hidden>{{ this.createAt }}</td>
                     <td>{{this.status}}</td>
                     <td>
                         <a href="/admin/rentals/list/{{this._id}}/detail" class="btn btn-info btn-detail">Xem chi tiết</a>

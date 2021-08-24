@@ -195,7 +195,16 @@ class UsersController{
     }
     async readManga(req, res, next){
         const manga =  manga_model.findOne({slug: req.params.slug})
+        const chapNew = imageDetail_model.findOne({ 
+            slug: req.params.slug,
+            new: 'true'
+        })
         Promise.all([
+            detailManga_model.findOne({ slug: req.params.slug })
+            .populate({
+                path:"imgDetails",
+            }),
+            chapNew,
             imageDetail_model.findOne({ 
                 slug: req.params.slug,
                 chapter: req.params.chap
@@ -225,12 +234,16 @@ class UsersController{
                 }
             }),
         ])
-        .then(async ([chapter, manga, mangaforPost])=>{
+        .then(async ([detail,chapNew, chapter, manga, mangaforPost])=>{
             // res.json(mangaforPost)
+            console.log('chap moi',chapNew)
             const detailManga = await detailManga_model.findById(manga.idDetailManga)
             const comments = comment_model.find({idPost: detailManga.idPost})
             .then((comments)=>{
+                //res.json(detail.imgDetails[0].chapter)
                 res.render('users/chapter',{
+                    detail: mongooseToOject(detail),
+                    chapNew: mongooseToOject(chapNew),
                     chapter: mongooseToOject(chapter),
                     manga: mongooseToOject(manga),
                     mangaforPost: mongooseToOject(mangaforPost),
