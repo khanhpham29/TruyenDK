@@ -105,7 +105,7 @@
         // Lịch sử
         chapters.each((index,chapter)=>{
             chapter.addEventListener("click", function(e){
-                e.preventDefault()
+                {{!-- e.preventDefault() --}}
                 idChapter = chapter.getAttribute("data-id")
                 axios.post("/history/"+ idManga,{
                     idChapter: idChapter,

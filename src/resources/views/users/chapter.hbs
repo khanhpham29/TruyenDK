@@ -28,8 +28,9 @@
                         </div>
                         <time datetime="">(cập nhật lúc: {{dateFormat chapter.createAt format="HH:mm DD/MM/YYYY "}} )</time>
                     </div>
+                    
                 </div>
-                <div class="story-see-content">
+                <div class="story-see-content" style="text-align: center;padding: 30px;margin-bottom: 30px">
                     {{#each chapter.imgManga}}
                         <img src="/img/{{this.fileName}}" alt="" class="lazy">
                     {{/each}}
@@ -74,7 +75,6 @@
                         <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}">
                             <i class="fas fa-forward"></i>
                         </a>
-
                     </div>
                     {{!-- Comment manga --}}
                     <div class="comment-container">

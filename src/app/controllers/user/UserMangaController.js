@@ -235,7 +235,6 @@ class UsersController{
             const comments = comment_model.find({idPost: detailManga.idPost})
             .then((comments)=>{
 
-                console.log('detail',detail)
                 //res.json(detail.imgDetails[0].chapter)
                 res.render('users/chapter',{
                     detail: mongooseToOject(detail),
