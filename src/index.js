@@ -10,7 +10,7 @@ const methodOverride = require('method-override')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
 
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 // bữa lên mạng xem thằng kia làm @@ nó thiết lập như này à 
 const http = require('http')
 const server = http.createServer(app)

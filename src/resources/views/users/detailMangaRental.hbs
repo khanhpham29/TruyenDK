@@ -60,7 +60,18 @@
         var btnAddToCarts = document.querySelectorAll(".btn-add-to-cart")
         var cartItem = document.querySelector('.cart-item')
         var amount = document.querySelectorAll('.amount')
+        var btnReadmore = $('.readmore')
+        var description = $('.readmore-js-collapsed')
         var flag = 1
+        btnReadmore.on('click',()=>{
+            if(description.hasClass("readmore-js-collapsed")){
+                description.removeClass("readmore-js-collapsed")
+                description.addClass("readmore-js-expanded")
+            }else{
+                description.removeClass("readmore-js-expanded")
+                description.addClass("readmore-js-collapsed")
+            }
+        })
         btnAddToCarts.forEach((btn, i) => {
             btn.onclick = function(e) {
                 e.preventDefault();

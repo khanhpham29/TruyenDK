@@ -54,6 +54,13 @@ module.exports = {
             return '<a href="#" class="btn btn-success btn-block-account">Mở khóa</a>'
         }
     },
+    preChap: function(str){
+        return parseInt(str) - 1
+    },
+
+    nextChap: function(str){
+        return parseInt(str) + 1 
+    },
     
     pagination: (currentPage, totalPage, size, options)=>{
         var startPage, endPage, context;

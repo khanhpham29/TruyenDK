@@ -55,6 +55,28 @@
                             </li>
                         </ul>
                     </div>
+                    {{!-- Pre chap or next chap --}}
+                    <div class="controller row">
+                        <a href="/manga/{{chapter.slug}}/{{#preChap chapter.chapter}}{{/preChap}}">
+                            <i class="fas fa-backward"></i>
+                        </a>
+                        <div class="list-chapter">
+                            <i class="fas fa-bars"></i>
+                            <ul class="list-chapter-ul">
+                                {{#each detail.imgDetails}}
+                                    <li>
+                                        <a data-id="{{_id}}" class="chapter" href="/manga/{{slug}}/{{this.chapter}}">Chương {{this.chapter}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul> 
+                        </div>
+                            
+                        <a href="/manga/{{chapter.slug}}/{{#nextChap chapter.chapter}}{{/nextChap}}">
+                            <i class="fas fa-forward"></i>
+                        </a>
+
+                    </div>
+                    {{!-- Comment manga --}}
                     <div class="comment-container">
                         <span class="story-detail-title">
                             <i class="fa fa-comments"></i>
@@ -148,6 +170,8 @@
         var replyComment = $('.reply-comment')
         var commnetCount = $('.comment-count')
         var likeComment = $('.like-comment')
+        var listChapter = document.querySelector('.list-chapter')
+        console.log('list chapterr',listChapter)
         likeComment.each((index, like)=>{
             var text = like.parentElement.getElementsByClassName('total-like-comment')[0]
             if(text.innerText == 0){
@@ -163,6 +187,13 @@
             },
             path: "/socket.io/manga"
         });
+        //Hiện danh sách chương truyện
+        listChapter.onclick = function(){
+            var icon = document.querySelector('.fa-bars')
+            var listChapter = document.querySelector('.list-chapter-ul')
+            icon.setAttribute("style", "display: none;");
+            listChapter.setAttribute("style", "display: block;");
+        }
         function FunLikeCmt(btnLike){
             console.log("btnLike", btnLike);
             var idUser = userIdElement

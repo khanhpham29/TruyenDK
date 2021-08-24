@@ -10,6 +10,7 @@ const post_model = require('../../models/post')
 const comment_model = require('../../models/comment')
 const DetailsCart_Model = require('../../models/DetailCart')
 const follow_model = require('../../models/FollowManga')
+const history_model = require('../../models/History')
 const notifies_model = require('../../models/Notifies')
 const favourites_model = require('../../models/Favourite')
 const bcrypt = require('bcrypt')
@@ -195,6 +196,10 @@ class UsersController{
     async readManga(req, res, next){
         const manga =  manga_model.findOne({slug: req.params.slug})
         Promise.all([
+            detailManga_model.findOne({ slug: req.params.slug })
+            .populate({
+                path:"imgDetails",
+            }),
             imageDetail_model.findOne({ 
                 slug: req.params.slug,
                 chapter: req.params.chap
@@ -224,12 +229,16 @@ class UsersController{
                 }
             }),
         ])
-        .then(async ([chapter, manga, mangaforPost])=>{
+        .then(async ([detail, chapter, manga, mangaforPost])=>{
             // res.json(mangaforPost)
             const detailManga = await detailManga_model.findById(manga.idDetailManga)
             const comments = comment_model.find({idPost: detailManga.idPost})
             .then((comments)=>{
+
+                console.log('detail',detail)
+                //res.json(detail.imgDetails[0].chapter)
                 res.render('users/chapter',{
+                    detail: mongooseToOject(detail),
                     chapter: mongooseToOject(chapter),
                     manga: mongooseToOject(manga),
                     mangaforPost: mongooseToOject(mangaforPost),
@@ -387,6 +396,133 @@ class UsersController{
                 }
             )
             res.status(200).json({message: "true"})
+        }
+    }
+    async history(req, res, next){
+        const user = req.user
+        if(user){
+            const histories = await history_model.findOne({idUser: user._id}) 
+            .populate({
+                path: 'arrMangaId.idManga',
+                populate:{
+                    path: 'idDetailManga',
+                    populate:{
+                        path:'imgDetails',
+                        match: {
+                            chapter: 'arrMangaId.chapter'
+                        }
+                    }
+                }
+            })
+            .limit(20)
+            .then((histories) => {
+                // res.json(histories)
+                res.render("users/histories",{
+                    histories: mongooseToOject(histories)
+                })
+            })
+        }else{
+            res.render("users/histories",{
+                message: "false"
+            })
+        }
+    }
+    async postHistory(req, res, next){
+        const data = await req.body
+        const imageDetail = await imageDetail_model.findById(data.idChapter)
+        const manga = await manga_model.findById(req.params.idManga).populate('categories')
+        const isExistHistory = await history_model.findOne(
+            {
+                idUser: data.idUser,
+            }
+        )
+        if(isExistHistory){
+            
+            const isExistInArr = await history_model.findOne(
+                {
+                    idUser: data.idUser,
+                    arrMangaId: {
+                        $elemMatch: {nameManga:  manga.nameManga}
+                    }
+                }
+            )
+            if(isExistInArr){
+                history_model.updateOne(
+                    {
+                        idUser: data.idUser,
+                        arrMangaId: {
+                            $elemMatch: {nameManga:  manga.nameManga}
+                        }
+                    },
+                    {
+                        $set: { 'arrMangaId.$.chapter' : imageDetail.chapter} 
+                    },
+                    (err,data)=>{
+                        console.log(data)
+                    }
+                )
+            }
+            else{
+                var arrCate = []
+                manga.categories.forEach((category)=>{
+                    arrCate.push(category.nameCategory)
+                })
+                history_model.updateOne(
+                    {
+                        _id: isExistHistory._id,
+                    },
+                    {
+                        $push: 
+                        {
+                            arrMangaId:
+                            {
+                                nameManga: manga.nameManga,
+                                otherName: manga.otherName,
+                                categories: arrCate,
+                                image:manga.image,
+                                slug: manga.slug,
+                                chapter: imageDetail.chapter,
+                            } 
+                        }
+                    },
+                    function(err, result) {
+                        console.log("result", result);
+                    }
+                )
+            }
+            
+        }else{
+            var arrCate = []
+            manga.categories.forEach((category)=>{
+                arrCate.push(category.nameCategory)
+            })
+            const newHistory = new history_model({
+                idUser: data.idUser,
+            })
+            await newHistory.save()
+            history_model.updateOne(
+                {
+                    _id: newHistory.id,
+                },
+                {
+                    $push: 
+                    {
+                        arrMangaId:
+                        {
+                            nameManga: manga.nameManga,
+                            otherName: manga.otherName,
+                            categories: arrCate,
+                            image:manga.image,
+                            slug: manga.slug,
+                            chapter: imageDetail.chapter
+                        } 
+                    }
+                },
+                function(err, result) {
+                    console.log("new history",result)
+                }
+            )
+            res.status(200).json({message:"true"})
         }
     }
 }

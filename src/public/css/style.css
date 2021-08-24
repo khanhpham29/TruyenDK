@@ -1382,197 +1382,222 @@ strong {
         .story-detail .main-content.on .story-see .story-see-main .block .story-detail .mess-input {
           margin-bottom: 0; }
 
-.story-detail .edit-manga .form-group .cbb-status {
+.edit-manga .form-group .cbb-status {
   width: 300px; }
 
-.story-detail .account {
+.story-see .story-detail .controller {
+  margin: 0 auto;
+  width: 500px;
+  height: 100%;
+  color: red;
+  display: flex;
+  justify-content: space-between; }
+  .story-see .story-detail .controller a {
+    color: #333;
+    font-size: 24px;
+    margin-left: 20px;
+    margin-right: 20px; }
+  .story-see .story-detail .controller .fas .fa-backward, .story-see .story-detail .controller .fas .fa-forward {
+    font-size: 24px; }
+  .story-see .story-detail .controller .list-chapter {
+    font-size: 24px;
+    color: #333;
+    margin-left: 20px;
+    margin-right: 20px; }
+    .story-see .story-detail .controller .list-chapter li a {
+      color: #fff !important; }
+    .story-see .story-detail .controller .list-chapter .list-chapter-ul {
+      display: none;
+      background-color: #333; }
+
+.account {
   width: 100%;
   height: 100%; }
-  .story-detail .account .avatar {
+  .account .avatar {
     width: 150px;
     height: 150px;
     margin-bottom: 50px; }
-    .story-detail .account .avatar img {
+    .account .avatar img {
       width: 100%;
       height: 100%; }
-  .story-detail .account label {
+  .account label {
     font-weight: 400 !important;
     padding-right: 10px; }
-  .story-detail .account button {
+  .account button {
     margin-bottom: 40px; }
 
-.story-detail .user-detail-rentals .info {
+.user-detail-rentals .info {
   width: 300px; }
 
-.story-detail .user-manager-avatar {
+.user-manager-avatar {
   width: 60px;
   height: 100%;
   background-color: #fff !important; }
-  .story-detail .user-manager-avatar img {
+  .user-manager-avatar img {
     width: 100%;
     height: 100%;
     border-radius: inherit; }
 
-.story-detail .table .row-data .font-color-reject {
+.table .row-data .font-color-reject {
   color: red; }
 
-.story-detail .messages .form-group .mab-jquery-taginput span.label, .story-detail .messages table input:checked + label, .story-detail .story-detail .block02 .title .sort li a.active, .story-detail .story-detail .block02 .title .sort li a:hover, .story-detail .story-list .story-list-bl01 .select2-selection.select2-selection--multiple .select2-selection__choice, .story-detail .story-list .story-list-bl01 table td ul li a.active, .story-detail .story-list .story-list-bl01 table td ul li a:active, .story-detail .story-list .story-list-bl01 table td ul li a:hover {
+.messages .form-group .mab-jquery-taginput span.label, .messages table input:checked + label, .story-detail .block02 .title .sort li a.active, .story-detail .block02 .title .sort li a:hover, .story-list .story-list-bl01 .select2-selection.select2-selection--multiple .select2-selection__choice, .story-list .story-list-bl01 table td ul li a.active, .story-list .story-list-bl01 table td ul li a:active, .story-list .story-list-bl01 table td ul li a:hover {
   color: #fff !important;
   background: #f18121; }
 
 @media screen and (min-width: 769px), print {
-  .story-detail .column.is-narrow, .story-detail .column.is-narrow-tablet {
+  .column.is-narrow, .column.is-narrow-tablet {
     flex: none; }
-  .story-detail .column.is-full, .story-detail .column.is-full-tablet {
+  .column.is-full, .column.is-full-tablet {
     flex: none;
     width: 100%; }
-  .story-detail .column.is-three-quarters, .story-detail .column.is-three-quarters-tablet {
+  .column.is-three-quarters, .column.is-three-quarters-tablet {
     flex: none;
     width: 75%; }
-  .story-detail .column.is-two-thirds, .story-detail .column.is-two-thirds-tablet {
+  .column.is-two-thirds, .column.is-two-thirds-tablet {
     flex: none;
     width: 66.6666%; }
-  .story-detail .column.is-half, .story-detail .column.is-half-tablet {
+  .column.is-half, .column.is-half-tablet {
     flex: none;
     width: 50%; }
-  .story-detail .column.is-one-third, .story-detail .column.is-one-third-tablet {
+  .column.is-one-third, .column.is-one-third-tablet {
     flex: none;
     width: 33.3333%; }
-  .story-detail .column.is-one-quarter, .story-detail .column.is-one-quarter-tablet {
+  .column.is-one-quarter, .column.is-one-quarter-tablet {
     flex: none;
     width: 25%; }
-  .story-detail .column.is-one-fifth, .story-detail .column.is-one-fifth-tablet {
+  .column.is-one-fifth, .column.is-one-fifth-tablet {
     flex: none;
     width: 20%; }
-  .story-detail .column.is-two-fifths, .story-detail .column.is-two-fifths-tablet {
+  .column.is-two-fifths, .column.is-two-fifths-tablet {
     flex: none;
     width: 40%; }
-  .story-detail .column.is-three-fifths, .story-detail .column.is-three-fifths-tablet {
+  .column.is-three-fifths, .column.is-three-fifths-tablet {
     flex: none;
     width: 60%; }
-  .story-detail .column.is-four-fifths, .story-detail .column.is-four-fifths-tablet {
+  .column.is-four-fifths, .column.is-four-fifths-tablet {
     flex: none;
     width: 80%; }
-  .story-detail .column.is-offset-three-quarters, .story-detail .column.is-offset-three-quarters-tablet {
+  .column.is-offset-three-quarters, .column.is-offset-three-quarters-tablet {
     margin-left: 75%; }
-  .story-detail .column.is-offset-two-thirds, .story-detail .column.is-offset-two-thirds-tablet {
+  .column.is-offset-two-thirds, .column.is-offset-two-thirds-tablet {
     margin-left: 66.6666%; }
-  .story-detail .column.is-offset-half, .story-detail .column.is-offset-half-tablet {
+  .column.is-offset-half, .column.is-offset-half-tablet {
     margin-left: 50%; }
-  .story-detail .column.is-offset-one-third, .story-detail .column.is-offset-one-third-tablet {
+  .column.is-offset-one-third, .column.is-offset-one-third-tablet {
     margin-left: 33.3333%; }
-  .story-detail .column.is-offset-one-quarter, .story-detail .column.is-offset-one-quarter-tablet {
+  .column.is-offset-one-quarter, .column.is-offset-one-quarter-tablet {
     margin-left: 25%; }
-  .story-detail .column.is-offset-one-fifth, .story-detail .column.is-offset-one-fifth-tablet {
+  .column.is-offset-one-fifth, .column.is-offset-one-fifth-tablet {
     margin-left: 20%; }
-  .story-detail .column.is-offset-two-fifths, .story-detail .column.is-offset-two-fifths-tablet {
+  .column.is-offset-two-fifths, .column.is-offset-two-fifths-tablet {
     margin-left: 40%; }
-  .story-detail .column.is-offset-three-fifths, .story-detail .column.is-offset-three-fifths-tablet {
+  .column.is-offset-three-fifths, .column.is-offset-three-fifths-tablet {
     margin-left: 60%; }
-  .story-detail .column.is-offset-four-fifths, .story-detail .column.is-offset-four-fifths-tablet {
+  .column.is-offset-four-fifths, .column.is-offset-four-fifths-tablet {
     margin-left: 80%; }
-  .story-detail .column.is-1, .story-detail .column.is-1-tablet {
+  .column.is-1, .column.is-1-tablet {
     flex: none;
     width: 8.33333%; }
-  .story-detail .column.is-offset-1, .story-detail .column.is-offset-1-tablet {
+  .column.is-offset-1, .column.is-offset-1-tablet {
     margin-left: 8.33333%; }
-  .story-detail .column.is-2, .story-detail .column.is-2-tablet {
+  .column.is-2, .column.is-2-tablet {
     flex: none;
     width: 16.66667%; }
-  .story-detail .column.is-offset-2, .story-detail .column.is-offset-2-tablet {
+  .column.is-offset-2, .column.is-offset-2-tablet {
     margin-left: 16.66667%; }
-  .story-detail .column.is-3, .story-detail .column.is-3-tablet {
+  .column.is-3, .column.is-3-tablet {
     flex: none;
     width: 25%; }
-  .story-detail .column.is-offset-3, .story-detail .column.is-offset-3-tablet {
+  .column.is-offset-3, .column.is-offset-3-tablet {
     margin-left: 25%; }
-  .story-detail .column.is-4, .story-detail .column.is-4-tablet {
+  .column.is-4, .column.is-4-tablet {
     flex: none;
     width: 33.33333%; }
-  .story-detail .column.is-offset-4, .story-detail .column.is-offset-4-tablet {
+  .column.is-offset-4, .column.is-offset-4-tablet {
     margin-left: 33.33333%; }
-  .story-detail .column.is-5, .story-detail .column.is-5-tablet {
+  .column.is-5, .column.is-5-tablet {
     flex: none;
     width: 41.66667%; }
-  .story-detail .column.is-offset-5, .story-detail .column.is-offset-5-tablet {
+  .column.is-offset-5, .column.is-offset-5-tablet {
     margin-left: 41.66667%; }
-  .story-detail .column.is-6, .story-detail .column.is-6-tablet {
+  .column.is-6, .column.is-6-tablet {
     flex: none;
     width: 50%; }
-  .story-detail .column.is-offset-6, .story-detail .column.is-offset-6-tablet {
+  .column.is-offset-6, .column.is-offset-6-tablet {
     margin-left: 50%; }
-  .story-detail .column.is-7, .story-detail .column.is-7-tablet {
+  .column.is-7, .column.is-7-tablet {
     flex: none;
     width: 58.33333%; }
-  .story-detail .column.is-offset-7, .story-detail .column.is-offset-7-tablet {
+  .column.is-offset-7, .column.is-offset-7-tablet {
     margin-left: 58.33333%; }
-  .story-detail .column.is-8, .story-detail .column.is-8-tablet {
+  .column.is-8, .column.is-8-tablet {
     flex: none;
     width: 66.66667%; }
-  .story-detail .column.is-offset-8, .story-detail .column.is-offset-8-tablet {
+  .column.is-offset-8, .column.is-offset-8-tablet {
     margin-left: 66.66667%; }
-  .story-detail .column.is-9, .story-detail .column.is-9-tablet {
+  .column.is-9, .column.is-9-tablet {
     flex: none;
     width: 75%; }
-  .story-detail .column.is-offset-9, .story-detail .column.is-offset-9-tablet {
+  .column.is-offset-9, .column.is-offset-9-tablet {
     margin-left: 75%; }
-  .story-detail .column.is-10, .story-detail .column.is-10-tablet {
+  .column.is-10, .column.is-10-tablet {
     flex: none;
     width: 83.33333%; }
-  .story-detail .column.is-offset-10, .story-detail .column.is-offset-10-tablet {
+  .column.is-offset-10, .column.is-offset-10-tablet {
     margin-left: 83.33333%; }
-  .story-detail .column.is-11, .story-detail .column.is-11-tablet {
+  .column.is-11, .column.is-11-tablet {
     flex: none;
     width: 91.66667%; }
-  .story-detail .column.is-offset-11, .story-detail .column.is-offset-11-tablet {
+  .column.is-offset-11, .column.is-offset-11-tablet {
     margin-left: 91.66667%; }
-  .story-detail .column.is-12, .story-detail .column.is-12-tablet {
+  .column.is-12, .column.is-12-tablet {
     flex: none;
     width: 100%; }
-  .story-detail .column.is-offset-12, .story-detail .column.is-offset-12-tablet {
+  .column.is-offset-12, .column.is-offset-12-tablet {
     margin-left: 100%; } }
 
 @media screen and (min-width: 769px), print {
-  .story-detail .columns:not(.is-desktop) {
+  .columns:not(.is-desktop) {
     display: flex; } }
 
-.story-detail .columns:last-child {
+.columns:last-child {
   margin-bottom: -.75rem; }
 
-.story-detail .columns:not(:last-child) {
+.columns:not(:last-child) {
   margin-bottom: calc(1.5rem - .75rem); }
 
-.story-detail .columns.is-centered {
+.columns.is-centered {
   justify-content: center; }
 
-.story-detail .columns {
+.columns {
   margin-left: -.75rem;
   margin-right: -.75rem;
   margin-top: -.75rem; }
 
-.story-detail .column {
+.column {
   display: block;
   flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
   padding: .75rem; }
 
-.story-detail .messages {
+.messages {
   background: #fff;
   overflow: hidden;
   padding-top: 20px; }
-  .story-detail .messages .columns {
+  .messages .columns {
     margin-left: -.75rem;
     margin-right: -.75rem;
     margin-top: -.75rem; }
-  .story-detail .messages .nav-user {
+  .messages .nav-user {
     width: 370px;
     border-right: 1px solid #eee;
     height: 100%; }
-    .story-detail .messages .nav-user li {
+    .messages .nav-user li {
       width: 300px;
       margin: 0 auto; }
-      .story-detail .messages .nav-user li a {
+      .messages .nav-user li a {
         display: block;
         font-size: 16px;
         color: #000;
@@ -1581,31 +1606,31 @@ strong {
         background-size: 26px 26px;
         background-position: 10px center;
         background-repeat: no-repeat; }
-      .story-detail .messages .nav-user li a.is-active {
+      .messages .nav-user li a.is-active {
         color: #f18121; }
-  .story-detail .messages .user-right {
+  .messages .user-right {
     width: 100px !important;
     text-align: center;
     order: 2; }
-    .story-detail .messages .user-right .img {
+    .messages .user-right .img {
       width: 100px;
       margin: 0 auto 8px; }
-    .story-detail .messages .user-right button {
+    .messages .user-right button {
       width: 100px;
       margin: 0 auto; }
-  .story-detail .messages .user-main {
+  .messages .user-main {
     width: 500px !important; }
-  .story-detail .messages .user-main input[type=email] {
+  .messages .user-main input[type=email] {
     border: 1px solid #e0e0e0;
     background: #ebebeb; }
-    .story-detail .messages .user-main input[type=email] .user-title {
+    .messages .user-main input[type=email] .user-title {
       margin-top: 20px; }
-    .story-detail .messages .user-main input[type=email] .user-field {
+    .messages .user-main input[type=email] .user-field {
       margin-top: 20px; }
-      .story-detail .messages .user-main input[type=email] .user-field .txt {
+      .messages .user-main input[type=email] .user-field .txt {
         padding-right: 20px; }
-    .story-detail .messages .user-main input[type=email] label {
+    .messages .user-main input[type=email] label {
       font-weight: 400 !important;
       padding-right: 10px; }
-    .story-detail .messages .user-main input[type=email] button {
+    .messages .user-main input[type=email] button {
       margin-bottom: 40px; }

@@ -1,6 +1,6 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-
+const bcrypt = require('bcrypt')
 // handle errors
 const handleErrors = (err) => {
     let errors = { email: '', password: '', name: '', phone: '', status: ''}
@@ -16,7 +16,6 @@ const handleErrors = (err) => {
         errors.email = 'Email này đã tồn tại'
         return errors
     }
-
     // validation erros
     if (err.message.includes('user validation failed')){
         Object.values(err.errors).forEach(({properties}) =>{
@@ -45,8 +44,12 @@ class AuthController{
     }
     // [POST] /signup
     async registerPost(req , res , next){
-        const { email, password, name , phone } = req.body
+        console.log(req.body)
+        var { email, password, name , phone } = req.body
         try{
+            const salt = await bcrypt.genSalt()
+            password  = await bcrypt.hash(password, salt)
+            console.log(password)
             const user =  await User.create({ email, password, name , phone })
             // tạo token
             const token = createToken(user._id)

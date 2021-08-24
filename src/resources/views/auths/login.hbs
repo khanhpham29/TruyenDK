@@ -25,7 +25,6 @@
                             name="password"
                             required>
                 </div>
-               
                 <div class="form-group text-center">
                     <button class="btn btn-primary account-btn" type="submit">Login</button>
                 </div>
@@ -50,6 +49,7 @@
             //reset error
             //emailError.text('')
             //passwordError.text('')
+            alertLogin.addClass("fade")
             // get the values
             const email = form.email.value
             const password = form.password.value
@@ -63,19 +63,23 @@
                 .then(async (res)=>{
                     console.log("đây là res:", res.data)
                     const data = await res.data
-                    if(data.status != ''){
-                        alertLogin.removeClass("fade")
-                        alertLogin.text(data.status)
-                    }
                     if(data.user){
                         location.assign('/')
                     }
                 })
                 .catch((err)=>{
-                    console.log("đây là err", err.response.data)
-                    const data = err.response.data.errors
-                    if(data.status != ''){
-                        alert(data.status)
+                    if(err.response.data != null){
+                        const data = err.response.data.errors
+                        if(!data){
+                            console.log("đây là err",data)
+                            if(data.status != ''){
+                                alert(data.status)
+                            }
+                        }
+                        if(data.email != ''){
+                            alertLogin.removeClass("fade")
+                            alertLogin.text(data.email)
+                        }
                     }
                 })
             }

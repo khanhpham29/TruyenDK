@@ -11,7 +11,7 @@ const accountController = require('../app/controllers/user/AccountController')
 const userRentalController = require('../app/controllers/user/UserRentalController')
 const userPostController = require('../app/controllers/user/UserPostController')
 
-
+// MANGA
 router.get('/', usersController.index)
 router.post('/manga/favourite/:idManga', usersController.favourite)
 router.post('/manga/cancelFollow/:idManga', usersController.cancelFollow)
@@ -20,6 +20,8 @@ router.get('/manga/:slug/:chap', usersController.readManga)
 router.get('/manga/:slug', usersController.detailManga)
 router.get('/category', usersController.categoryOfManga)
 router.get('/listFollow', usersController.listFollow)
+router.get('/history', usersController.history)
+router.post('/history/:idManga', usersController.postHistory)
 router.get('/notifies', usersController.getNotifies)
 
 

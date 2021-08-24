@@ -205,6 +205,7 @@
             //var numberRental = form.numberRental.value
             var totalPrice = tongtienEl.innerText
             let socket = io({path: "/socket.io/rental"});
+
             var flag = 1
             var rowData = this.parentElement.querySelector('.table').querySelectorAll('.row-data')
             rowData.forEach((row, i) => {
@@ -239,7 +240,6 @@
                 //numberRental: numberRental,
                 })
                 .then(async (res)=>{
-                    console.log('res 1', res.data.cartEl)
                     let data = res.data.cartEl
                     socket.emit('cart', data)   
                     var success  = await res.data.message
