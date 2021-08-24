@@ -6,9 +6,13 @@
 				<span class="logo">
 					<a href="/">TruyenDK</a>
 				</span>
-				<div class="top-search">
-					<input type="text" class="text-search" placeholder="Nhập gì đó...">
-					<button class="btn_search btn-submit"></button>
+				<div class="top-search search-input">
+					<input type="text" id="search" class="text-search" placeholder="Nhập gì đó..." autocomplete="off">
+					<div class="list-results">
+						<div id="match-list" class="list-container">
+							
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="level-right">
@@ -18,9 +22,6 @@
 					</li>
 					<li class="items">
 						<a href="/rental">Truyện cho thuê</a>
-					</li>
-					<li class="items">
-						<a href="/listfollow">Theo dõi truyện</a>
 					</li>
 					{{#if user}}
 					<li class="items">
@@ -94,8 +95,72 @@
 
 <script>
 	document.addEventListener("DOMContentLoaded",()=>{
+		// Đặt biến
 		var numberNewNotify = 0;
 		var userManager  = document.querySelector(".user-manager")
+		var searchWrapper = document.querySelector('.search-input')
+		var listResults = document.querySelector('.list-results')
+        var search = document.getElementById('search')
+        var matchList = document.getElementById('match-list')
+		console.log(search)
+		console.log(matchList)
+		console.log(searchWrapper)
+
+
+		// hàm xử lý
+		var searchMangas =  searchText =>{
+            if(searchText.length === 0){
+                matches = [];
+                searchWrapper.classList.remove("active")
+                matchList.innerHTML = ''
+                return false;
+            }
+            axios.get("/manga/searchManga")
+            .then((res)=>{
+				console.log(res.data.mangas)
+                const mangas = res.data.mangas
+                // khớp với kiểu nhập văn bản hiện tại
+                let matches = mangas.filter(manga =>{
+                    const regex = new RegExp(`${searchText}`, 'giu')
+                    return manga.nameManga.replace(/\s/gis, "").match(regex) || manga.otherName.replace(/\s/gis, "").match(regex)
+                })
+                if(matches.length === 0){
+                    searchWrapper.classList.remove("active")
+                    listResults.classList.remove("open")
+                    matchList.innerHTML = ''
+                }
+                outputHtml(matches)
+            })
+			.catch((err)=>{
+				console.log(err.response)
+			})
+        }
+		const outputHtml = matches =>{
+            if(matches.length >0){
+                const html = matches.map(match =>`
+					<div class="result-item">
+						<a href="/admin/manga/${match.slug}">
+							<div class="media">
+								<div class="media-left">
+									<p class="image">
+										<img src="/img/${match.image}" alt="">
+									</p>
+								</div>
+								<div class="media-content">
+									<h4> ${match.nameManga}</h4>
+									<h5> ${match.otherName}</h5>
+								</div>
+							</div>
+						</a>
+					</div>
+                `)
+                .join('');
+                searchWrapper.classList.add("active")
+                listResults.classList.add("open")
+                matchList.innerHTML = html
+            }
+        }
+        search.addEventListener('input', ()=> searchMangas(search.value.replace(/\s/gis, "").toLowerCase()))
 		if(userManager){
 			userManager.onclick = function(e) {
 				this.classList.toggle("active");

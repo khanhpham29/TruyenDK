@@ -79,7 +79,7 @@
         var timeAgoArr = document.querySelectorAll('.input-time-ago')
         Array.from(timeAgoArr).forEach((el)=>{
             el.parentElement.querySelector('.time-ago').innerText = formatTime(el.value)
-            console.log(el.parentElement.querySelector('.time-ago').innerText)
+            {{!-- console.log(el.parentElement.querySelector('.time-ago').innerText) --}}
         })
     })
 </script>

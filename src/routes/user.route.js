@@ -13,6 +13,7 @@ const userPostController = require('../app/controllers/user/UserPostController')
 
 // MANGA
 router.get('/', usersController.index)
+router.get('/manga/searchManga', usersController.searchManga)
 router.post('/manga/favourite/:idManga', usersController.favourite)
 router.post('/manga/cancelFollow/:idManga', usersController.cancelFollow)
 router.post('/manga/follow/:idManga', requireAuth , usersController.followManga)

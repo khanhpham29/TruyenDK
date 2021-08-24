@@ -404,7 +404,8 @@ class UsersController{
                             chapter: 'arrMangaId.chapter'
                         }
                     }
-                }
+                },
+                options: {sort: { 'arrMangaId.updatedAt': -1 }}
             })
             .limit(20)
             .then((histories) => {
@@ -516,6 +517,27 @@ class UsersController{
             )
             res.status(200).json({message:"true"})
         }
+    }
+    async searchManga(req, res, next){
+        const mangas = await manga_model.find({})
+        .populate([
+            {
+                path:'idDetailManga',
+                populate:{ 
+                    path:'imgDetails',
+                    model:'ImgDetail',
+                    match: {new: true}
+                }
+            },{
+                path:'categories'
+            }
+        ])
+        .then((mangas) => {
+            res.json({
+                mangas: multipleMongooseToOject(mangas),
+            })
+        })
+        .catch(next)    
     }
 }
 
