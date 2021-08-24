@@ -1369,10 +1369,6 @@ strong {
         padding-bottom: 15px; }
     .story-detail .main-content.on .story-see .story-see-main .block {
       margin: 0 auto; }
-      .story-detail .main-content.on .story-see .story-see-main .block .story-see-content {
-        text-align: center;
-        padding: 30px;
-        margin-bottom: 30px; }
       .story-detail .main-content.on .story-see .story-see-main .block .story-detail {
         border-radius: 6px;
         padding: 10px 30px;
